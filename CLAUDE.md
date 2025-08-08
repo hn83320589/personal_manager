@@ -82,16 +82,16 @@ personal-manager/
     └── PersonalManagerFrontend/ # 本地前端開發 (不上傳)
 ```
 
-### 後端專案倉庫 (personal-manager-backend)
+### 後端專案倉庫 (PersonalManagerBackend)
 獨立的後端API專案
-- **倉庫地址**: `https://github.com/[username]/personal-manager-backend`
-- **本地路徑**: `./PersonalManagerBackend/`
+- **倉庫地址**: `https://github.com/hn83320589/PersonalManagerBackend`
+- **本地路徑**: `./local-development/PersonalManagerBackend/`
 - **技術棧**: C# .NET Core Web API + Entity Framework Core + MariaDB
 
-### 前端專案倉庫 (personal-manager-frontend)  
+### 前端專案倉庫 (PersonalManagerFrontend)  
 獨立的前端UI專案
-- **倉庫地址**: `https://github.com/[username]/personal-manager-frontend`
-- **本地路徑**: `./PersonalManagerFrontend/`
+- **倉庫地址**: `https://github.com/hn83320589/PersonalManagerFrontend`
+- **本地路徑**: `./local-development/PersonalManagerFrontend/`
 - **技術棧**: Vue3 + TypeScript + Vite + Pinia
 
 ## 本地開發環境設定
@@ -99,18 +99,18 @@ personal-manager/
 ### 初始化步驟
 1. **Clone 主專案倉庫**
    ```bash
-   git clone https://github.com/[username]/personal-manager.git
+   git clone https://github.com/hn83320589/personal_manager.git
    cd personal-manager
    ```
 
 2. **Clone 後端專案** (在主專案目錄下)
    ```bash
-   git clone https://github.com/[username]/personal-manager-backend.git PersonalManagerBackend
+   git clone https://github.com/hn83320589/PersonalManagerBackend.git PersonalManagerBackend
    ```
 
 3. **Clone 前端專案** (在主專案目錄下)
    ```bash
-   git clone https://github.com/[username]/personal-manager-frontend.git PersonalManagerFrontend
+   git clone https://github.com/hn83320589/PersonalManagerFrontend.git PersonalManagerFrontend
    ```
 
 4. **啟動開發環境**

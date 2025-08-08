@@ -26,8 +26,8 @@ Personal Manager 是一個現代化的個人管理系統，提供以下功能：
 
 ### 🔗 相關倉庫
 
-- 🖥️ **後端倉庫**: [personal-manager-backend](https://github.com/[username]/personal-manager-backend)
-- 🎨 **前端倉庫**: [personal-manager-frontend](https://github.com/[username]/personal-manager-frontend)
+- 🖥️ **後端倉庫**: [personal-manager-backend](https://github.com/hn83320589/PersonalManagerBackend)
+- 🎨 **前端倉庫**: [personal-manager-frontend](https://github.com/hn83320589/PersonalManagerFrontend)
 
 ## 🚀 快速開始
 
@@ -42,13 +42,13 @@ Personal Manager 是一個現代化的個人管理系統，提供以下功能：
 
 1. **Clone 主專案**
    ```bash
-   git clone https://github.com/[username]/personal-manager.git
+   git clone https://github.com/hn83320589/personal_manager.git
    cd personal-manager
    ```
 
 2. **設定後端專案**
    ```bash
-   git clone https://github.com/[username]/personal-manager-backend.git PersonalManagerBackend
+   git clone https://github.com/hn83320589/PersonalManagerBackend.git PersonalManagerBackend
    cd PersonalManagerBackend
    dotnet restore
    dotnet run
@@ -56,7 +56,7 @@ Personal Manager 是一個現代化的個人管理系統，提供以下功能：
 
 3. **設定前端專案**
    ```bash
-   git clone https://github.com/[username]/personal-manager-frontend.git PersonalManagerFrontend
+   git clone https://github.com/hn83320589/PersonalManagerFrontend.git PersonalManagerFrontend
    cd PersonalManagerFrontend
    npm install
    npm run dev
@@ -117,13 +117,6 @@ Personal Manager 是一個現代化的個人管理系統，提供以下功能：
 - 後端API版本: `v1.x.x`
 - 前端UI版本: `v1.x.x`  
 - 整體系統版本: `v1.x.x`
-
-## 📞 聯絡資訊
-
-如有問題或建議，歡迎透過以下方式聯絡：
-
-- GitHub Issues: [提交問題](https://github.com/[username]/personal-manager/issues)
-- Email: [your-email@example.com]
 
 ## 📄 授權條款
 
