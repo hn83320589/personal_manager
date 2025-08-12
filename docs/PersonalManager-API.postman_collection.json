@@ -1,0 +1,360 @@
+{
+  "info": {
+    "name": "Personal Manager API",
+    "description": "Personal Manager 系統 API 測試集合",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5001/api",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"testuser@example.com\",\n  \"passwordHash\": \"hashed_password\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"phone\": \"0987654321\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"username\": \"admin\",\n  \"email\": \"admin@example.com\",\n  \"passwordHash\": \"hashed_password\",\n  \"firstName\": \"更新後\",\n  \"lastName\": \"姓名\",\n  \"phone\": \"0912345678\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "PersonalProfiles",
+      "item": [
+        {
+          "name": "Get All Personal Profiles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/personalprofiles",
+              "host": ["{{baseUrl}}"],
+              "path": ["personalprofiles"]
+            }
+          }
+        },
+        {
+          "name": "Get Personal Profile By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/personalprofiles/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["personalprofiles", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Personal Profile By User ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/personalprofiles/user/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["personalprofiles", "user", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Personal Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"title\": \"軟體工程師\",\n  \"summary\": \"熟悉多種程式語言\",\n  \"description\": \"擁有豐富的軟體開發經驗...\",\n  \"profileImageUrl\": \"https://example.com/profile.jpg\",\n  \"website\": \"https://mysite.com\",\n  \"location\": \"台北市\",\n  \"birthday\": \"1990-01-01T00:00:00Z\",\n  \"isPublic\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/personalprofiles",
+              "host": ["{{baseUrl}}"],
+              "path": ["personalprofiles"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Educations",
+      "item": [
+        {
+          "name": "Get All Educations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/educations",
+              "host": ["{{baseUrl}}"],
+              "path": ["educations"]
+            }
+          }
+        },
+        {
+          "name": "Get Education By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/educations/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["educations", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Educations By User ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/educations/user/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["educations", "user", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Education",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"school\": \"國立交通大學\",\n  \"degree\": \"學士\",\n  \"fieldOfStudy\": \"資訊工程學系\",\n  \"startDate\": \"2011-09-01T00:00:00Z\",\n  \"endDate\": \"2015-06-30T00:00:00Z\",\n  \"description\": \"主修程式設計與演算法...\",\n  \"isPublic\": true,\n  \"sortOrder\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/educations",
+              "host": ["{{baseUrl}}"],
+              "path": ["educations"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "WorkExperiences",
+      "item": [
+        {
+          "name": "Get All Work Experiences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/workexperiences",
+              "host": ["{{baseUrl}}"],
+              "path": ["workexperiences"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Work Experiences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/workexperiences/current",
+              "host": ["{{baseUrl}}"],
+              "path": ["workexperiences", "current"]
+            }
+          }
+        },
+        {
+          "name": "Get Work Experience By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/workexperiences/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["workexperiences", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Work Experience",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"company\": \"測試公司\",\n  \"position\": \"軟體工程師\",\n  \"startDate\": \"2020-01-01T00:00:00Z\",\n  \"endDate\": null,\n  \"isCurrent\": true,\n  \"description\": \"負責軟體開發...\",\n  \"achievements\": \"完成多項專案...\",\n  \"isPublic\": true,\n  \"sortOrder\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workexperiences",
+              "host": ["{{baseUrl}}"],
+              "path": ["workexperiences"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Skills",
+      "item": [
+        {
+          "name": "Get All Skills",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/skills",
+              "host": ["{{baseUrl}}"],
+              "path": ["skills"]
+            }
+          }
+        },
+        {
+          "name": "Get Skills By Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/skills/category/後端開發",
+              "host": ["{{baseUrl}}"],
+              "path": ["skills", "category", "後端開發"]
+            }
+          }
+        },
+        {
+          "name": "Get Skills By Level",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/skills/level/Expert",
+              "host": ["{{baseUrl}}"],
+              "path": ["skills", "level", "Expert"]
+            }
+          }
+        },
+        {
+          "name": "Get Skill By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/skills/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["skills", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Skill",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"name\": \"Python\",\n  \"category\": \"程式語言\",\n  \"level\": 2,\n  \"description\": \"熟悉Python開發，包含Django、Flask框架\",\n  \"isPublic\": true,\n  \"sortOrder\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/skills",
+              "host": ["{{baseUrl}}"],
+              "path": ["skills"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

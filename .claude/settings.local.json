@@ -5,7 +5,22 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(move:*)",
-      "Bash(robocopy:*)"
+      "Bash(robocopy:*)",
+      "Bash(mkdir:*)",
+      "Bash(dotnet build)",
+      "Bash(dotnet run:*)",
+      "Bash(curl:*)",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet add reference:*)",
+      "Bash(dotnet add package:*)",
+      "Bash(rm:*)",
+      "Bash(dotnet test)",
+      "Bash(dotnet clean:*)",
+      "Bash(dotnet test:*)",
+      "Bash(taskkill:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss init:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": []
   }

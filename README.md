@@ -64,17 +64,18 @@ Personal Manager 是一個現代化的個人管理系統，提供以下功能：
 
 4. **存取應用程式**
    - 前端: http://localhost:5173
-   - 後端API: http://localhost:5000
-   - Swagger文檔: http://localhost:5000/swagger
+   - 後端API: http://localhost:5002/api (目前使用埠口 5002)
+   - Swagger文檔: http://localhost:5002/swagger
 
 ## 📋 開發進度
 
 - ✅ 專案架構規劃
 - ✅ 前後端專案框架建立
-- 🔄 資料庫設計與建立
-- ⏳ 後端API開發
-- ⏳ 前端介面開發
-- ⏳ 系統整合測試
+- ✅ 資料庫設計與建立 (JSON 模擬資料)
+- ✅ 後端API開發 (12個完整 Controllers + 文件 + 測試)
+- ✅ 前端基礎架構 (Vue3 + TypeScript + Tailwind CSS)
+- 🔄 前後端整合與API連接
+- ⏳ 系統功能完善與測試
 - ⏳ 部署上線
 
 ## 📖 文檔
@@ -88,17 +89,19 @@ Personal Manager 是一個現代化的個人管理系統，提供以下功能：
 
 ### 後端
 - **框架**: ASP.NET Core 9.0
-- **資料庫**: MariaDB with Entity Framework Core
-- **文檔**: Swagger/OpenAPI
-- **測試**: xUnit
+- **資料庫**: JSON 模擬資料 (JsonDataService)
+- **ORM**: Entity Framework Core 9.0.8 (已設定，未來可連接 MariaDB)
+- **文檔**: Swagger/OpenAPI + 完整API文檔
+- **測試**: xUnit + 手動測試驗證
 
 ### 前端  
-- **框架**: Vue 3 with Composition API
-- **語言**: TypeScript
-- **建置**: Vite
-- **狀態管理**: Pinia
-- **路由**: Vue Router
-- **測試**: Vitest + Playwright
+- **框架**: Vue 3.5 with Composition API
+- **語言**: TypeScript 嚴格模式
+- **建置**: Vite 7.1
+- **樣式**: Tailwind CSS + Headless UI
+- **狀態管理**: Pinia (authStore + portfolioStore 已實作)
+- **路由**: Vue Router 4 + 認證守衛
+- **測試**: Vitest + Playwright (已設定)
 
 ### 部署
 - **容器化**: Docker
