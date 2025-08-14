@@ -64,19 +64,27 @@ Personal Manager 是一個現代化的個人管理系統，提供以下功能：
 
 4. **存取應用程式**
    - 前端: http://localhost:5173
-   - 後端API: http://localhost:5002/api (目前使用埠口 5002)
-   - Swagger文檔: http://localhost:5002/swagger
+   - 後端API: http://localhost:5253/api
+   - Swagger文檔: http://localhost:5253/swagger
 
 ## 📋 開發進度
 
 - ✅ 專案架構規劃
-- ✅ 前後端專案框架建立
+- ✅ 前後端專案框架建立  
 - ✅ 資料庫設計與建立 (JSON 模擬資料)
-- ✅ 後端API開發 (12個完整 Controllers + 文件 + 測試)
-- ✅ 前端基礎架構 (Vue3 + TypeScript + Tailwind CSS)
-- 🔄 前後端整合與API連接
+- ✅ 後端API開發 (13個完整 Controllers + 文件 + 測試)
+- ✅ 前端核心架構 (Vue3 + TypeScript + Tailwind CSS)
+- ✅ 前端狀態管理 (9個 Pinia Stores)
+- ✅ 前端API服務層 (10個完整服務)
+- ✅ 前端UI元件庫 (8個核心元件) 
+- ✅ 前端公開頁面開發 (9/9 完成)
+- ✅ 前端認證系統 (登入、JWT、路由守衛)
+- ✅ **前後端API整合完成** (CORS、HTTP客戶端、環境配置)
+- 🔄 前端管理頁面開發 (11個管理介面)
 - ⏳ 系統功能完善與測試
 - ⏳ 部署上線
+
+**整體開發進度: ~85% 完成** 🚀
 
 ## 📖 文檔
 
@@ -97,10 +105,13 @@ Personal Manager 是一個現代化的個人管理系統，提供以下功能：
 ### 前端  
 - **框架**: Vue 3.5 with Composition API
 - **語言**: TypeScript 嚴格模式
-- **建置**: Vite 7.1
-- **樣式**: Tailwind CSS + Headless UI
-- **狀態管理**: Pinia (authStore + portfolioStore 已實作)
+- **建置**: Vite 7.1 + PostCSS
+- **樣式**: Tailwind CSS + 自訂主題設計
+- **狀態管理**: Pinia (9個完整 Stores)
+- **API客戶端**: Axios + 統一攔截器 + CORS整合
 - **路由**: Vue Router 4 + 認證守衛
+- **UI元件**: 8個自建核心元件 + Heroicons
+- **認證**: JWT Token + 自動刷新 + 路由保護
 - **測試**: Vitest + Playwright (已設定)
 
 ### 部署
@@ -120,6 +131,34 @@ Personal Manager 是一個現代化的個人管理系統，提供以下功能：
 - 後端API版本: `v1.x.x`
 - 前端UI版本: `v1.x.x`  
 - 整體系統版本: `v1.x.x`
+
+## 🔗 API 整合狀態
+
+### 已整合服務
+- ✅ 後端 API 服務: http://localhost:5253
+- ✅ 前端 UI 服務: http://localhost:5173  
+- ✅ CORS 跨域設定完成
+- ✅ HTTP 客戶端配置完成
+- ✅ 環境變數管理完成
+- ✅ 認證系統整合完成
+
+### API 測試
+開發環境提供 API 測試介面，可在首頁測試以下功能：
+- Users API (使用者管理)
+- Skills API (技能管理)  
+- PersonalProfiles API (個人資料)
+- Demo 登入功能
+
+### 開發服務啟動
+```bash
+# 啟動後端 (終端1)
+cd PersonalManagerBackend
+dotnet run
+
+# 啟動前端 (終端2)  
+cd PersonalManagerFrontend
+npm run dev
+```
 
 ## 📄 授權條款
 

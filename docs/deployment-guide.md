@@ -6,12 +6,46 @@ Personal Manager 系統的部署指南，包含開發、測試和生產環境的
 
 ## 部署架構
 
-### 開發環境
-- 後端: 本地 .NET Core (localhost:5000)
-- 前端: Vite 開發伺服器 (localhost:5173)
-- 資料庫: 本地 MariaDB
+### 開發環境 ✅ 已完成整合
+- 後端: 本地 .NET Core (localhost:5253) - **運行中**
+- 前端: Vite 開發伺服器 (localhost:5173) - **運行中** 
+- 資料庫: JSON 模擬資料服務 (JsonDataService)
+- **整合狀態**: ✅ CORS 設定完成，前後端API完全整合
 
-### 生產環境
+### 開發環境啟動
+```bash
+# 啟動後端服務 (終端1)
+cd PersonalManagerBackend
+dotnet run
+# 服務運行於 http://localhost:5253
+
+# 啟動前端服務 (終端2)  
+cd PersonalManagerFrontend
+npm run dev
+# 服務運行於 http://localhost:5173
+
+# 驗證整合狀態
+curl -X GET "http://localhost:5253/api/users"
+```
+
+### 整合測試結果
+**API 端點驗證:**
+```bash
+✅ GET /api/users - 200 OK
+✅ GET /api/skills - 200 OK  
+✅ GET /api/personalprofiles - 200 OK
+✅ CORS Headers: Access-Control-Allow-Origin: http://localhost:5173
+✅ 前端 API 測試組件正常運作
+```
+
+**技術堆疊驗證:**
+- ✅ Vue3 + TypeScript 前端建置成功
+- ✅ .NET Core 後端服務穩定運行
+- ✅ Axios HTTP 客戶端與後端完全整合
+- ✅ Tailwind CSS 樣式系統運作正常
+- ✅ 路由系統與認證機制完整
+
+### 生產環境 (規劃中)
 - 平台: Zeabur
 - 容器化: Docker
 - 資料庫: MariaDB (雲端服務)

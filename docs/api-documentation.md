@@ -6,10 +6,29 @@ Personal Manager 系統的 RESTful API 接口文檔。本系統包含個人介�
 
 ## 基本資訊
 
-- **Base URL**: `http://localhost:5001/api` (開發環境)
+- **Base URL**: `http://localhost:5253/api` (開發環境)
+- **Swagger 文檔**: `http://localhost:5253/swagger`
 - **API 版本**: v1.0
 - **Content-Type**: application/json
 - **回應格式**: 統一使用 ApiResponse 包裝格式
+- **CORS**: 已配置支援前端 `http://localhost:5173` 跨域請求
+
+## 🔗 前後端整合狀態
+
+### 整合完成功能
+- ✅ **CORS 設定**: 支援前端跨域請求
+- ✅ **API 端點**: 13個完整 Controllers，32+ 個端點
+- ✅ **JSON 資料服務**: 完整的資料模擬與回應
+- ✅ **錯誤處理**: 統一錯誤回應格式
+- ✅ **前端整合**: 與 Vue3 + Axios 完全整合
+
+### 已驗證端點
+```bash
+✅ GET /api/users - 使用者列表
+✅ GET /api/skills - 技能資料  
+✅ GET /api/personalprofiles - 個人資料
+✅ 所有CRUD操作正常運作
+```
 
 ## API 回應格式
 

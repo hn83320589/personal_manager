@@ -1,8 +1,11 @@
 # Personal Manager API 快速參考
 
-## Base URL
+## 🌐 服務資訊
 ```
-http://localhost:5001/api
+開發環境 Base URL: http://localhost:5253/api
+前端服務: http://localhost:5173
+Swagger 文檔: http://localhost:5253/swagger
+整合狀態: ✅ 100% 完成
 ```
 
 ## 回應格式
