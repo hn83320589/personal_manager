@@ -23,7 +23,11 @@
       "Bash(npm run dev:*)",
       "Bash(npm run type-check:*)",
       "Bash(npm run build:*)",
-      "Bash(npm run test:unit:*)"
+      "Bash(npm run test:unit:*)",
+      "Bash(dotnet build:*)",
+      "Bash(timeout:*)",
+      "Bash(del:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
