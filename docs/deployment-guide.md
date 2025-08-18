@@ -45,10 +45,34 @@ curl -X GET "http://localhost:5253/api/users"
 - ✅ Tailwind CSS 樣式系統運作正常
 - ✅ 路由系統與認證機制完整
 
-### 生產環境 (規劃中)
-- 平台: Zeabur
-- 容器化: Docker
-- 資料庫: MariaDB (雲端服務)
+### 生產環境 ✅ 已配置完成
+- **平台**: Zeabur (自動部署)
+- **容器化**: Docker (分離配置架構)
+- **資料庫**: Zeabur DB Server (外部 MariaDB)
+- **部署狀態**: ✅ 配置完成，等待上線
+
+### Docker 部署架構
+```bash
+# 後端 Docker 配置
+PersonalManagerBackend/
+├── docker/                    # Docker 配置目錄
+│   ├── Dockerfile            # 生產映像建置
+│   ├── docker-compose.yml    # API 服務編排 (僅API)
+│   ├── zeabur.yml            # Zeabur 部署配置
+│   └── README.md             # Docker 使用說明
+└── code/                     # 原始碼目錄
+```
+
+### Zeabur 部署流程
+1. **環境變數設定**:
+   - `JWT_SECRET_KEY` (必填)
+   - `DATABASE_CONNECTION_STRING` (必填)
+   - `FRONTEND_URL` (可選)
+
+2. **自動部署流程**:
+   - Git 推送觸發建置
+   - Docker 映像自動建立
+   - 服務自動部署與健康檢查
 
 ## Docker 部署
 

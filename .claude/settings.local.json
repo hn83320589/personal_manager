@@ -27,7 +27,9 @@
       "Bash(dotnet build:*)",
       "Bash(timeout:*)",
       "Bash(del:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(mv:*)",
+      "Bash(docker build:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
