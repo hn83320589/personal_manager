@@ -110,7 +110,7 @@ Personal Manager 是一個現代化的個人管理系統，提供以下功能：
 - ✅ 專案架構規劃
 - ✅ 前後端專案框架建立  
 - ✅ 資料庫設計與建立 (JSON 模擬資料)
-- ✅ 後端API開發 (13個完整 Controllers + 文件 + 測試)
+- ✅ 後端API開發 (15個完整 Controllers + 文件 + 測試)
 - ✅ 前端核心架構 (Vue3 + TypeScript + Tailwind CSS)
 - ✅ 前端狀態管理 (9個 Pinia Stores)
 - ✅ 前端API服務層 (10個完整服務)
@@ -153,6 +153,7 @@ Personal Manager 是一個現代化的個人管理系統，提供以下功能：
 ### 後端
 - **框架**: ASP.NET Core 9.0
 - **認證**: JWT Bearer Token + BCrypt密碼雜湊
+- **API Controllers**: 15個完整 Controllers (80+ API端點)
 - **資料庫**: JSON 模擬資料 (JsonDataService)
 - **ORM**: Entity Framework Core 9.0.8 (已設定，未來可連接 MariaDB)
 - **安全性**: 多層檔案安全驗證 + 檔案隔離系統
