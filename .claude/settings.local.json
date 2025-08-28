@@ -30,7 +30,11 @@
       "Bash(find:*)",
       "Bash(mv:*)",
       "Bash(docker build:*)",
-      "Bash(dotnet remove:*)"
+      "Bash(dotnet remove:*)",
+      "Bash(dotnet ef migrations:*)",
+      "Bash(dotnet tool install:*)",
+      "Bash(dotnet ef:*)",
+      "Bash(tasklist:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
