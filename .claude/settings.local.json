@@ -34,7 +34,12 @@
       "Bash(dotnet ef migrations:*)",
       "Bash(dotnet tool install:*)",
       "Bash(dotnet ef:*)",
-      "Bash(tasklist:*)"
+      "Bash(tasklist:*)",
+      "Bash(powershell:*)",
+      "Bash(for i in {1..5})",
+      "Bash(do echo \"Request $i:\")",
+      "Bash(done)",
+      "Bash(for i in {1..105})"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
