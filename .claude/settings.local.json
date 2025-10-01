@@ -27,7 +27,8 @@
       "Bash(dotnet add package:*)",
       "Bash(dir:*)",
       "Bash(dotnet ef:*)",
-      "Bash(docker run:*)"
+      "Bash(docker run:*)",
+      "Bash(break)"
     ],
     "deny": [],
     "ask": [],
