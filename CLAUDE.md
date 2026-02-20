@@ -213,7 +213,7 @@ cd PersonalManagerFrontend && npm install && npm run dev
 - 📋 **主專案同步**: 前後端的 CLAUDE.md 有重大進度更新時，同步更新此主專案的 CLAUDE.md
 - 🔄 **三方同步**: 確保三個 CLAUDE.md 檔案的待辦事項與開發紀錄保持同步
 
-**🏆 專案開發完成狀態 (2025/09/19) - 企業級系統完成**
+**🏆 專案開發完成狀態 (2025/10/01) - 企業級系統完成**
 
 ### 📊 開發歷程回顧
 
@@ -223,15 +223,15 @@ cd PersonalManagerFrontend && npm install && npm run dev
 - ✅ **前端開發**: 21個完整頁面 (9公開 + 12管理)
 - ✅ **認證系統**: JWT認證 + 檔案安全 + 統一錯誤處理
 
-**Phase 2 企業級增強 (2025/08/20-2025/09/15):**
+**Phase 2 企業級增強 (2025/08/20-2025/10/01):**
 - ✅ **Clean Architecture**: 12個服務模組 + 36套DTOs完整重構
 - ✅ **Entity Framework**: 雙模式架構 + 17個實體配置
 - ✅ **JWT Token管理**: 完整生命週期 + 黑名單 + 自動續期
-- ✅ **RBAC權限系統**: 角色權限控制 + 細粒度授權
+- ✅ **RBAC權限系統**: 角色權限控制 + 細粒度授權 + 完整前後端管理介面
 - ✅ **API限流防護**: Rate Limiting + DDoS防護 + IP封鎖
-- ✅ **設備安全管理**: 多設備登入控制 + 指紋識別 + 風險評估
-- ✅ **Redis快取整合**: 分散式快取 + 效能最佳化
-- ✅ **密碼安全系統**: 複雜度檢查 + 安全評分
+- ✅ **安全驗證強化**: DTO層級驗證 + 防SQL注入 + XSS防護
+- ✅ **用戶體驗優化**: 檔案管理 + 全站搜尋 + 響應式系統 + 無障礙功能
+- ✅ **高級功能整合**: Google Calendar + 雲端儲存 + 即時通知 + 資料匯出
 
 **Phase 3 CI/CD與部署 (2025/09/19):**
 - ✅ **GitHub Actions CI/CD**: 完整企業級管線
@@ -296,7 +296,6 @@ personal-manager/
 │   ├── database-design.md       # 資料庫設計文檔
 │   ├── api-documentation.md     # API文檔
 │   └── deployment-guide.md      # 部署指南
-├── docker-compose.yml           # 整合部署設定
 └── local-development/           # 本地開發相關檔案
     ├── PersonalManagerBackend/  # 本地後端開發 (不上傳)
     └── PersonalManagerFrontend/ # 本地前端開發 (不上傳)
@@ -352,7 +351,6 @@ personal-manager/
 
 ### 版本同步策略
 - 使用 Git Tags 標記相容的版本
-- 在主專案的 docker-compose.yml 中指定前後端的版本
 - API 變更時同步更新三個倉庫的文檔
 
 ## 開發進度規劃
@@ -403,8 +401,6 @@ personal-manager/
             _已完成：開發指南 (95KB)、生產部署指南 (45KB)，包含完整的技術文檔、最佳實踐、部署流程_
     - [x] 專案準備發布
             _已完成：專案總結報告 (30KB)，所有核心功能開發完成，文檔齊全，生產環境就緒_
-    - [x] 製作後端docker檔
-            _已完成：Docker配置簡化，移除本地DB依賴，整合Zeabur DB Server，README文檔完善_
     - [x] 完成前端管理後台
             _已完成：12個管理頁面100%完成，統一AdminLayout、多視圖系統、批量操作、即時功能、響應式設計_
 
@@ -413,7 +409,7 @@ personal-manager/
 - ✅ **前端開發完成度**: 100% (9個公開頁面、12個管理頁面、認證系統、完整UI組件庫)
 - ✅ **管理後台**: 100% (12/12頁面完成，企業級管理功能齊全)
 - ✅ **測試與文檔**: 100% (測試框架、完整文檔體系、API文檔)
-- ✅ **部署準備**: 100% (Docker容器化、Zeabur配置、分離架構)
+- ✅ **部署準備**: 100% (Zeabur配置、扁平化架構)
 
 **🎉 2025/08/20 Phase 2 開發完成！**
 **總開發時長**: 13天 | **專案狀態**: ✅ Phase 2 完成 | **完成度**: 企業級生產系統 100%
@@ -421,6 +417,32 @@ personal-manager/
 ---
 
 ## 📝 最新開發記錄
+
+### 2026/02/20 - 前後端 README 文檔全面重寫完成 📝
+
+#### 文檔更新
+**完成前端與後端專案 README.md 的全面重寫，移除過時內容，反映當前實際架構**
+
+**後端 README (`PersonalManagerBackend/README.md`):**
+- ✅ 移除所有 Docker、`code/` 資料夾、CI/CD 相關過時內容
+- ✅ 修正 API port 為 5037（非舊的 5253）
+- ✅ 修正 JWT 設定區段名稱為 `Jwt`（非 `JwtSettings`）
+- ✅ 記錄實際三層架構：`IRepository<T>` / `JsonRepository<T>` → `CrudService` → Controllers
+- ✅ 記錄 DTO 手動映射模式（`MappingExtensions.cs`）
+- ✅ 記錄 DI 註冊模式（Repository: Singleton, Service: Scoped）
+- ✅ 新增「資料模式切換」章節（JSON vs 未來 DB 模式）
+- ✅ 新增「如何擴充」步驟指南
+
+**前端 README (`PersonalManagerFrontend/README.md`):**
+- ✅ 移除所有 Docker 相關內容與過時統計資料
+- ✅ 修正 API base URL 為 port 5037
+- ✅ 記錄實際前端架構：Component → Store → Service → HttpService → API
+- ✅ 列出所有 11 個 Service 與對應後端 API 路徑
+- ✅ 記錄環境變數（`.env.development` / `.env.production`）
+- ✅ 套件版本與實際 `package.json` 一致
+- ✅ 新增實用的擴充指南（新增頁面、Service、Store）
+
+---
 
 ### 2025/08/27 - JWT Token 刷新機制完整實作完成 🔐
 
@@ -628,8 +650,8 @@ TypeScript: 100% 嚴格模式，0編譯錯誤
 
 ### 🚀 第二期開發規劃 (2025/08/16 開始)
 
-#### Phase 2.1: 管理後台完善 (優先級: 高)
-**目標**: 完成管理後台所有功能，提供完整的內容管理能力
+#### ✅ Phase 2.1: 管理後台完善 (已完成 2025/10/01)
+**目標**: 完成管理後台所有功能，提供完整的內容管理能力 ✅
 
 **前端管理頁面開發 (已完成 12/12) ✅:**
     - [x] 學經歷管理 (ExperienceManageView)
@@ -656,8 +678,9 @@ TypeScript: 100% 嚴格模式，0編譯錯誤
             _已完成：完整Clean Architecture實作，12個服務介面與實作，業務邏輯完全從Controller分離_
     - [x] 建立DTOs體系 (12個模組的完整DTOs)
             _已完成：36個DTO類別（Create/Update/Response），完整AutoMapper配置，API安全性與版本控制基礎_
-    - [ ] 高級安全性功能
-            _JWT Token刷新機制、角色權限控制、API限流、輸入驗證加強_
+    - [x] 高級安全性功能 ✅ (已完成 2025/10/01)
+            _已完成：JWT Token刷新機制、RBAC角色權限控制、API限流防護、輸入驗證強化_
+            _包含：Token黑名單、3預設角色、17系統權限、Rate Limiting、完整前後端RBAC管理介面_
 
 #### ✅ Phase 2.2: 用戶體驗優化 (已完成 2025/08/19)
 **目標**: 提升用戶體驗，增加互動性和實用性
