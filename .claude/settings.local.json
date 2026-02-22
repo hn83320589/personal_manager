@@ -64,7 +64,11 @@
       "Bash(nc:*)",
       "Bash(dotnet tool list -g | grep dotnet-ef || dotnet tool install --global dotnet-ef 2>&1)",
       "Bash(export PATH=\"$PATH:/Users/mingtafang/.dotnet/tools\" && dotnet ef migrations add InitialCreate 2>&1)",
-      "Bash(dotnet:*)"
+      "Bash(dotnet:*)",
+      "Bash(tail:*)",
+      "Bash(echo Killed old server:*)",
+      "Bash(echo:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": [],
