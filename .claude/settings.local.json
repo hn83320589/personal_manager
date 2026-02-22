@@ -60,7 +60,11 @@
       "Bash(cmd.exe /c \"rmdir /s /q D:\\\\workspace\\\\personal_manager\\\\local-development\\\\PersonalManagerBackend\\\\src 2>nul\")",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(nc:*)",
+      "Bash(dotnet tool list -g | grep dotnet-ef || dotnet tool install --global dotnet-ef 2>&1)",
+      "Bash(export PATH=\"$PATH:/Users/mingtafang/.dotnet/tools\" && dotnet ef migrations add InitialCreate 2>&1)",
+      "Bash(dotnet:*)"
     ],
     "deny": [],
     "ask": [],
