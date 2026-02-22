@@ -70,7 +70,8 @@
       "Bash(echo:*)",
       "Bash(grep:*)",
       "Bash(sleep 1:*)",
-      "Bash(lsof -ti:5037 | xargs kill -9 2>/dev/null)"
+      "Bash(lsof -ti:5037 | xargs kill -9 2>/dev/null)",
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": [],
