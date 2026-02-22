@@ -68,7 +68,9 @@
       "Bash(tail:*)",
       "Bash(echo Killed old server:*)",
       "Bash(echo:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(sleep 1:*)",
+      "Bash(lsof -ti:5037 | xargs kill -9 2>/dev/null)"
     ],
     "deny": [],
     "ask": [],
