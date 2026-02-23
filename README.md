@@ -1,6 +1,6 @@
 # Personal Manager
 
-個人展示與管理平台 — 包含公開展示網站與個人管理後台的全端應用程式。
+多用戶個人展示與管理平台 — 包含公開展示網站（`/@:username` 格式）與個人管理後台的全端應用程式。
 
 ## 功能概覽
 
@@ -90,8 +90,8 @@ npm run dev
    VITE_API_BASE_URL=https://<後端網域>/api
    ```
 
-## 文件
+## 相關連結
 
-- [後端 CLAUDE.md](./local-development/PersonalManagerBackend/CLAUDE.md) — 後端架構與開發指南
-- [前端 CLAUDE.md](./local-development/PersonalManagerFrontend/CLAUDE.md) — 前端架構與開發指南
-- [主專案 CLAUDE.md](./CLAUDE.md) — 整體規劃與開發紀錄
+- [主專案](https://github.com/hn83320589/personal_manager)
+- [後端](https://github.com/hn83320589/PersonalManagerBackend)
+- [前端](https://github.com/hn83320589/PersonalManagerFrontend)
