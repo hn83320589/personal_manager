@@ -97,12 +97,18 @@ npm run dev
 
 ## 最新異動記錄
 
+### 2026/03/11
+- **前端功能補完與修復**：
+  - `UserContactView.vue` 新增（聯絡我獨立公開頁），路由 `/@:username/contact`，UserLayout 導覽列加入「聯絡我」
+  - `BlogManageView.vue`：修正 `previewPost()` URL（`/@{username}/blog/{slug}`）；`duplicatePost()` 加 null check
+  - `BlogEditorView.vue`：移除未實作的 WYSIWYG 富文本 toggle，僅保留 Markdown 模式
+
 ### 2026/02/23
 - **多使用者架構大改寫**（後端 + 前端）：
   - 後端：新增公開用戶端點（`/api/users/public`）、個人目錄端點（`/api/profiles/directory`）、每人留言板（`/api/guestbookentries/user/{id}`）
   - 後端：`PersonalProfile` 加 `ThemeColor`，`GuestBookEntry` 加 `TargetUserId`
   - 前端路由：改為 `/@:username` 架構（類 GitHub），移除舊扁平路由
-  - 前端：新增 `UserLayout.vue`（主題 + Header + 導覽）、完整 10 個 user/* views
+  - 前端：新增 `UserLayout.vue`（主題 + Header + 導覽）、完整 10 個 user/* views（含 UserContactView）
   - 前端：`HomeView.vue` 改為用戶目錄頁（搜尋 + 格狀卡片）
   - 前端：修復 admin 頁面 hardcoded userId、AppHeader 連結、CSS 表單樣式
   - 主題系統：5 套預設主題（blue/green/purple/rose/slate），由 CSS 變數控制
@@ -111,6 +117,7 @@ npm run dev
   - 前端留言回覆（`CommentManageView`）`adminReply` 欄位未傳送已修正
   - 工作追蹤時間記錄（`TimeEntry`）改以 localStorage 持久化（後端無對應 API）
   - 後台側欄移除 `/admin/files` 和 `/admin/settings` 尚未實作的導覽項目
+- **功能補全**：聯絡方式 CRUD（`ContactManageView`）、Blog 分類管理、工作追蹤專案重新命名
 
 ### 2026/02/22
 - **JSON 序列化修復**：後端 camelCase 輸出修正，前後端欄位對齊
