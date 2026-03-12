@@ -73,7 +73,11 @@
       "Bash(lsof -ti:5037 | xargs kill -9 2>/dev/null)",
       "Bash(git rm:*)",
       "Bash(echo \"=== Frontend Changes ===\" && git -C \"D:\\\\workspace\\\\personal_manager\\\\local-development\\\\PersonalManagerFrontend\" diff --stat HEAD 2>/dev/null | head -30 && echo \"=== New Files ===\" && git -C \"D:\\\\workspace\\\\personal_manager\\\\local-development\\\\PersonalManagerFrontend\" ls-files --others --exclude-standard src/ 2>/dev/null)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot"
     ],
     "deny": [],
     "ask": [],

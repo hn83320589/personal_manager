@@ -4,6 +4,18 @@ This file provides guidance to Claude Code when working in this repository.
 
 ---
 
+## 給 AI 的指示
+
+每次任務完成後，你必須：
+1. 更新下方「進度」區塊的 checkbox
+2. 若有新的技術債，加入「已知問題」
+3. 若做了未預期的架構決策，加入「架構決策」並說明原因
+4. 回報你更新了哪些區塊
+
+以上未完成，任務視為未完成。
+
+---
+
 ## 專案說明
 
 **Personal Manager** — 現代化個人展示與管理平台，包含公開展示網站與個人管理後台。
