@@ -1,82 +1,84 @@
 # Personal Manager 快速入門指南
 
-## 🚀 快速開始
+## 5 分鐘上手
 
-歡迎使用 Personal Manager！這份快速指南將幫助您在 5 分鐘內了解系統的主要功能。
+### 1. 瀏覽公開頁面
 
-### 第一步：瀏覽公開內容
-1. **訪問首頁** - 了解系統概覽
-2. **查看作品集** - 瀏覽精選專案
-3. **閱讀部落格** - 獲取最新文章
-4. **留言互動** - 在留言板分享想法
+開啟瀏覽器，進入首頁（`/`）可以看到所有已註冊用戶的目錄卡片。
 
-### 第二步：體驗管理功能
-1. **登入系統** - 使用 Demo 帳號 (admin/demo123)
-2. **瀏覽儀表板** - 查看系統統計資訊  
-3. **編輯個人資料** - 更新個人資訊
-4. **JWT 認證體驗** - 完整的令牌管理系統
+點選任一用戶卡片進入個人頁面（`/@username`），可瀏覽：
 
-### 第三步：探索進階功能
-1. **行事曆管理** - 安排個人行程
-2. **任務追蹤** - 管理待辦事項
-3. **留言審核** - 處理用戶回饋
-4. **統計分析** - 查看網站數據
+| 頁面 | 網址 |
+|------|------|
+| 關於我 | `/@username` |
+| 學經歷 | `/@username/experience` |
+| 技能專長 | `/@username/skills` |
+| 作品集 | `/@username/portfolio` |
+| 部落格 | `/@username/blog` |
+| 公開行事曆 | `/@username/calendar` |
+| 留言板 | `/@username/guestbook` |
+| 聯絡我 | `/@username/contact` |
 
----
-
-## 🎯 主要功能亮點
-
-### 📱 響應式設計
-- 支援桌面、平板、手機
-- 自適應介面佈局
-- 觸控友善操作
-
-### 🔧 簡易管理
-- 直觀的管理介面
-- 拖拽式操作
-- 即時預覽功能
-
-### 🚀 現代技術
-- Vue 3 + TypeScript
-- 快速載入速度
-- 離線支援（未來）
-
-### 🔒 安全可靠
-- JWT 認證機制 (完整實作)
-- 多層檔案安全驗證
-- 惡意檔案檢測與隔離
-- 統一錯誤處理與日誌記錄
-- 資料加密傳輸
+> 所有公開頁面無需登入即可瀏覽。
 
 ---
 
-## 🛠️ 系統導覽
+### 2. 登入管理後台
 
-### 公開區域
-```
-首頁 → 關於我 → 學經歷 → 專長技能
-  ↓
-作品集 → 公開行事曆 → 部落格 → 留言板 → 聯絡我
+前往 `/login` 使用帳號密碼登入。登入後進入管理後台（`/admin/dashboard`）。
+
+後台功能一覽：
+
+| 功能 | 網址 |
+|------|------|
+| 儀表板 | `/admin/dashboard` |
+| 個人資料 + 主題設定 | `/admin/profile` |
+| 學經歷管理 | `/admin/experience` |
+| 技能管理 | `/admin/skills` |
+| 作品集管理 | `/admin/projects` |
+| 聯絡方式管理 | `/admin/contacts` |
+| 行事曆管理 | `/admin/calendar` |
+| 工作追蹤 | `/admin/work-tracking` |
+| 待辦事項 | `/admin/tasks` |
+| 文章管理 | `/admin/blog` |
+| 留言管理 | `/admin/comments` |
+
+---
+
+### 3. 本地開發快速啟動
+
+```bash
+# 終端 1 — 後端
+cd local-development/PersonalManagerBackend
+dotnet run
+# → http://localhost:5037  （Swagger: /swagger）
+
+# 終端 2 — 前端
+cd local-development/PersonalManagerFrontend
+npm install && npm run dev
+# → http://localhost:5173
 ```
 
-### 管理區域
-```
-登入 → 儀表板 → 個人資料管理
-  ↓
-學經歷管理 → 專長管理 → 作品管理
-  ↓
-行事曆管理 → 任務追蹤 → 文章管理 → 留言管理
+後端若無法連接 MariaDB，會自動 fallback 至本地 JSON 資料，可正常開發。
+
+---
+
+### 4. 常用指令
+
+```bash
+# 前端型別檢查
+npm run type-check
+
+# 前端建置
+npm run build
+
+# 後端建置檢查
+dotnet build
 ```
 
 ---
 
-## 📞 需要幫助？
-
-- 📖 **完整手冊**: [使用者手冊](./user-manual.md)
-- 🔧 **開發文件**: [開發文件](./development-guide.md)
-- 💬 **技術支援**: support@personalmanager.dev
-- 🐛 **問題回報**: GitHub Issues
-
----
-
-**開始探索 Personal Manager 吧！** 🎉
+更多詳情請參考：
+- [API 快速參考](./api-quick-reference.md)
+- [部署指南](./deployment-guide.md)
+- [資料庫設計](./database-design.md)

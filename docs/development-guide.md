@@ -36,7 +36,7 @@ Personal Manager 是一個現代化的個人展示與管理平台，旨在提供
 - **測試**: Vitest 3.2 + Playwright 1.54
 
 **後端技術：**
-- **框架**: .NET Core 8.0 Web API
+- **框架**: .NET 9.0 Web API
 - **語言**: C# 12
 - **資料庫**: MariaDB 10.6+
 - **ORM**: Entity Framework Core 8.0
@@ -150,7 +150,7 @@ npm run dev
 #### 6. 驗證安裝
 ```bash
 # 檢查後端 API
-curl http://localhost:5253/api/users
+curl http://localhost:5037/api/users
 
 # 檢查前端頁面
 # 瀏覽器開啟 http://localhost:5173
@@ -208,7 +208,7 @@ curl http://localhost:5253/api/users
 **前端環境變數 (.env.development):**
 ```env
 # API Base URL
-VITE_API_BASE_URL=http://localhost:5253/api
+VITE_API_BASE_URL=http://localhost:5037/api
 
 # 應用程式設定
 VITE_APP_TITLE=Personal Manager
@@ -930,7 +930,7 @@ jobs:
 #### 開發環境 (Development)
 - **目的**: 本地開發和測試
 - **資料庫**: 本地 MariaDB
-- **API**: http://localhost:5253
+- **API**: http://localhost:5037
 - **前端**: http://localhost:5173
 - **特色**: 熱重載、除錯模式、詳細日誌
 

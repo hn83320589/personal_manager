@@ -1,172 +1,129 @@
 # 部署指南
 
-## 概述
+## 架構概覽
 
-Personal Manager 系統的部署指南，包含開發、測試和生產環境的部署方式。
-
-## 部署架構
-
-### 開發環境 ✅ 已完成整合
-- 後端: 本地 .NET Core (localhost:5253) - **運行中**
-- 前端: Vite 開發伺服器 (localhost:5173) - **運行中** 
-- 資料庫: JSON 模擬資料服務 (JsonDataService)
-- **整合狀態**: ✅ CORS 設定完成，前後端API完全整合
-
-### 開發環境啟動
-```bash
-# 啟動後端服務 (終端1)
-cd PersonalManagerBackend
-dotnet run
-# 服務運行於 http://localhost:5253
-
-# 啟動前端服務 (終端2)  
-cd PersonalManagerFrontend
-npm run dev
-# 服務運行於 http://localhost:5173
-
-# 驗證整合狀態
-curl -X GET "http://localhost:5253/api/users"
-```
-
-### 整合測試結果
-**API 端點驗證:**
-```bash
-✅ GET /api/users - 200 OK
-✅ GET /api/skills - 200 OK  
-✅ GET /api/personalprofiles - 200 OK
-✅ CORS Headers: Access-Control-Allow-Origin: http://localhost:5173
-✅ 前端 API 測試組件正常運作
-```
-
-**技術堆疊驗證:**
-- ✅ Vue3 + TypeScript 前端建置成功
-- ✅ .NET Core 後端服務穩定運行
-- ✅ Axios HTTP 客戶端與後端完全整合
-- ✅ Tailwind CSS 樣式系統運作正常
-- ✅ 路由系統與認證機制完整
-
-### 生產環境 ✅ 已配置完成
-- **平台**: Zeabur (自動部署)
-- **容器化**: Docker (分離配置架構)
-- **資料庫**: Zeabur DB Server (外部 MariaDB)
-- **部署狀態**: ✅ 配置完成，等待上線
-
-### Docker 部署架構
-```bash
-# 後端 Docker 配置
-PersonalManagerBackend/
-├── docker/                    # Docker 配置目錄
-│   ├── Dockerfile            # 生產映像建置
-│   ├── docker-compose.yml    # API 服務編排 (僅API)
-│   ├── zeabur.yml            # Zeabur 部署配置
-│   └── README.md             # Docker 使用說明
-└── code/                     # 原始碼目錄
-```
-
-### Zeabur 部署流程
-1. **環境變數設定**:
-   - `JWT_SECRET_KEY` (必填)
-   - `DATABASE_CONNECTION_STRING` (必填)
-   - `FRONTEND_URL` (可選)
-
-2. **自動部署流程**:
-   - Git 推送觸發建置
-   - Docker 映像自動建立
-   - 服務自動部署與健康檢查
-
-## Docker 部署
-
-### Docker Compose 設定
-
-*待建立 docker-compose.yml*
-
-### 建立映像檔
-
-```bash
-# 建立後端映像檔
-cd PersonalManagerBackend
-docker build -t personal-manager-backend .
-
-# 建立前端映像檔  
-cd PersonalManagerFrontend
-docker build -t personal-manager-frontend .
-```
-
-### 執行容器
-
-```bash
-# 使用 Docker Compose
-docker-compose up -d
-```
-
-## Zeabur 部署
-
-### 準備工作
-
-1. 建立 Zeabur 帳號
-2. 連接 GitHub 倉庫
-3. 設定環境變數
-
-### 部署步驟
-
-*待補充 - 將在部署階段完成*
-
-## 環境變數設定
-
-### 後端環境變數
-
-```env
-ASPNETCORE_ENVIRONMENT=Production
-CONNECTION_STRINGS__DEFAULT=Server=xxx;Database=xxx;...
-JWT_SECRET=your_jwt_secret
-```
-
-### 前端環境變數
-
-```env
-VITE_API_BASE_URL=https://your-api-domain.com/api
-```
-
-## 資料庫遷移
-
-### Production 資料庫設定
-
-```bash
-# 執行 Migration
-dotnet ef database update --connection "your_production_connection_string"
-```
-
-## 監控與維護
-
-### 健康檢查
-
-- **後端健康檢查**: `/health`
-- **前端可用性**: 主頁載入測試
-
-### 日誌監控
-
-*待設定 - 建議使用結構化日誌*
-
-### 備份策略
-
-*待規劃 - 資料庫定期備份*
-
-## 故障排除
-
-### 常見問題
-
-1. **資料庫連線失敗**
-   - 檢查連線字串設定
-   - 確認資料庫服務狀態
-
-2. **API 回應 500 錯誤**
-   - 查看應用程式日誌
-   - 檢查環境變數設定
-
-3. **前端無法載入**
-   - 檢查 API 基礎 URL 設定
-   - 確認 CORS 政策設定
+| 環境 | 後端 | 前端 | 資料庫 |
+|------|------|------|--------|
+| 本地開發 | http://localhost:5037 | http://localhost:5173 | JSON fallback（無需 DB） |
+| 生產環境 | Zeabur（自動部署） | Zeabur（自動部署） | Zeabur MariaDB |
 
 ---
 
-**注意**: 此文檔將在部署階段詳細補充完整。
+## 本地開發啟動
+
+```bash
+# 終端 1 — 後端
+cd local-development/PersonalManagerBackend
+dotnet run
+# → http://localhost:5037
+# → Swagger: http://localhost:5037/swagger
+
+# 終端 2 — 前端
+cd local-development/PersonalManagerFrontend
+npm install   # 首次或 package.json 有變動
+npm run dev
+# → http://localhost:5173
+```
+
+> **注意**：後端若無法連接 MariaDB，會自動 fallback 至 `Data/JsonData/*.json`，不影響本地開發。啟動 log 會顯示 `啟動模式: 資料庫 (MariaDB)` 或 `啟動模式: JSON Fallback`。
+
+---
+
+## 環境變數設定
+
+### 後端
+
+| 檔案 | 提交 git | 用途 |
+|------|---------|------|
+| `appsettings.json` | ✅ | 只含占位符，**不放真實密碼** |
+| `appsettings.Development.json` | ❌ gitignored | 本地真實連線字串與密鑰 |
+| Zeabur 環境變數 | — | 生產環境覆寫 |
+
+**`appsettings.Development.json`（本地自行建立）**：
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=...;Database=personal_manager;User=...;Password=...;"
+  },
+  "Jwt": {
+    "SecretKey": "your_local_secret_key_at_least_32_chars"
+  }
+}
+```
+
+**Zeabur 生產環境變數**（使用雙底線 `__` 分隔層級）：
+```
+ConnectionStrings__DefaultConnection = <MariaDB 連線字串>
+Jwt__SecretKey                        = <隨機密鑰，至少 32 字元>
+```
+
+### 前端
+
+**`.env.development`（本地，已存在，不提交）**：
+```
+VITE_API_BASE_URL=http://localhost:5037/api
+VITE_APP_TITLE=Personal Manager
+```
+
+**Zeabur 生產環境變數**：
+```
+VITE_API_BASE_URL=https://your-backend.zeabur.app/api
+```
+
+---
+
+## Zeabur 生產部署
+
+### 部署方式
+
+後端與前端各有獨立的 GitHub 倉庫，Zeabur 直接連接 GitHub repo 進行自動部署（**不使用 Docker**）。
+
+```
+hn83320589/PersonalManagerBackend  → Zeabur（.NET 自動偵測）
+hn83320589/PersonalManagerFrontend → Zeabur（Node.js 自動偵測）
+```
+
+### 首次部署步驟
+
+1. 在 Zeabur 建立 Project
+2. 新增 MariaDB 服務，取得連線字串
+3. 部署後端 → 設定 `ConnectionStrings__DefaultConnection` 和 `Jwt__SecretKey`
+4. 部署前端 → 設定 `VITE_API_BASE_URL`（指向後端 URL）
+
+### 每次更新
+
+推送到 main branch 後 Zeabur 自動重新部署。
+
+---
+
+## 資料庫管理
+
+- **不需要執行 migrations**：後端啟動時 EF Core `EnsureCreated()` 自動建立資料表
+- **Schema 異動**（新增欄位等）：Zeabur 的 MariaDB 需手動執行 `ALTER TABLE`，或 DROP + 重建（會清空資料）
+- **本地開發**：優先使用 JSON fallback，無需管理 DB schema
+
+---
+
+## 驗證部署
+
+```bash
+# 確認後端正常回應
+curl https://your-backend.zeabur.app/api/profiles/directory
+
+# 確認登入可用
+curl -X POST https://your-backend.zeabur.app/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"..."}'
+```
+
+---
+
+## 故障排除
+
+| 問題 | 排查方式 |
+|------|---------|
+| 後端啟動顯示 `JSON Fallback` | 確認 `ConnectionStrings__DefaultConnection` 環境變數已設定 |
+| 前端 API 請求 401 | 確認 `Jwt__SecretKey` 已設定且前後端使用相同密鑰 |
+| 前端無法連線後端（CORS） | 確認後端 CORS 允許的 Origin 包含前端 URL |
+| 前端顯示空白 | 確認 `VITE_API_BASE_URL` 指向正確後端網址 |
+| DB 欄位缺失 | 參考 `Models/*.cs` 手動執行 `ALTER TABLE`，或 DROP DB 重建 |
