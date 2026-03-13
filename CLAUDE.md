@@ -110,6 +110,16 @@ npm run dev
 ## 最新異動記錄
 
 ### 2026/03/13
+- **後端 EF Core Migrations 策略遷移完成**：
+  - `Data/DesignTimeDbContextFactory.cs` 新增（ef tools design-time 支援）
+  - `Migrations/20260313084338_InitialCreate.cs` 建立（完整初始 schema）
+  - `Program.cs` 改用 `db.Database.Migrate()` 取代 `EnsureCreated()`
+  - ⚠️ 生產 DB 切換需手動建立 `__EFMigrationsHistory` 並插入 migration 記錄（見後端 CLAUDE.md）
+- **後端公開端點 Rate Limiting 完成**：
+  - `Program.cs` 加入 `AddRateLimiter` + `UseRateLimiter()`
+  - `"auth"` policy → login/register（每 IP 每分鐘 10 次）
+  - `"public_write"` policy → guestbook POST（每 IP 每分鐘 10 次）
+  - 超過回傳 HTTP 429
 - **後端資源所有權驗證（TD-02）完成**：
   - 新增 `Controllers/BaseApiController.cs`（`GetCurrentUserId()` helper）
   - 全部 11 個 Controller 加入所有權驗證（Create 強制 `dto.UserId = currentUserId`；Update/Delete 驗證擁有者）

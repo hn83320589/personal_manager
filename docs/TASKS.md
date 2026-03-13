@@ -23,13 +23,13 @@
   - 影響：任何登入用戶可以刪除/修改其他用戶的資料
   - 做法：在每個 CRUD 控制器的 Update/Delete 加入 `userId == currentUserId` 驗證
 
-- [ ] **[BE] 公開端點 Rate Limiting**
+- [x] **[BE] 公開端點 Rate Limiting**
   - 現況：POST `/api/guestbookentries` 等公開端點無任何速率限制
   - 做法：在 `Program.cs` 加入 `AddRateLimiter`（.NET 7+ 內建）
 
 ### 技術債
 
-- [ ] **[BE] DB Migration 策略** (`EnsureCreated` 限制)
+- [x] **[BE] DB Migration 策略** (`EnsureCreated` 限制)
   - 現況：使用 `EnsureCreated()`，新增欄位需手動 `ALTER TABLE`
   - 做法：改用 EF Core Migrations（`dotnet ef migrations add`），支援增量 schema 變更
   - 注意：此改動需要協調 Zeabur 生產 DB
