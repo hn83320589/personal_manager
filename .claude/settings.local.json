@@ -77,7 +77,9 @@
       "mcp__plugin_playwright_playwright__browser_navigate",
       "mcp__plugin_playwright_playwright__browser_snapshot",
       "mcp__plugin_playwright_playwright__browser_click",
-      "mcp__plugin_playwright_playwright__browser_take_screenshot"
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "Bash(wc -l /d/workspace/personal_manager/local-development/PersonalManagerFrontend/src/stores/*.ts)",
+      "Bash(cd D:/workspace/personal_manager/docs && rm api-documentation.md deployment-production.md jwt-authentication.md project-summary.md user-manual.md feature-overview.md quick-start-guide.md && ls -la)"
     ],
     "deny": [],
     "ask": [],

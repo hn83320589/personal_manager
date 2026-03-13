@@ -109,6 +109,19 @@ npm run dev
 
 ## 最新異動記錄
 
+### 2026/03/13
+- **後端資源所有權驗證（TD-02）完成**：
+  - 新增 `Controllers/BaseApiController.cs`（`GetCurrentUserId()` helper）
+  - 全部 11 個 Controller 加入所有權驗證（Create 強制 `dto.UserId = currentUserId`；Update/Delete 驗證擁有者）
+  - 修復 `TodoItemsController` / `WorkTasksController` `GetAll()` 原本洩漏所有用戶資料的問題
+  - `GuestBookEntriesController` 使用 `TargetUserId` 作為所有權依據；`GetAll` 改為只回傳目標用戶為當前用戶的留言
+- **文件整併與任務清單建立**：
+  - `docs/system-specification.md` 新增（系統規格書，12 章節完整架構文件）
+  - 刪除 7 個過時文件：`api-documentation.md`、`deployment-production.md`、`jwt-authentication.md`、`project-summary.md`、`user-manual.md`、`feature-overview.md`、`quick-start-guide.md`
+  - `docs/development-guide.md` 更新：移除 Docker 指令，改為實際三倉庫啟動流程；更新目錄結構
+  - `docs/TASKS.md` 新增（任務清單，含 TD-01~TD-05 技術債 + 15 項功能優化 + 完成項目）
+  - 文件從 12 個精簡至 6 個（含 Postman Collection）
+
 ### 2026/03/11
 - **前端功能補完與修復**：
   - `UserContactView.vue` 新增（聯絡我獨立公開頁），路由 `/@:username/contact`，UserLayout 導覽列加入「聯絡我」

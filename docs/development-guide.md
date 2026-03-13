@@ -84,76 +84,70 @@ Personal Manager 是一個現代化的個人展示與管理平台，旨在提供
 ### 🚀 快速開始
 
 #### 1. 克隆專案倉庫
+
+本專案採用三倉庫架構，請依以下結構 clone：
+
 ```bash
-# 主專案倉庫
+# 主專案
 git clone https://github.com/hn83320589/personal_manager.git
 cd personal_manager
 
-# 後端專案 
-git clone https://github.com/hn83320589/PersonalManagerBackend.git PersonalManagerBackend
-
-# 前端專案
-git clone https://github.com/hn83320589/PersonalManagerFrontend.git PersonalManagerFrontend
+# 在 local-development/ 目錄下 clone 前後端
+mkdir -p local-development
+git clone https://github.com/hn83320589/PersonalManagerBackend.git local-development/PersonalManagerBackend
+git clone https://github.com/hn83320589/PersonalManagerFrontend.git local-development/PersonalManagerFrontend
 ```
 
-#### 2. 環境配置
-```bash
-# 複製環境配置檔案
-cp PersonalManagerBackend/appsettings.example.json PersonalManagerBackend/appsettings.Development.json
-cp PersonalManagerFrontend/.env.example PersonalManagerFrontend/.env.development
+#### 2. 後端環境設定
+
+後端**不需要**安裝 MariaDB 即可開發——若無 DB 連線，後端自動 fallback 至 `Data/JsonData/*.json`。
+
+如需連接本地 DB，建立 `appsettings.Development.json`（不提交 git）：
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=personal_manager;User=pm_user;Password=pm_password;"
+  },
+  "Jwt": {
+    "SecretKey": "your_local_secret_key_at_least_32_chars"
+  }
+}
 ```
 
-#### 3. 資料庫設定
+#### 3. 啟動服務
+
 ```bash
-# 啟動 MariaDB (使用 Docker)
-docker run -d \
-  --name personal-manager-db \
-  -e MYSQL_ROOT_PASSWORD=rootpassword \
-  -e MYSQL_DATABASE=personal_manager \
-  -e MYSQL_USER=pm_user \
-  -e MYSQL_PASSWORD=pm_password \
-  -p 3306:3306 \
-  mariadb:10.6
-
-# 或使用 Docker Compose
-cd PersonalManagerBackend
-docker-compose up -d database
-```
-
-#### 4. 後端啟動
-```bash
-cd PersonalManagerBackend
-
-# 安裝相依套件 (首次執行)
-dotnet restore
-
-# 執行資料庫遷移
-dotnet ef database update
-
-# 啟動開發伺服器
+# 終端 1 — 後端
+cd local-development/PersonalManagerBackend
 dotnet run
-# 或使用 watch 模式 (自動重新載入)
-dotnet watch run
-```
+# → API: http://localhost:5037
+# → Swagger: http://localhost:5037/swagger
+# 啟動 log 會顯示「啟動模式: 資料庫」或「啟動模式: JSON Fallback」
 
-#### 5. 前端啟動
-```bash
-cd PersonalManagerFrontend
-
-# 安裝相依套件
-npm install
-
-# 啟動開發伺服器
+# 終端 2 — 前端
+cd local-development/PersonalManagerFrontend
+npm install   # 首次執行或 package.json 有異動時
 npm run dev
+# → http://localhost:5173
 ```
 
-#### 6. 驗證安裝
-```bash
-# 檢查後端 API
-curl http://localhost:5037/api/users
+#### 4. 前端環境變數
 
-# 檢查前端頁面
-# 瀏覽器開啟 http://localhost:5173
+`.env.development` 已存在於前端倉庫（不提交 git），內容如下：
+
+```env
+VITE_API_BASE_URL=http://localhost:5037/api
+VITE_APP_TITLE=Personal Manager
+```
+
+#### 5. 驗證安裝
+
+```bash
+# 後端健康確認
+curl http://localhost:5037/api/profiles/directory
+
+# 前端：瀏覽器開啟 http://localhost:5173
 ```
 
 ### 🔧 開發環境配置詳解
@@ -225,56 +219,50 @@ VITE_DEBUG_MODE=true
 ### 📁 目錄結構
 
 ```
-personal_manager/
-├── README.md                          # 專案說明
-├── CLAUDE.md                          # AI 開發指引
-├── .gitignore                         # Git 忽略檔案
-├── personal_manager.sln               # Visual Studio 解決方案
-├── docs/                              # 專案文檔
-│   ├── api-documentation.md           # API 技術文檔
-│   ├── database-design.md             # 資料庫設計
-│   ├── deployment-guide.md            # 部署指南
-│   ├── user-manual.md                 # 使用者手冊
-│   ├── development-guide.md           # 開發指南 (本檔案)
-│   └── feature-overview.md            # 功能概覽
-├── PersonalManagerBackend/            # 後端專案
-│   ├── Controllers/                   # API 控制器
-│   ├── Models/                        # 資料模型
-│   ├── Services/                      # 業務邏輯服務
-│   ├── Data/                          # 資料訪問層
-│   ├── DTOs/                          # 資料傳輸物件
-│   ├── Middleware/                    # 中介軟體
-│   ├── Configuration/                 # 設定檔
-│   ├── DB/                            # 資料庫腳本
-│   ├── wwwroot/                       # 靜態檔案
-│   ├── Tests/                         # 測試專案
-│   ├── Program.cs                     # 應用程式進入點
-│   ├── appsettings.json               # 應用程式設定
-│   └── PersonalManagerAPI.csproj     # 專案檔
-└── PersonalManagerFrontend/           # 前端專案
-    ├── src/                           # 原始碼
-    │   ├── components/                # Vue 元件
-    │   │   ├── common/                # 共用元件
-    │   │   ├── layout/                # 佈局元件
-    │   │   └── ui/                    # UI 元件
-    │   ├── views/                     # 頁面元件
-    │   │   ├── admin/                 # 管理頁面
-    │   │   └── auth/                  # 認證頁面
-    │   ├── stores/                    # Pinia 狀態管理
-    │   ├── services/                  # API 服務
-    │   ├── router/                    # 路由設定
-    │   ├── types/                     # TypeScript 型別
-    │   ├── utils/                     # 工具函式
-    │   ├── assets/                    # 靜態資源
-    │   ├── styles/                    # 樣式檔案
-    │   └── main.ts                    # 應用程式進入點
-    ├── public/                        # 公共資源
-    ├── tests/                         # 測試檔案
-    ├── e2e/                           # E2E 測試
-    ├── package.json                   # NPM 設定
-    ├── vite.config.ts                 # Vite 設定
-    ├── tailwind.config.js             # Tailwind 設定
-    └── tsconfig.json                  # TypeScript 設定
+personal_manager/                          ← 主專案（本倉庫）
+├── README.md
+├── CLAUDE.md                              # AI 開發指引
+├── docs/
+│   ├── system-specification.md           # 系統規格書（主要技術文件）
+│   ├── api-quick-reference.md            # API 快速參考
+│   ├── database-design.md                # 資料庫設計
+│   ├── deployment-guide.md               # 部署指南
+│   ├── development-guide.md              # 開發指南（本檔案）
+│   └── PersonalManager-API.postman_collection.json
+└── local-development/
+    ├── PersonalManagerBackend/            ← 後端倉庫
+    │   ├── Controllers/                   # 15 個 API 控制器
+    │   ├── Models/                        # 14 個 EF Core 實體
+    │   ├── Services/                      # 14 個業務邏輯服務
+    │   ├── DTOs/                          # 每實體 3 層 DTO
+    │   ├── Repositories/                  # IRepository + EF/JSON 雙實作
+    │   ├── Data/
+    │   │   ├── AppDbContext.cs
+    │   │   ├── DatabaseSeeder.cs
+    │   │   └── JsonData/                  # 14 個 JSON fallback 檔案
+    │   ├── Middleware/
+    │   ├── Mappings/
+    │   ├── Program.cs
+    │   └── appsettings.json              # 只含占位符，不含真實密鑰
+    └── PersonalManagerFrontend/           ← 前端倉庫
+        └── src/
+            ├── views/
+            │   ├── user/                  # 10 個公開個人頁 View
+            │   ├── admin/                 # 18 個管理後台 View
+            │   ├── HomeView.vue           # 用戶目錄首頁
+            │   └── LoginView.vue
+            ├── components/
+            │   ├── ui/                    # 基礎 UI 元件
+            │   ├── admin/                 # 後台專用元件
+            │   └── layout/
+            ├── layouts/
+            │   ├── AdminLayout.vue
+            │   └── UserLayout.vue         # provide userId + 主題
+            ├── stores/                    # 11 個 Pinia Store
+            ├── services/                  # 16 個 API 服務
+            ├── types/api.ts               # 所有型別定義
+            ├── composables/useTheme.ts
+            └── router/index.ts
 ```
 
 ### 🏗️ 系統架構圖
