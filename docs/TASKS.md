@@ -89,18 +89,17 @@
 
 ### 功能增強
 
-- [-] **[BE] BlogPost.Tags 正規化**
-  - 現況：Tags 以逗號字串儲存（`"vue,typescript,dotnet"`）
-  - 做法：建立獨立 `Tags` 資料表 + `BlogPostTags` 多對多關聯
-  - 備注：需評估改動成本，現況雖不優雅但功能正常
+- [x] **[BE/FE] BlogPost.Tags 正規化**
+  - 後端：`Tags` 資料表 + `BlogPostTags` 多對多 + `BlogPostRepository`（SyncTagsAsync）+ EF Migration `AddRecurrenceRuleProjectTag`
+  - 前端：`BlogPost.tags: string[]`；`BlogEditorView` 內部仍用逗號字串、提交時轉陣列；`BlogManageView/BlogGridView/BlogTableView/UserBlogDetailView/UserBlogListView` 全部改為直接使用 `string[]`
 
-- [-] **[BE] WorkTask.Project 正規化**
-  - 現況：`Project` 只是 `WorkTask` 上的字串欄位，前端有「專案管理」UI 但後端無對應實體
-  - 做法：建立獨立 `Projects` 資料表，WorkTask 加入 FK
+- [x] **[BE/FE] WorkTask.Project 正規化**
+  - 後端：`Projects` 資料表 + `ProjectsController` + `IProjectService`/`ProjectService` + EF Migration
+  - 前端：`WorkTask.projectId`/`projectName`；`WorkTaskForm` 改為下拉選單；`WorkTrackingView` 動態載入專案清單；`TasksView/TimeEntryForm/TimeTrackerForm` 改用 `projectName`
 
-- [-] **[FE] 行事曆重複事件支援**
-  - 現況：`CalendarEvent` 無重複規則（RRULE）欄位
-  - 做法：加入 `RecurrenceRule` 欄位，前端行事曆解析並展開重複事件
+- [x] **[FE] 行事曆重複事件支援**
+  - 後端：`CalendarEvent.RecurrenceRule` + EF Migration
+  - 前端：`CalendarEvent.recurrenceRule`；`CalendarEventForm` 送出/讀入 `recurrenceRule`
 
 - [x] **[FE] 部落格文章目錄（TOC）自動生成**
   - `UserBlogDetailView` 加入 lg+ 右側 TOC sidebar
@@ -109,9 +108,10 @@
 - [x] **[FE] 文章閱讀時間估算**
   - `estimateReadTime(content)` 依字數 / 200 估算，已顯示於文章 header
 
-- [-] **[FE] 密碼重設功能**
-  - 現況：忘記密碼只能直接改 DB
-  - 做法：需要 Email 發送功能（SMTP 設定），後端建立 `PasswordResetTokens` 資料表
+- [x] **[BE/FE] 密碼重設功能**
+  - 後端：`Models/PasswordResetToken.cs`、`Settings/EmailSettings.cs`、`Services/EmailService.cs`（`IEmailService`/`SmtpEmailService`/`NoOpEmailService`）、`Data/JsonData/PasswordResetTokens.json`、`DTOs/AuthDtos.cs` 加 `ForgotPasswordRequest`/`ResetPasswordRequest`、`Data/ApplicationDbContext.cs` 加 `DbSet<PasswordResetToken>`、`Auth/AuthService.cs` 加 `ForgotPasswordAsync`/`ResetPasswordAsync`、`Controllers/AuthController.cs` 加 `POST /auth/forgot-password`/`POST /auth/reset-password`（rate-limited）、`appsettings.json` 加 `Email` section、`Program.cs` DI（SMTP/NoOp 自動判斷）、EF Migration `AddPasswordResetToken`
+  - 前端：`src/services/authService.ts` 加 `forgotPassword`/`resetPassword`；新增 `src/views/ForgotPasswordView.vue`（Email 輸入、防枚舉攻擊）；新增 `src/views/ResetPasswordView.vue`（token 從 query param 讀取、密碼確認驗證）；`src/router/index.ts` 新增 `/forgot-password`/`/reset-password` 路由；`src/views/LoginView.vue` 「忘記密碼？」改為 `<router-link to="/forgot-password">`
+  - 本地開發：SMTP 未設定時，重設連結會以 Warning log 輸出至後端 console
 
 - [x] **[BE] 後端 `/api/health` 端點**
   - 新增 `DbHealthCheck : IHealthCheck`；`app.MapHealthChecks("/api/health")` 回傳 JSON，DB 模式回 Healthy，JSON fallback 回 Degraded
