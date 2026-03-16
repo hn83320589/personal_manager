@@ -79,7 +79,15 @@
       "mcp__plugin_playwright_playwright__browser_click",
       "mcp__plugin_playwright_playwright__browser_take_screenshot",
       "Bash(wc -l /d/workspace/personal_manager/local-development/PersonalManagerFrontend/src/stores/*.ts)",
-      "Bash(cd D:/workspace/personal_manager/docs && rm api-documentation.md deployment-production.md jwt-authentication.md project-summary.md user-manual.md feature-overview.md quick-start-guide.md && ls -la)"
+      "Bash(cd D:/workspace/personal_manager/docs && rm api-documentation.md deployment-production.md jwt-authentication.md project-summary.md user-manual.md feature-overview.md quick-start-guide.md && ls -la)",
+      "Bash(cd \"D:\\\\workspace\\\\personal_manager\\\\local-development\\\\PersonalManagerFrontend\" && npx vitest run src/stores/__tests__/blog.spec.ts 2>&1)",
+      "Bash(cd \"D:\\\\workspace\\\\personal_manager\\\\local-development\\\\PersonalManagerFrontend\" && npx vitest run src/stores/__tests__/auth.spec.ts 2>&1 | head -30)",
+      "Bash(node -e \"console.log\\(process.argv\\)\" -- 2>&1 | head -5 && grep -r \"localstorage\" \"D:\\\\workspace\\\\personal_manager\\\\local-development\\\\PersonalManagerFrontend\\\\node_modules\\\\vitest-environment-jsdom\" 2>/dev/null | head -5)",
+      "Bash(cd \"D:\\\\workspace\\\\personal_manager\\\\local-development\\\\PersonalManagerFrontend\" && node --trace-warnings -e \"\nprocess.argv.push\\('--localstorage-file', ''\\);\n\" 2>&1 && echo \"no warning from jsdom\")",
+      "Bash(cd \"D:\\\\workspace\\\\personal_manager\\\\local-development\\\\PersonalManagerFrontend\" && npx vitest run 2>&1 | tail -20)",
+      "Bash(cd \"D:\\\\workspace\\\\personal_manager\\\\local-development\\\\PersonalManagerFrontend\" && npx vitest run 2>&1 | grep -E \"FAIL|PASS|failed|passed\" | head -20)",
+      "Bash(find \"D:\\\\workspace\\\\personal_manager\\\\local-development\\\\PersonalManagerBackend\\\\Data\\\\JsonData\" -name \"Users.json\" 2>/dev/null | xargs head -20 2>/dev/null | head -30)",
+      "Bash(cd \"D:\\\\workspace\\\\personal_manager\\\\local-development\\\\PersonalManagerFrontend\" && npx vitest run src/stores/__tests__/blog.spec.ts 2>&1 | tail -8)"
     ],
     "deny": [],
     "ask": [],

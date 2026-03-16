@@ -40,46 +40,48 @@
 
 ### 功能補完
 
-- [ ] **[BE] TimeEntry API 實作** (`TD-01`)
-  - 現況：工作時間記錄僅存於前端 localStorage，清除瀏覽器資料即遺失
-  - 做法：新增 `TimeEntries` 資料表 + CRUD 端點，前端改為 API 呼叫
-  - 影響檔案：後端 `Models/TimeEntry.cs`、`Controllers/TimeEntriesController.cs`；前端 `stores/task.ts`、`services/workTrackingService.ts`
+- [x] **[BE] TimeEntry API 實作** (`TD-01`)
+  - 後端：新增 `Models/TimeEntry.cs`、DTOs、Mappings、Service、`TimeEntriesController.cs`、EF Migration `AddTimeEntry`
+  - 前端：新增 `services/timeEntryService.ts`；`types/api.ts` 新增 `TimeEntry`、`CreateTimeEntryDto`、`UpdateTimeEntryDto`；`stores/task.ts` 改為 API 呼叫（移除 localStorage 持久化）
 
-- [ ] **[BE/FE] Refresh Token 機制** (`TD-04`)
+- [x] **[BE/FE] Refresh Token 機制** (`TD-04`)
   - 現況：JWT 24h 過期後強制重新登入，長時間工作會被中斷
   - 做法：後端加入 `RefreshToken` 資料表；前端 HttpService 在 401 時自動 refresh 而非直接登出
 
-- [ ] **[FE] 分頁（Pagination）**
-  - 現況：所有列表端點一次回傳所有資料，資料量大時效能低落
-  - 影響頁面：部落格列表、作品集、留言板、待辦事項
-  - 做法：後端加入 `page`/`pageSize` query param；前端加入分頁元件
+- [x] **[FE] 分頁（Pagination）**
+  - 後端新增 `PagedResult<T>` DTO；`GET /api/blogposts/user/{id}/public/paged` 與 `GET /api/guestbookentries/user/{id}/paged` 支援 `page`/`pageSize`
+  - 前端 `UserBlogListView` / `UserGuestbookView` 改為 server-side 分頁
 
-- [ ] **[FE] Dashboard 統計數據實作**
-  - 現況：`DashboardView.vue` 顯示的統計（文章數、留言數等）可能為硬編碼或空值
-  - 做法：後端加入 `/api/dashboard/stats` 端點彙總各模組數量；前端串接顯示
+- [x] **[FE] Dashboard 統計數據實作**
+  - 修復 `/portfolios` → `/portfolios/user/${uid}`（原本拉全部用戶資料）
+  - 修復 `/guestbookentries` → `/guestbookentries/all`（才能看到當前用戶 pending 留言）
 
-- [ ] **[FE] 部落格文章搜尋**
-  - 現況：前端有搜尋 UI 但後端無全文搜尋端點
-  - 做法：後端加入 `?keyword=` query param 過濾 `Title`、`Content`、`Tags`
+- [x] **[FE] 部落格文章搜尋**
+  - 後端 `/public/paged` 端點支援 `?keyword=` 過濾 `Title`、`Content`、`Tags`、`Summary`
+  - 前端搜尋框改為 debounce 呼叫 API（300ms），並支援同時套用 tag + category 過濾
 
-- [ ] **[FE] 作品集篩選功能**
-  - 現況：`UserPortfolioView` 無技術類型篩選
-  - 做法：加入 `Technologies` tag 篩選，類似部落格的 Tag 篩選實作
+- [x] **[FE] 作品集篩選功能**
+  - 現況已完整：`UserPortfolioView` 已有 searchTerm + selectedTech 下拉篩選 + filteredPortfolios computed
 
-- [ ] **[FE] 文章瀏覽計數（viewCount）**
-  - 現況：`BlogPost` 有 `ViewCount` 欄位但訪問文章詳情頁時未觸發遞增
-  - 做法：`UserBlogDetailView` 載入文章時呼叫 `POST /api/blogposts/{id}/view` 端點
+- [x] **[FE] 文章瀏覽計數（viewCount）**
+  - 後端 `BlogPostsController` 新增 `POST /api/blogposts/{id}/view` 公開端點
+  - `IBlogPostService` / `BlogPostService` 新增 `IncrementViewCountAsync(int id)`
+  - 前端 `UserBlogDetailView.vue` 載入文章後 fire-and-forget 呼叫計數端點
 
 ### 優化
 
-- [ ] **[FE] SEO / Open Graph 標籤**
-  - 現況：所有公開頁面缺乏 `<meta>` og 標籤，社群分享無預覽圖
-  - 做法：使用 `vueuse/head` 或 `@unhead/vue` 動態設定每頁的 title、description、og:image
+- [x] **[FE] SEO / Open Graph 標籤**
+  - 新增 `src/composables/useSeo.ts`（`setPageSeo` + `stripHtml`，無需外部 library）
+  - `UserLayout.vue`：用戶基礎 SEO（fullName、summary、profileImage）+ route watcher 重新套用
+  - `UserBlogDetailView.vue`：文章層級 SEO（title、description/summary、og:type=article）
 
-- [ ] **[BE] 檔案儲存改用 Object Storage** (`TD-05`)
-  - 現況：上傳檔案存於本地 `files/` 路徑，生產環境容器重啟後遺失
-  - 做法：整合 Zeabur Object Storage 或 S3 相容服務（如 Cloudflare R2）
-  - 優先度：上線前必須解決
+- [x] **[BE] 檔案儲存改用 Object Storage** (`TD-05`)
+  - 新增 `IFileStorageProvider` 介面 + `LocalFileStorageProvider`（本地，dev fallback）+ `S3FileStorageProvider`（生產）
+  - 新增 `Settings/FileStorageSettings.cs` `S3StorageSettings` 巢狀設定（BucketName、ServiceUrl、AccessKey、SecretKey、PublicBaseUrl、ForcePathStyle）
+  - `Program.cs`：啟動時讀取 `FileStorage:S3` 設定，若已設定則使用 S3，否則 fallback 本地
+  - 新增 NuGet `AWSSDK.S3` v3.7.414.3（支援 Zeabur Object Storage / Cloudflare R2 / AWS S3 所有 S3 相容服務）
+  - `appsettings.json` 新增 `FileStorage.S3` section（空占位符，生產環境填入 Zeabur 環境變數）
+  - ⚠️ 生產部署：在 Zeabur 設定以下環境變數：`FileStorage__S3__BucketName`、`FileStorage__S3__ServiceUrl`、`FileStorage__S3__AccessKey`、`FileStorage__S3__SecretKey`、`FileStorage__S3__PublicBaseUrl`
 
 ---
 
@@ -87,46 +89,52 @@
 
 ### 功能增強
 
-- [ ] **[BE] BlogPost.Tags 正規化**
+- [-] **[BE] BlogPost.Tags 正規化**
   - 現況：Tags 以逗號字串儲存（`"vue,typescript,dotnet"`）
   - 做法：建立獨立 `Tags` 資料表 + `BlogPostTags` 多對多關聯
   - 備注：需評估改動成本，現況雖不優雅但功能正常
 
-- [ ] **[BE] WorkTask.Project 正規化**
+- [-] **[BE] WorkTask.Project 正規化**
   - 現況：`Project` 只是 `WorkTask` 上的字串欄位，前端有「專案管理」UI 但後端無對應實體
   - 做法：建立獨立 `Projects` 資料表，WorkTask 加入 FK
 
-- [ ] **[FE] 行事曆重複事件支援**
+- [-] **[FE] 行事曆重複事件支援**
   - 現況：`CalendarEvent` 無重複規則（RRULE）欄位
   - 做法：加入 `RecurrenceRule` 欄位，前端行事曆解析並展開重複事件
 
-- [ ] **[FE] 部落格文章目錄（TOC）自動生成**
-  - 現況：`UserBlogDetailView` 無目錄導覽
-  - 做法：解析文章 HTML，抓取 `h1~h3` 標籤生成浮動 TOC 元件
+- [x] **[FE] 部落格文章目錄（TOC）自動生成**
+  - `UserBlogDetailView` 加入 lg+ 右側 TOC sidebar
+  - 解析文章 `h1~h3`，指定 ID，IntersectionObserver 追蹤 activeId
 
-- [ ] **[FE] 文章閱讀時間估算**
-  - 做法：依文章字數除以平均閱讀速度（250 字/分鐘）顯示「預計閱讀 N 分鐘」
+- [x] **[FE] 文章閱讀時間估算**
+  - `estimateReadTime(content)` 依字數 / 200 估算，已顯示於文章 header
 
-- [ ] **[FE] 密碼重設功能**
+- [-] **[FE] 密碼重設功能**
   - 現況：忘記密碼只能直接改 DB
   - 做法：需要 Email 發送功能（SMTP 設定），後端建立 `PasswordResetTokens` 資料表
 
-- [ ] **[BE] 後端 `/api/health` 端點**
-  - 做法：加入 `HealthChecks`（DB 連線狀態），供 Zeabur 監控使用
+- [x] **[BE] 後端 `/api/health` 端點**
+  - 新增 `DbHealthCheck : IHealthCheck`；`app.MapHealthChecks("/api/health")` 回傳 JSON，DB 模式回 Healthy，JSON fallback 回 Degraded
 
 ### 程式碼品質
 
-- [ ] **[BE] 後端單元測試補充**
-  - 現況：測試專案存在但覆蓋率不明
-  - 目標：`AuthService`、`BlogPostService`、`GuestBookEntryService` 各有完整單元測試
+- [x] **[BE] 後端單元測試補充**
+  - 新增 `tests/PersonalManager.Tests.csproj`（xUnit + Moq）
+  - `tests/AuthServiceTests.cs`：10 個測試（Login 有效/無效密碼/用戶不存在、Register 新用戶/重複用戶名、Refresh 有效/過期/已撤銷/不存在、Revoke 有效/不存在）
+  - `tests/BlogPostServiceTests.cs`：10 個測試（GetPublicByUserId、GetBySlug、GetPublicPaged 分頁/關鍵字/分類/標籤過濾、IncrementViewCount）
+  - `tests/GuestBookEntryServiceTests.cs`：9 個測試（GetApprovedByTargetUserId 過濾/空結果/排序、GetApprovedPaged 分頁/最後一頁/排除未審核/空結果）
+  - 共 29 個測試，全部通過
 
-- [ ] **[FE] Vitest 單元測試補充**
-  - 現況：Vitest 已設定，但 Store 與 Service 的測試可能不完整
-  - 目標：`authStore`、`blogStore`、`httpService` 有基本測試
+- [x] **[FE] Vitest 單元測試補充**
+  - `src/stores/__tests__/blog.spec.ts` 新增：16 個測試覆蓋 initial state、getters（publishedPosts/publicPosts/draftPosts）、searchPosts、createPost/deletePost
+  - 修復 Vitest 3.2.4 + Node.js 25 + `@vue/devtools-kit` 相容性問題（`execArgv: ['--localstorage-file', ...]`）
 
-- [ ] **[FE] Playwright E2E 測試**
-  - 現況：Playwright 已設定，測試腳本可能為空或最小化
-  - 目標：登入流程、留言提交、個人頁瀏覽 3 個關鍵路徑有 E2E 測試
+- [x] **[FE] Playwright E2E 測試**
+  - 改寫 `e2e/auth.spec.ts`：登入流程、受保護路由重導向、登出後無法訪問後台
+  - 改寫 `e2e/home.spec.ts`：用戶目錄、個人頁瀏覽（/@admin, /@admin/blog）
+  - 新增 `e2e/guestbook.spec.ts`：留言板顯示 + 提交表單
+  - 改寫 `e2e/portfolio.spec.ts`：作品集列表 + 響應式
+  - 改寫 `e2e/vue.spec.ts`：首頁載入
 
 ---
 
