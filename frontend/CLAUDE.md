@@ -74,7 +74,11 @@ npm run lint          # ESLint（CI 會跑）
 npm run format        # Prettier 格式化；CI 以 format:check 檢查
 npm run api:types     # 由 ../backend/openapi.json 產生 src/api/schema.ts（CI 檢查是否最新）
 npx vitest run        # 單元測試
+npx playwright test   # E2E（會自動啟動後端與前端，首次需 npx playwright install chromium）
 ```
+
+E2E（`e2e/`）以真實後端執行：`playwright.config.ts` 啟動 Development 環境的後端（示範資料，帳號 `admin`／`password123`）
+與前端，每次使用新的 SQLite 檔案。本機若已經開著後端或前端會直接沿用；CI 以建置後的前端（`vite preview`）執行。
 
 ---
 
@@ -104,8 +108,6 @@ View（.vue）
   → 後端 API
 ```
 
-舊頁面仍走 `src/services/*` → `src/services/http.ts`（已改由 auth store 取得 token）。
-Phase 5 重寫每個畫面時改用 `src/api`，並刪除對應的舊 service／store；全部完成後刪除 `services/` 與 `types/api.ts`。
 
 ### HTTP 層（`src/api/http.ts`）
 
@@ -129,7 +131,6 @@ Phase 5 重寫每個畫面時改用 `src/api`，並刪除對應的舊 service／
 
 ## 專案結構
 
-Phase 5 重寫中：新程式碼放在下列資料夾，舊頁面（`views/admin`、`components/{admin,task,work,calendar,layout,ui,common}`、`services/`、舊 store）逐頁替換後刪除。
 
 ```
 src/
@@ -183,8 +184,8 @@ src/
 
 ### 後台（`/admin`，需登入）
 
-新版頁面是 `AdminShell` 的子路由：`profile`、`works`、`works/:id`、`blog`、`blog/:id`、`experience`、`skills`、`contacts`。
-其餘（儀表板、留言、行事曆、待辦、工作追蹤、檔案）仍是舊頁面，重寫後改為子路由。路由規則有測試（`router/__tests__/routes.spec.ts`）。
+子路由：`dashboard`、`profile`、`works`、`works/:id`、`blog`、`blog/:id`、`experience`、`skills`、`contacts`、`comments`、`files`、`calendar`、`tasks`、`work-tracking`、`account`、`users`。
+所有後台頁面都是 `AdminShell` 的子路由；`users` 限管理員（`meta.requiresAdmin`）。路由規則有測試（`router/__tests__/routes.spec.ts`）。
 
 ---
 
@@ -222,7 +223,7 @@ export const mySkillsApi = {
 - **視覺**：依前台 prototype（ADR-012）。顏色、字體、間距一律使用 `tokens.css` 與 Tailwind 設定中的 token，支援深淺色與 5 種主題色
 - **元件**：前台元件在 `components/public/`、後台元件在 `components/manage/`；按鈕用 `.btn`／`.btn-primary`／`.btn-small`，欄位用 `.input` 搭配 `FormField`
 - **無障礙**：可點的東西用 `<button>`／`<a>`，圖示按鈕要有 `aria-label`，圖片要有替代文字；尊重「減少動態」
-- **TypeScript**：strict，不使用 `any`（舊畫面暫時容許，見 `eslint.config.js` 的 legacy 清單），所有 prop 需要型別定義
+- **TypeScript**：strict，不使用 `any`，所有 prop 需要型別定義
 - **元件根層不要放 HTML 註解**：開發模式下會變成 fragment，外部傳入的 class 不會套用（註解寫在 `<script>` 裡）
 
 ---

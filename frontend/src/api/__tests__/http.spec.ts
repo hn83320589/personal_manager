@@ -172,6 +172,15 @@ describe('http client', () => {
     })
   })
 
+  it('explains rate limiting instead of showing the status code', async () => {
+    const { http } = client(() => ({ status: 429, body: '' }))
+
+    await expect(http.post('/auth/login', {})).rejects.toMatchObject({
+      status: 429,
+      message: '操作太頻繁了，請稍候一分鐘再試',
+    })
+  })
+
   it('reports a readable message when the server cannot be reached', async () => {
     const { http } = client(() => 'network-error')
 

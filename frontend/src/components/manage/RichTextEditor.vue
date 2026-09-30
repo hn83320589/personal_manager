@@ -50,7 +50,15 @@ const editor = useEditor({
     Link.configure({ openOnClick: false, autolink: true, HTMLAttributes: { rel: 'noopener' } }),
     Placeholder.configure({ placeholder: props.placeholder }),
   ],
-  editorProps: { attributes: { 'aria-label': props.label, class: 'min-h-24 outline-none' } },
+  editorProps: {
+    // 讓輔助技術把編輯區視為多行文字欄位
+    attributes: {
+      role: 'textbox',
+      'aria-multiline': 'true',
+      'aria-label': props.label,
+      class: 'min-h-24 outline-none',
+    },
+  },
   onUpdate: ({ editor }) => emit('update:modelValue', editor.isEmpty ? '' : editor.getHTML()),
 })
 

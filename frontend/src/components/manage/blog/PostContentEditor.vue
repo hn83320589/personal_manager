@@ -102,7 +102,12 @@ const editor = useEditor({
     }),
   ],
   editorProps: {
-    attributes: { 'aria-label': '文章內容', class: 'min-h-96 outline-none' },
+    attributes: {
+      role: 'textbox',
+      'aria-multiline': 'true',
+      'aria-label': '文章內容',
+      class: 'min-h-96 outline-none',
+    },
     handlePaste: (_view, event) => uploadFrom(event.clipboardData?.files),
     handleDrop: (_view, event) => uploadFrom((event as DragEvent).dataTransfer?.files),
   },

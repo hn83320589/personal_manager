@@ -48,12 +48,7 @@ async function submit() {
     sent.value = true
     form.message = ''
   } catch (e) {
-    error.value =
-      e instanceof ApiError && e.status === 429
-        ? '留言太頻繁了，請稍後再試。'
-        : e instanceof ApiError
-          ? [e.message, ...e.errors].join('：')
-          : '送出失敗，請稍後再試。'
+    error.value = e instanceof ApiError ? [e.message, ...e.errors].join('：') : '送出失敗，請稍後再試。'
   } finally {
     sending.value = false
   }

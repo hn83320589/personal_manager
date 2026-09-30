@@ -141,6 +141,7 @@ function toApiError(error: unknown): ApiError {
   if (error instanceof AxiosError) {
     const response = error.response
     if (!response) return new ApiError(unreachableMessage, 0)
+    if (response.status === 429) return new ApiError('操作太頻繁了，請稍候一分鐘再試', 429)
     const body = response.data as { message?: string; errors?: string[] } | undefined
     return new ApiError(
       body?.message || `請求失敗（${response.status}）`,
