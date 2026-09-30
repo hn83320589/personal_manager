@@ -53,6 +53,16 @@
 - [x] 公開卡片列表（分類、標籤篩選與 facets）、以 slug 取得單件作品；後台整份儲存與排序
 - [x] 移除 `PortfolioAttachment`；migration 保留既有作品的標題並產生不重複的 slug（含資料遷移測試）
 
+### Phase 4 — 前端基礎
+- [ ] 刪除死碼與未使用的套件
+- [ ] TypeScript 恢復 `strict`
+- [ ] ESLint + Prettier、`lint` script，納入 CI
+- [ ] openapi-typescript：由後端 OpenAPI 文件產生型別（`npm run api:types`）
+- [ ] 新 HTTP 層：access token 只放記憶體、refresh token 走 httpOnly cookie、多個 401 共用同一次 refresh、只有 GET 會重試
+- [ ] 依 public／me／admin 分組的 API 模組（使用產生的型別）；auth store 與登入、忘記密碼、重設密碼頁改接新 API
+- [ ] `v-html` 一律經過 DOMPurify
+- 說明：其他舊頁面在 Phase 5 依新設計重寫時，才改用新 API 並刪除對應的舊 service／store，避免為即將淘汰的畫面做轉接
+
 ### 技術債（重構期間發現）
 - [x] 第一位管理員以 `Admin:BootstrapEmails` 建立
 - [x] 【Bug】部落格「特色圖片」從未被儲存 → 後端已新增 `CoverImageUrl`（前端於 Phase 4 串接）

@@ -23,7 +23,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           'vendor-vue': ['vue', 'vue-router', 'pinia', 'pinia-plugin-persistedstate'],
-          'vendor-ui': ['@headlessui/vue', '@heroicons/vue'],
+          'vendor-ui': ['@heroicons/vue'],
           'vendor-http': ['axios'],
         },
       },
@@ -44,7 +44,6 @@ export default defineConfig({
       'pinia',
       'pinia-plugin-persistedstate',
       'axios',
-      '@headlessui/vue',
       '@heroicons/vue/24/outline',
       '@heroicons/vue/24/solid',
     ],
