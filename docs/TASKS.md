@@ -20,7 +20,21 @@
 - [x] 修復前端 8 個失敗的單元測試（改為驗證行為）
 - [x] 新增 GitHub Actions CI（後端 build/test、前端 test/type-check/build）
 - [x] 整理 git 追蹤範圍（`.gitignore` 改為 monorepo 版本）
-- [-] `.sln` 與測試專案搬遷 → 併入後端重構，避免搬兩次
+- [x] `.sln` 與測試專案搬遷（於 Phase 1 完成）
+
+### Phase 1 — 後端基礎
+- [x] 後端改為 `src/`、`tests/` 同層並建立 `PersonalManager.sln`
+- [x] 預設 SQLite、`Database:Provider` 切換、兩組 migration；移除 JSON fallback
+- [x] 整合測試基礎（WebApplicationFactory + 暫存 SQLite）
+- [ ] 索引改由 `HasIndex` 管理，移除 `DatabaseSeeder.CreateIndexesAsync` 的 raw SQL
+- [ ] 啟動時驗證設定（JWT secret）；seeder 只在 Development 執行；CORS 來源改從設定讀取；Swagger 只在 Development 開啟
+- [ ] `Program.cs` 拆成擴充方法；改用 `ILogger`
+- [ ] `ICurrentUser` 與統一錯誤處理（不外洩例外訊息）
+- [ ] feature folder 骨架
+
+### 技術債（重構期間發現）
+- [ ] `BlogPost.Tags`、`WorkTask.Tags` 字串欄位與其註解仍寫著「供 JSON fallback 使用」，JSON 模式已移除 → Phase 2 一併刪除欄位
+- [ ] 本地 `dotnet ef` 工具為 9.0.8，runtime 為 9.0.13（產生 migration 時會出現警告，不影響結果）
 
 ---
 
