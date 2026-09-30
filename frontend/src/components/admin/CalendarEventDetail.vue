@@ -393,25 +393,6 @@ END:VCALENDAR`
   URL.revokeObjectURL(url)
 }
 
-function syncToGoogle() {
-  /**
-   * Google Calendar 同步功能
-   *
-   * 注意：此功能需要實作 Google Calendar API 整合 (Phase 2.3 已規劃)
-   *
-   * 實作步驟：
-   * 1. 引入 googleCalendarService (已存在於 src/services/googleCalendarService.ts)
-   * 2. 使用 googleCalendarService.exportEvent(props.event) 匯出事件
-   * 3. 處理 OAuth 認證流程（如未授權）
-   * 4. 顯示同步進度與結果通知
-   * 5. 處理錯誤情況（網路、授權、衝突等）
-   *
-   * 相關檔案：
-   * - src/services/googleCalendarService.ts
-   * - src/components/admin/GoogleCalendarSync.vue
-   */
-}
-
 function viewRelatedEvent(event: CalendarEvent) {
   /**
    * 查看相關事件功能

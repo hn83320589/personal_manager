@@ -117,14 +117,8 @@
 
 <script setup lang="ts">
 import { ref, computed, reactive, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import {
   MapPinIcon,
-  EnvelopeIcon,
-  PhoneIcon,
-  BriefcaseIcon,
-  CodeBracketIcon,
-  ChatBubbleLeftEllipsisIcon,
   GlobeAltIcon
 } from '@heroicons/vue/24/outline'
 import { useProfileStore } from '@/stores/profile'
@@ -135,11 +129,9 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import BaseTextarea from '@/components/ui/BaseTextarea.vue'
 import BaseForm from '@/components/ui/BaseForm.vue'
-import { themes } from '@/composables/useTheme'
 import type { ThemeName } from '@/composables/useTheme'
 
 // Router
-const router = useRouter()
 
 // Stores
 const profileStore = useProfileStore()
@@ -170,7 +162,6 @@ const themeOptions: { key: ThemeName; label: string; color: string }[] = [
 // Computed
 const isFormValid = computed(() => profileForm.title.trim() !== '')
 
-const hasSocialLinks = computed(() => profileForm.website)
 
 // Methods
 function getInitials(firstName: string, lastName: string): string {

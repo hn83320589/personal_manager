@@ -155,12 +155,12 @@ interface Props {
   selectedTasks: number[]
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   loading: false
 })
 
 // Emits
-const emit = defineEmits<{
+defineEmits<{
   toggleSelect: [id: number]
   toggleComplete: [task: TodoItem]
   editTask: [task: TodoItem]

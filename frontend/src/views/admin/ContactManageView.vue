@@ -130,7 +130,6 @@ import contactMethodService from '@/services/contactMethodService'
 import type { ContactMethod, ContactType } from '@/types/api'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseCard from '@/components/ui/BaseCard.vue'
 import BaseModal from '@/components/ui/BaseModal.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 

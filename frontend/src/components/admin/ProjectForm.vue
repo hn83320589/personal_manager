@@ -272,7 +272,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { PlusIcon, TrashIcon, PhotoIcon } from '@heroicons/vue/24/outline'
 import type { Portfolio } from '@/types/api'
 import BaseInput from '@/components/ui/BaseInput.vue'

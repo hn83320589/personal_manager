@@ -30,7 +30,7 @@ jobs:
           dotnet ef migrations has-pending-model-changes --context MySqlApplicationDbContext
 
   frontend:
-    name: Frontend (type-check + unit test + build)
+    name: Frontend (lint + type-check + unit test + build)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -43,6 +43,8 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+      - name: Lint
+        run: npm run lint
       - name: Unit test
         run: npx vitest run
       - name: Type-check + build

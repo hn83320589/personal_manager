@@ -13,7 +13,7 @@
 
           <div class="space-y-6">
             <div
-              v-for="(work, index) in workExperiences"
+              v-for="work in workExperiences"
               :key="work.id"
               class="relative pl-10"
             >

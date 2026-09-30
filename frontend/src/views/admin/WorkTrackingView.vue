@@ -391,12 +391,10 @@ import {
   PauseIcon,
   StopIcon,
   ListBulletIcon,
-  ChartBarIcon,
   CalendarDaysIcon,
   DocumentChartBarIcon,
 } from "@heroicons/vue/24/outline";
 import { useTaskStore } from "@/stores/task";
-import { useAuthStore } from "@/stores/auth";
 import { projectService } from "@/services/projectService";
 import type { WorkTask, WorkTaskStatus, WorkTaskPriority, Project } from "@/types/api";
 import AdminLayout from "@/components/layout/AdminLayout.vue";
@@ -413,7 +411,6 @@ import ReportsView from "@/components/work/ReportsView.vue";
 
 // Stores
 const taskStore = useTaskStore();
-const authStore = useAuthStore();
 
 // Projects
 const projectList = ref<Project[]>([]);

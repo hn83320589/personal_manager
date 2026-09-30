@@ -252,7 +252,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { PlusIcon, TrashIcon } from '@heroicons/vue/24/outline'
 import type { CalendarEvent } from '@/types/api'
 import BaseInput from '@/components/ui/BaseInput.vue'

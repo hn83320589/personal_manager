@@ -67,7 +67,6 @@ export interface SelectOptionGroup {
   isGroup: true
 }
 
-type Option = SelectOption | SelectOptionGroup
 
 interface Props {
   modelValue: string | number

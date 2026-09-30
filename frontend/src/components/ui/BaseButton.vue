@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type Component } from 'vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
   size?: 'small' | 'medium' | 'large'
   disabled?: boolean
   loading?: boolean
-  icon?: any
+  icon?: Component
 }
 
 const props = withDefaults(defineProps<Props>(), {

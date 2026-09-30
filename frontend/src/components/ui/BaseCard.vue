@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   borderRadius: 'medium'
 })
 
-const emit = defineEmits<{
+defineEmits<{
   click: [event: MouseEvent]
 }>()
 
@@ -150,9 +150,4 @@ const subtitleClasses = computed(() => {
   return ['text-gray-500 mt-1', sizeClasses[props.size]].join(' ')
 })
 
-function handleClick(event: MouseEvent) {
-  if (props.clickable) {
-    emit('click', event)
-  }
-}
 </script>

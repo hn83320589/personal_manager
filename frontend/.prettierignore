@@ -1,0 +1,7 @@
+dist
+coverage
+src/api/schema.ts
+package-lock.json
+playwright-report
+test-results
+public

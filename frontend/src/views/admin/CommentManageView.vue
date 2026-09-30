@@ -737,16 +737,6 @@ function toggleSelectAll() {
   }
 }
 
-function getStatusLabel(status: string): string {
-  const statusMap = {
-    pending: '待審核',
-    approved: '已審核',
-    rejected: '已拒絕',
-    spam: '垃圾留言'
-  }
-  return statusMap[status as keyof typeof statusMap] || status
-}
-
 function getStatusBadgeClass(status: string): string {
   const classMap = {
     pending: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800',

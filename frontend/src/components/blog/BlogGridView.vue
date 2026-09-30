@@ -213,12 +213,12 @@ interface Props {
   selectedPosts: number[]
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   loading: false
 })
 
 // Emits
-const emit = defineEmits<{
+defineEmits<{
   'toggle-select': [id: number]
   'edit-post': [post: BlogPost]
   'delete-post': [id: number]

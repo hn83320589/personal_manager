@@ -386,7 +386,6 @@ import {
   PaperClipIcon
 } from '@heroicons/vue/24/outline'
 import { usePortfolioStore } from '@/stores/portfolio'
-import { useAuthStore } from '@/stores/auth'
 import type { Portfolio, PortfolioAttachment } from '@/types/api'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
@@ -400,7 +399,6 @@ import type { FileUpload } from '@/types/api'
 
 // Stores
 const portfolioStore = usePortfolioStore()
-const authStore = useAuthStore()
 
 // State
 const searchQuery = ref('')

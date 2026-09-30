@@ -315,8 +315,7 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   ClockIcon,
-  TrashIcon,
-  TagIcon
+  TrashIcon
 } from '@heroicons/vue/24/outline'
 import { useTaskStore } from '@/stores/task'
 import type { TodoItem, TodoStatus } from '@/types/api'
@@ -336,7 +335,6 @@ const taskStore = useTaskStore()
 const searchQuery = ref('')
 const selectedStatus = ref('')
 const selectedPriority = ref('')
-const selectedCategory = ref('') // kept for filter compatibility
 const sortBy = ref<'createdAt' | 'dueDate' | 'priority' | 'title' | 'status'>('createdAt')
 const viewMode = ref<'list' | 'grid' | 'kanban'>('list')
 const loading = ref(false)
@@ -373,10 +371,6 @@ const todayTasks = computed(() => {
   return tasks.value.filter(task => 
     task.dueDate && task.dueDate.split('T')[0] === today
   ).length
-})
-
-const categories = computed(() => {
-  return [] as string[]
 })
 
 const filteredAndSortedTasks = computed(() => {

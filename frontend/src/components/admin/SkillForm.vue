@@ -218,7 +218,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { PlusIcon, TrashIcon } from '@heroicons/vue/24/outline'
 import type { Skill, SkillLevel } from '@/types/api'
 import BaseInput from '@/components/ui/BaseInput.vue'
@@ -338,8 +338,7 @@ async function handleSubmit() {
     submitData.competencies = submitData.competencies.filter(c => c.name.trim())
     
     // Convert competencies to string for API
-    const competenciesString = submitData.competencies.map(c => c.name).join(', ')
-    
+        
     // Prepare final data
     const finalData: Record<string, any> = {
       name: submitData.name,

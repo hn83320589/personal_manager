@@ -213,7 +213,7 @@ import {
   ShareIcon,
   AcademicCapIcon
 } from '@heroicons/vue/24/outline'
-import type { WorkTask, WorkTaskStatus } from '@/types/api'
+import type { WorkTask } from '@/types/api'
 import BaseButton from '@/components/ui/BaseButton.vue'
 
 // Time Entry Interface (reused from TimesheetView)

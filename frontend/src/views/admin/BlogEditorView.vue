@@ -322,7 +322,7 @@
                       placeholder="輸入標籤後按 Enter"
                       class="flex-1 min-w-24 text-sm outline-none text-gray-900 placeholder:text-gray-400"
                       @keydown.enter.prevent="addTag"
-                      @keydown.comma.prevent="addTag"
+                      @keydown="addTagOnComma"
                     />
                   </div>
                   <p class="mt-1 text-xs text-gray-400">按 Enter 或逗號新增標籤</p>
@@ -551,6 +551,12 @@ const tagsList = computed(() => {
 })
 
 // Tag management
+function addTagOnComma(event: KeyboardEvent) {
+  if (event.key !== ',') return
+  event.preventDefault()
+  addTag()
+}
+
 function addTag() {
   const tag = tagInput.value.trim().replace(/,/g, '')
   if (tag && !tagsList.value.includes(tag)) {
