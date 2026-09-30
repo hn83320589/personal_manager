@@ -27,7 +27,8 @@
 - [x] 預設 SQLite、`Database:Provider` 切換、兩組 migration；移除 JSON fallback
 - [x] 整合測試基礎（WebApplicationFactory + 暫存 SQLite）
 - [ ] 索引改由 `HasIndex` 管理，移除 `DatabaseSeeder.CreateIndexesAsync` 的 raw SQL
-- [ ] 啟動時驗證設定（JWT secret）；seeder 只在 Development 執行；CORS 來源改從設定讀取；Swagger 只在 Development 開啟
+- [x] 移除寫死的 JWT 金鑰，啟動時驗證 `Jwt:SecretKey`（背景安全審查發現原始碼內有預設金鑰）
+- [ ] seeder 只在 Development 執行；CORS 來源改從設定讀取；Swagger 只在 Development 開啟
 - [ ] `Program.cs` 拆成擴充方法；改用 `ILogger`
 - [ ] `ICurrentUser` 與統一錯誤處理（不外洩例外訊息）
 - [ ] feature folder 骨架
