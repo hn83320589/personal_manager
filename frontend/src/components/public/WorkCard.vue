@@ -1,5 +1,4 @@
 <template>
-  <!-- 技術型：文字與重點數字為主，截圖為選用的縮圖 -->
   <article
     v-if="variant === 'Tech'"
     :class="[
@@ -64,6 +63,7 @@
 </template>
 
 <script setup lang="ts">
+// 技術型：文字與重點數字為主，截圖為選用的縮圖
 import { computed } from 'vue'
 import type { Schemas } from '@/api/types'
 import CoverCarousel from './CoverCarousel.vue'

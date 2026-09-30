@@ -1,5 +1,4 @@
 <template>
-  <!-- 兩段式刪除：第一次點擊要求確認，幾秒內沒有確認就恢復，不需要彈出對話框 -->
   <button
     type="button"
     :class="[
@@ -22,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+// 兩段式刪除：第一次點擊要求確認，幾秒內沒有確認就恢復，不需要彈出對話框
 import { onUnmounted, ref } from 'vue'
 
 withDefaults(defineProps<{ itemName?: string; label?: string; disabled?: boolean }>(), {

@@ -1,5 +1,4 @@
 <template>
-  <!-- 側邊編輯面板：原生 dialog 處理 Esc 關閉與焦點鎖定；手機上佔滿畫面 -->
   <dialog
     ref="dialog"
     class="m-0 ml-auto h-full max-h-none w-full max-w-none border-0 bg-transparent p-0 text-ink backdrop:bg-black/40 sm:w-[30rem]"
@@ -41,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+// 側邊編輯面板：原生 dialog 處理 Esc 關閉與焦點鎖定；手機上佔滿畫面
 import { onMounted, ref, useId, watch } from 'vue'
 
 const props = withDefaults(
