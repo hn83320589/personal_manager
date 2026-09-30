@@ -1,18 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
-// Import views
-import HomeView from '../views/HomeView.vue'
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  // 返回上一頁時回到原本位置；#about、#contact 等錨點捲動到對應區塊（扣掉固定導覽列）
+  scrollBehavior(to, _from, savedPosition) {
+    if (savedPosition) return savedPosition
+    if (to.hash) return { el: to.hash, top: 80, behavior: 'smooth' }
+    return { top: 0 }
+  },
   routes: [
     // 首頁：使用者目錄
     {
       path: '/',
       name: 'home',
-      component: HomeView,
-      meta: { title: '首頁' },
+      component: () => import('../views/public/DirectoryView.vue'),
+      meta: { title: '探索個人頁面' },
     },
 
     // 登入
@@ -37,70 +40,60 @@ const router = createRouter({
       meta: { title: '重設密碼' },
     },
 
-    // /@:username — 個人公開頁面（UserLayout 包覆）
+    // /@:username — 個人公開頁面
     {
       path: '/@:username',
-      component: () => import('../components/layout/UserLayout.vue'),
+      component: () => import('../views/public/PublicLayout.vue'),
       children: [
         {
           path: '',
-          name: 'user-about',
-          component: () => import('../views/user/UserAboutView.vue'),
-          meta: { title: '關於我' },
+          name: 'public-home',
+          component: () => import('../views/public/PublicHomeView.vue'),
         },
         {
-          path: 'experience',
-          name: 'user-experience',
-          component: () => import('../views/user/UserExperienceView.vue'),
-          meta: { title: '學經歷' },
+          path: 'works',
+          name: 'public-works',
+          component: () => import('../views/public/PublicWorksView.vue'),
         },
         {
-          path: 'skills',
-          name: 'user-skills',
-          component: () => import('../views/user/UserSkillView.vue'),
-          meta: { title: '技能專長' },
-        },
-        {
-          path: 'portfolio',
-          name: 'user-portfolio',
-          component: () => import('../views/user/UserPortfolioView.vue'),
-          meta: { title: '作品集' },
-        },
-        {
-          path: 'portfolio/:id',
-          name: 'user-project-detail',
-          component: () => import('../views/user/UserProjectDetailView.vue'),
-          meta: { title: '作品詳情' },
+          path: 'works/:slug',
+          name: 'public-work',
+          component: () => import('../views/public/PublicWorkView.vue'),
         },
         {
           path: 'blog',
-          name: 'user-blog',
-          component: () => import('../views/user/UserBlogListView.vue'),
-          meta: { title: '部落格' },
+          name: 'public-blog',
+          component: () => import('../views/public/PublicBlogView.vue'),
         },
         {
           path: 'blog/:slug',
-          name: 'user-blog-detail',
-          component: () => import('../views/user/UserBlogDetailView.vue'),
-          meta: { title: '文章內容' },
-        },
-        {
-          path: 'calendar',
-          name: 'user-calendar',
-          component: () => import('../views/user/UserCalendarView.vue'),
-          meta: { title: '公開行事曆' },
+          name: 'public-post',
+          component: () => import('../views/public/PublicPostView.vue'),
         },
         {
           path: 'guestbook',
-          name: 'user-guestbook',
-          component: () => import('../views/user/UserGuestbookView.vue'),
-          meta: { title: '留言板' },
+          name: 'public-guestbook',
+          component: () => import('../views/public/PublicGuestbookView.vue'),
         },
         {
+          path: 'calendar',
+          name: 'public-calendar',
+          component: () => import('../views/public/PublicCalendarView.vue'),
+        },
+        // 舊網址：經歷、技能、聯絡已併入首頁；作品集改為 works（舊的以 id 為網址，無法對應到 slug）
+        { path: 'portfolio/:id?', redirect: (to) => ({ name: 'public-works', params: to.params }) },
+        {
+          path: 'experience',
+          redirect: (to) => ({ name: 'public-home', params: to.params, hash: '#about' }),
+        },
+        {
+          path: 'skills',
+          redirect: (to) => ({ name: 'public-home', params: to.params, hash: '#about' }),
+        },
+        { path: 'about', redirect: (to) => ({ name: 'public-home', params: to.params }) },
+        {
           path: 'contact',
-          name: 'user-contact',
-          component: () => import('../views/user/UserContactView.vue'),
-          meta: { title: '聯絡我' },
+          redirect: (to) => ({ name: 'public-home', params: to.params, hash: '#contact' }),
         },
       ],
     },

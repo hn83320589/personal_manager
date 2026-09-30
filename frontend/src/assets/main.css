@@ -45,6 +45,14 @@
     @apply px-3 py-1.5 text-[0.85rem];
   }
 
+  /* 表單欄位（設計 token，深淺色皆適用） */
+  .input {
+    @apply w-full rounded-lg border border-rule bg-surface px-3 py-2 text-ink placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20;
+  }
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium;
+  }
+
   /* 讓整張卡片可點：連結的 ::after 蓋住最近的 relative 父元素 */
   .stretched-link {
     @apply no-underline after:absolute after:inset-0 after:content-[''];
