@@ -103,6 +103,13 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(w => w.ProjectId)
             .OnDelete(DeleteBehavior.SetNull);
 
+        // TimeEntry → WorkTask FK（任務刪除後保留時間紀錄）
+        modelBuilder.Entity<TimeEntry>()
+            .HasOne<WorkTask>()
+            .WithMany()
+            .HasForeignKey(t => t.WorkTaskId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         // BlogPost ↔ Tag many-to-many
         modelBuilder.Entity<BlogPost>()
             .HasMany(b => b.Tags)
@@ -178,7 +185,7 @@ public class ApplicationDbContext : DbContext
         b.Entity<ContactMethod>().HasIndex(e => e.Type);
         b.Entity<ContactMethod>().HasIndex(e => new { e.IsPublic, e.SortOrder });
 
-        b.Entity<TimeEntry>().HasIndex(e => e.UserId);
+        b.Entity<TimeEntry>().HasIndex(e => new { e.UserId, e.Date });
         b.Entity<Project>().HasIndex(e => e.UserId);
         b.Entity<FileUpload>().HasIndex(e => e.UserId);
 

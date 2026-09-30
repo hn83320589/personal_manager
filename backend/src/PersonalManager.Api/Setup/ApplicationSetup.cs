@@ -22,16 +22,16 @@ public static class ApplicationSetup
         services.AddScoped<Features.Skills.SkillService>();
         services.AddScoped<IPortfolioService, PortfolioService>();
         services.AddScoped<Features.Calendar.CalendarService>();
-        services.AddScoped<ITodoItemService, TodoItemService>();
-        services.AddScoped<IProjectService, ProjectService>();
-        services.AddScoped<IWorkTaskService, WorkTaskService>();
+        services.AddScoped<Features.Todos.TodoService>();
+        services.AddScoped<Features.WorkTracking.ProjectService>();
+        services.AddScoped<Features.WorkTracking.WorkTaskService>();
         services.AddScoped<Features.Blog.BlogService>();
         services.AddScoped<Features.Blog.TagService>();
         services.AddScoped<Features.Guestbook.GuestbookService>();
         services.AddScoped<Features.Contacts.ContactMethodService>();
         services.AddScoped<IFileUploadService, FileUploadService>();
         services.AddScoped<IPortfolioAttachmentService, PortfolioAttachmentService>();
-        services.AddScoped<ITimeEntryService, TimeEntryService>();
+        services.AddScoped<Features.WorkTracking.TimeEntryService>();
         return services;
     }
 }

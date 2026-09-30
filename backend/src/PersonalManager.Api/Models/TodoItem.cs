@@ -19,7 +19,7 @@ public enum TodoStatus
     Completed
 }
 
-public class TodoItem
+public class TodoItem : IOwnedByUser
 {
     public int Id { get; set; }
     public int UserId { get; set; }

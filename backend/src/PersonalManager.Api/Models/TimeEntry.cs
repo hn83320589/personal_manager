@@ -2,28 +2,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PersonalManager.Api.Models;
 
-public class TimeEntry
+/// <summary>
+/// 一筆工作時間紀錄。連到任務時，任務與專案名稱由關聯取得，不另外複製一份；
+/// 沒有連到任務的紀錄以 <see cref="Title"/> 描述做了什麼。
+/// </summary>
+public class TimeEntry : IOwnedByUser
 {
     public int Id { get; set; }
     public int UserId { get; set; }
     public int? WorkTaskId { get; set; }
 
-    [Required, StringLength(200)]
-    public string Task { get; set; } = string.Empty;
+    [StringLength(200)]
+    public string Title { get; set; } = string.Empty;
 
-    [StringLength(100)]
-    public string Project { get; set; } = string.Empty;
+    public DateOnly Date { get; set; }
+    public TimeOnly? StartTime { get; set; }
+    public TimeOnly? EndTime { get; set; }
 
-    [Required, StringLength(20)]
-    public string Date { get; set; } = string.Empty;  // ISO date "2026-03-16"
-
-    [StringLength(10)]
-    public string? StartTime { get; set; }
-
-    [StringLength(10)]
-    public string? EndTime { get; set; }
-
-    public int Duration { get; set; }  // minutes
+    /// <summary>有起訖時間時由兩者計算，否則由使用者直接填寫。</summary>
+    public int DurationMinutes { get; set; }
 
     public string Description { get; set; } = string.Empty;
 

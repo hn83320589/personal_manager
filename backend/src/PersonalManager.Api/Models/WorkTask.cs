@@ -24,7 +24,7 @@ public enum WorkTaskPriority
     Urgent
 }
 
-public class WorkTask
+public class WorkTask : IOwnedByUser
 {
     public int Id { get; set; }
     public int UserId { get; set; }
@@ -40,12 +40,10 @@ public class WorkTask
     public WorkTaskStatus Status { get; set; } = WorkTaskStatus.Pending;
 
     public double EstimatedHours { get; set; }
-    public double ActualHours { get; set; }
 
     public DateTime? DueDate { get; set; }
     public DateTime? CompletedAt { get; set; }
 
-    public string Tags { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

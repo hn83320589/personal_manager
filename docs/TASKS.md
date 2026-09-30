@@ -41,7 +41,7 @@
 - [x] 部落格（封面圖、HtmlSanitizer 清洗、嵌入白名單、每位使用者範圍內唯一的 slug、排程、閱讀時間、DB 端分頁與篩選、原子遞增瀏覽數；標籤改用 Tag 資料表並提供 `/api/me/tags`）
 - [x] 留言板（公開不含 Email、只回傳已審核、回覆時間、移除 TargetUserId 預設值 1；流量限制改為可設定）
 - [x] 行事曆（重複規則由後端展開、查詢區間最長一年、顏色格式驗證；所有時間一律以 UTC 存取）
-- [ ] 待辦、工作追蹤（Project、WorkTask、TimeEntry）
+- [x] 待辦、工作追蹤（實際時數改由時間紀錄加總、時間紀錄改用 DateOnly／TimeOnly 並自動計算時長、移除重複的任務與專案名稱、統計 API）
 - [ ] 檔案上傳（magic bytes、50 MB 上限）
 - [ ] Auth（httpOnly cookie refresh token、token 雜湊、重設密碼後撤銷）
 - [ ] Admin：使用者管理、建立第一位管理員的方式
@@ -50,7 +50,7 @@
 ### 技術債（重構期間發現）
 - [ ] 非 Development 環境不再自動建立 admin 帳號 → Phase 2 Admin 功能需提供建立第一個管理員的方式（例如以設定指定的 Email 註冊時授予 Admin）
 - [x] 【Bug】部落格「特色圖片」從未被儲存 → 後端已新增 `CoverImageUrl`（前端於 Phase 4 串接）
-- [ ] `WorkTask.Tags` 字串欄位仍在（`BlogPost.Tags` 已刪除）→ 工作追蹤重建時處理
+- [x] 移除 `WorkTask.Tags` 字串欄位
 - [x] `dotnet-ef` 以 local tool 鎖定 9.0.13；CI 檢查兩組 migration 是否都已產生
 
 ---

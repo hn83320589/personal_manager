@@ -206,13 +206,13 @@ backend/
 | PublicSkillsController／MySkillsController | `/api/public/users/{username}/skills`、`/api/me/skills` | 技能（已重建） |
 | PortfoliosController | `/api/portfolios` | 作品集 |
 | PublicCalendarController／MyCalendarController | `/api/public/users/{username}/calendar?from&to`、`/api/me/calendar`（展開後的發生時間）、`/api/me/calendar/events` | 行事曆（已重建） |
-| TodoItemsController | `/api/todoitems` | 待辦事項 |
-| WorkTasksController | `/api/worktasks` | 工作追蹤 |
+| MyTodosController | `/api/me/todos` | 待辦事項（已重建） |
+| MyWorkTasksController | `/api/me/work-tasks` | 工作任務（已重建，實際時數由時間紀錄加總） |
 | PublicPostsController／MyPostsController／MyTagsController | `/api/public/users/{username}/posts`（含 `facets`、`{slug}/views`）、`/api/me/posts`、`/api/me/tags` | 部落格文章與標籤（已重建） |
 | PublicGuestbookController／MyGuestbookController | `/api/public/users/{username}/guestbook`（GET、POST 限流）、`/api/me/guestbook`（含 `approval`、`reply`） | 留言板（已重建） |
 | PublicContactMethodsController／MyContactMethodsController | `/api/public/users/{username}/contact-methods`、`/api/me/contact-methods` | 聯絡方式（已重建） |
-| ProjectsController | `/api/projects` | 工作追蹤專案 |
-| TimeEntriesController | `/api/timeentries` | 時間記錄 |
+| MyProjectsController | `/api/me/projects` | 工作追蹤專案（已重建） |
+| MyTimeEntriesController | `/api/me/time-entries`（含 `summary`） | 時間紀錄（已重建） |
 | FileUploadsController | `/api/fileuploads` | 檔案上傳 |
 | PortfolioAttachmentsController | `/api/portfolioattachments` | 作品集附件 |
 
@@ -290,7 +290,7 @@ Jwt__SecretKey = <隨機密鑰>
 | 路由 | 公開頁面 `api/public/users/{username}/<資源>`（`[AllowAnonymous]`）；後台 `api/me/<資源>`（`[Authorize]`）；管理員 `api/admin/<資源>` |
 | 資料範圍 | 後台查詢一律 `.OwnedBy(currentUser.RequireUserId())`；公開查詢先 `db.RequirePublicUserIdAsync(username)` 再篩選公開資料 |
 | 存取別人的資料 | 查不到 → `NotFoundException`（404），不回 403 |
-| Service | 直接使用 `ApplicationDbContext` 與 `ICurrentUser`；讀取加 `AsNoTracking()`，以 `Select` 投影成 DTO |
+| Service | 直接使用 `ApplicationDbContext` 與 `ICurrentUser`；讀取加 `AsNoTracking()`，以 `Select` 投影成 DTO。排序、分頁必須在投影成 record DTO **之前**（EF 無法翻譯對建構子投影結果的排序）；需要關聯欄位時先投影成私有的 row class 再排序 |
 | DTO | `record`：`SaveXxxRequest`（新增與更新共用，含 DataAnnotations）、`XxxDto`（後台）、`PublicXxxDto`（公開，不含管理欄位） |
 | 錯誤 | 丟 `AppException` 子類別；驗證失敗由 `[ApiController]` 自動回 400 + `ApiResponse` |
 | 排序 | 實體實作 `ISortable`；新增時 `NextPositionAsync()`，`PUT api/me/<資源>/order` 以 `ApplyOrder()` 套用 |

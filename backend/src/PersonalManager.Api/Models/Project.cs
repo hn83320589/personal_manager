@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PersonalManager.Api.Models;
 
-public class Project
+public class Project : IOwnedByUser, ISortable
 {
     public int Id { get; set; }
     public int UserId { get; set; }

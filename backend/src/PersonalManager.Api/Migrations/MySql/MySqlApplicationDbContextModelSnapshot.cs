@@ -766,32 +766,23 @@ namespace PersonalManager.Api.Migrations.MySql
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Date")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Duration")
+                    b.Property<int>("DurationMinutes")
                         .HasColumnType("int");
 
-                    b.Property<string>("EndTime")
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
+                    b.Property<TimeOnly?>("EndTime")
+                        .HasColumnType("time(6)");
 
-                    b.Property<string>("Project")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                    b.Property<TimeOnly?>("StartTime")
+                        .HasColumnType("time(6)");
 
-                    b.Property<string>("StartTime")
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<string>("Task")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
@@ -807,7 +798,9 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("WorkTaskId");
+
+                    b.HasIndex("UserId", "Date");
 
                     b.ToTable("TimeEntries");
                 });
@@ -988,9 +981,6 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("ActualHours")
-                        .HasColumnType("double");
-
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("datetime(6)");
 
@@ -1019,10 +1009,6 @@ namespace PersonalManager.Api.Migrations.MySql
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
-
-                    b.Property<string>("Tags")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -1063,6 +1049,14 @@ namespace PersonalManager.Api.Migrations.MySql
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PersonalManager.Api.Models.TimeEntry", b =>
+                {
+                    b.HasOne("PersonalManager.Api.Models.WorkTask", null)
+                        .WithMany()
+                        .HasForeignKey("WorkTaskId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("PersonalManager.Api.Models.WorkTask", b =>

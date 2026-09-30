@@ -197,8 +197,6 @@ public static class DatabaseSeeder
                 DueDate = new DateTime(2025, 8, 13, 18, 0, 0),
                 CompletedAt = null,
                 EstimatedHours = 8.0,
-                ActualHours = 0.0,
-                Tags = "資料庫,設計,架構",
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             },
@@ -212,8 +210,6 @@ public static class DatabaseSeeder
                 DueDate = new DateTime(2025, 8, 16, 18, 0, 0),
                 CompletedAt = null,
                 EstimatedHours = 16.0,
-                ActualHours = 0.0,
-                Tags = "認證,JWT,安全性",
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             }
