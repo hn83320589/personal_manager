@@ -39,6 +39,7 @@ dotnet test PersonalManager.sln                # 執行測試
   dotnet ef migrations add <Name> --context MySqlApplicationDbContext --output-dir Migrations/MySql
   ```
 - **產生 migration 後要檢查內容**：一個欄位刪除、另一個同型別欄位新增時，EF 可能判斷成「改名」而沿用舊資料（例如 `IsPublic` → `ReadingMinutes`），需手動改成刪除後新增。
+  新增「以字串儲存的 enum」且不可為 null 的欄位時，EF 產生的預設值是空字串，既有資料讀取時會無法轉換，需改成合法的 enum 值（例如 `"None"`）。
 - **重設本地資料庫**：刪除 `App_Data/` 後重新啟動即可。
 
 ---
@@ -204,7 +205,7 @@ backend/
 | PublicResumeController／MyWorkExperiencesController | `/api/public/users/{username}/work-experiences`、`/api/me/work-experiences` | 工作經歷（已重建） |
 | PublicSkillsController／MySkillsController | `/api/public/users/{username}/skills`、`/api/me/skills` | 技能（已重建） |
 | PortfoliosController | `/api/portfolios` | 作品集 |
-| CalendarEventsController | `/api/calendarevents` | 行事曆 |
+| PublicCalendarController／MyCalendarController | `/api/public/users/{username}/calendar?from&to`、`/api/me/calendar`（展開後的發生時間）、`/api/me/calendar/events` | 行事曆（已重建） |
 | TodoItemsController | `/api/todoitems` | 待辦事項 |
 | WorkTasksController | `/api/worktasks` | 工作追蹤 |
 | PublicPostsController／MyPostsController／MyTagsController | `/api/public/users/{username}/posts`（含 `facets`、`{slug}/views`）、`/api/me/posts`、`/api/me/tags` | 部落格文章與標籤（已重建） |

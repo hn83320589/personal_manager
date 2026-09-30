@@ -59,40 +59,6 @@ public class PortfolioService : CrudService<Portfolio, CreatePortfolioDto, Updat
     }
 }
 
-// ===== CalendarEvent Service =====
-public interface ICalendarEventService : ICrudService<CalendarEvent, CreateCalendarEventDto, UpdateCalendarEventDto, CalendarEventResponse>
-{
-    Task<List<CalendarEventResponse>> GetByUserIdAsync(int userId);
-    Task<List<CalendarEventResponse>> GetPublicByUserIdAsync(int userId);
-    Task<List<CalendarEventResponse>> GetByDateRangeAsync(int userId, DateTime start, DateTime end);
-}
-
-public class CalendarEventService : CrudService<CalendarEvent, CreateCalendarEventDto, UpdateCalendarEventDto, CalendarEventResponse>, ICalendarEventService
-{
-    public CalendarEventService(IRepository<CalendarEvent> repo) : base(repo) { }
-    protected override CalendarEvent MapToEntity(CreateCalendarEventDto dto) => dto.ToEntity();
-    protected override CalendarEventResponse MapToResponse(CalendarEvent entity) => entity.ToResponse();
-    protected override void ApplyUpdate(CalendarEvent entity, UpdateCalendarEventDto dto) => entity.ApplyUpdate(dto);
-
-    public async Task<List<CalendarEventResponse>> GetByUserIdAsync(int userId)
-    {
-        var items = await Repository.FindAsync(c => c.UserId == userId);
-        return items.OrderBy(c => c.StartTime).Select(MapToResponse).ToList();
-    }
-
-    public async Task<List<CalendarEventResponse>> GetPublicByUserIdAsync(int userId)
-    {
-        var items = await Repository.FindAsync(c => c.UserId == userId && c.IsPublic);
-        return items.OrderBy(c => c.StartTime).Select(MapToResponse).ToList();
-    }
-
-    public async Task<List<CalendarEventResponse>> GetByDateRangeAsync(int userId, DateTime start, DateTime end)
-    {
-        var items = await Repository.FindAsync(c => c.UserId == userId && c.StartTime >= start && c.EndTime <= end);
-        return items.OrderBy(c => c.StartTime).Select(MapToResponse).ToList();
-    }
-}
-
 // ===== TodoItem Service =====
 public interface ITodoItemService : ICrudService<TodoItem, CreateTodoItemDto, UpdateTodoItemDto, TodoItemResponse>
 {

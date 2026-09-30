@@ -71,45 +71,6 @@ public class PortfolioResponse
     public DateTime CreatedAt { get; set; }
 }
 
-// ===== CalendarEvent =====
-public class CreateCalendarEventDto
-{
-    public int UserId { get; set; }
-    [Required] public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
-    public bool IsAllDay { get; set; }
-    public bool IsPublic { get; set; }
-    public string Color { get; set; } = string.Empty;
-    public string RecurrenceRule { get; set; } = string.Empty;
-}
-public class UpdateCalendarEventDto
-{
-    public string? Title { get; set; }
-    public string? Description { get; set; }
-    public DateTime? StartTime { get; set; }
-    public DateTime? EndTime { get; set; }
-    public bool? IsAllDay { get; set; }
-    public bool? IsPublic { get; set; }
-    public string? Color { get; set; }
-    public string? RecurrenceRule { get; set; }
-}
-public class CalendarEventResponse
-{
-    public int Id { get; set; }
-    public int UserId { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
-    public bool IsAllDay { get; set; }
-    public bool IsPublic { get; set; }
-    public string Color { get; set; } = string.Empty;
-    public string RecurrenceRule { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-}
-
 // ===== Project =====
 public class CreateProjectDto
 {

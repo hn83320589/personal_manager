@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonalManager.Api.Models;
 
 namespace PersonalManager.Api.Data;
@@ -33,6 +34,16 @@ public class ApplicationDbContext : DbContext
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
+
+    /// <summary>
+    /// 所有時間一律以 UTC 存取。SQLite 讀回的 DateTime 沒有時區資訊，
+    /// 不指定的話 API 輸出的時間會少了「Z」，前端會誤當成當地時間。
+    /// </summary>
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Properties<DateTime>().HaveConversion<UtcDateTimeConverter>();
+        configurationBuilder.Properties<DateTime?>().HaveConversion<NullableUtcDateTimeConverter>();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -69,6 +80,11 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<ContactMethod>()
             .Property(e => e.Type)
+            .HasConversion<string>()
+            .HasMaxLength(20);
+
+        modelBuilder.Entity<CalendarEvent>()
+            .Property(e => e.Recurrence)
             .HasConversion<string>()
             .HasMaxLength(20);
 
@@ -174,3 +190,11 @@ public class ApplicationDbContext : DbContext
         b.Entity<Tag>().HasIndex(e => new { e.UserId, e.Name }).IsUnique();
     }
 }
+
+internal sealed class UtcDateTimeConverter() : ValueConverter<DateTime, DateTime>(
+    v => v.Kind == DateTimeKind.Local ? v.ToUniversalTime() : DateTime.SpecifyKind(v, DateTimeKind.Utc),
+    v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
+internal sealed class NullableUtcDateTimeConverter() : ValueConverter<DateTime?, DateTime?>(
+    v => v == null ? null : v.Value.Kind == DateTimeKind.Local ? v.Value.ToUniversalTime() : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc),
+    v => v == null ? null : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc));

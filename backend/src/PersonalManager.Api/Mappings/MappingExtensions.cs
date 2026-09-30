@@ -51,32 +51,6 @@ public static class MappingExtensions
         if (d.SortOrder.HasValue) p.SortOrder = d.SortOrder.Value;
     }
 
-    // ===== CalendarEvent =====
-    public static CalendarEventResponse ToResponse(this CalendarEvent c) => new()
-    {
-        Id = c.Id, UserId = c.UserId, Title = c.Title, Description = c.Description,
-        StartTime = c.StartTime, EndTime = c.EndTime, IsAllDay = c.IsAllDay,
-        IsPublic = c.IsPublic, Color = c.Color, RecurrenceRule = c.RecurrenceRule,
-        CreatedAt = c.CreatedAt
-    };
-    public static CalendarEvent ToEntity(this CreateCalendarEventDto d) => new()
-    {
-        UserId = d.UserId, Title = d.Title, Description = d.Description,
-        StartTime = d.StartTime, EndTime = d.EndTime, IsAllDay = d.IsAllDay,
-        IsPublic = d.IsPublic, Color = d.Color, RecurrenceRule = d.RecurrenceRule
-    };
-    public static void ApplyUpdate(this CalendarEvent c, UpdateCalendarEventDto d)
-    {
-        if (d.Title != null) c.Title = d.Title;
-        if (d.Description != null) c.Description = d.Description;
-        if (d.StartTime.HasValue) c.StartTime = d.StartTime.Value;
-        if (d.EndTime.HasValue) c.EndTime = d.EndTime.Value;
-        if (d.IsAllDay.HasValue) c.IsAllDay = d.IsAllDay.Value;
-        if (d.IsPublic.HasValue) c.IsPublic = d.IsPublic.Value;
-        if (d.Color != null) c.Color = d.Color;
-        if (d.RecurrenceRule != null) c.RecurrenceRule = d.RecurrenceRule;
-    }
-
     // ===== TodoItem =====
     public static TodoItemResponse ToResponse(this TodoItem t) => new()
     {

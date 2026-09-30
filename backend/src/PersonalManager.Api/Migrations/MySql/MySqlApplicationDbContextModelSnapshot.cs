@@ -140,9 +140,13 @@ namespace PersonalManager.Api.Migrations.MySql
                     b.Property<bool>("IsPublic")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("RecurrenceRule")
+                    b.Property<string>("Recurrence")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<DateOnly?>("RecurrenceUntil")
+                        .HasColumnType("date");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime(6)");

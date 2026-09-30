@@ -40,7 +40,7 @@
 - [x] 聯絡方式（新增 Behance、Dribbble、YouTube、Threads、LINE、個人網站；拒絕 javascript:／data: 等非 http(s) 連結）
 - [x] 部落格（封面圖、HtmlSanitizer 清洗、嵌入白名單、每位使用者範圍內唯一的 slug、排程、閱讀時間、DB 端分頁與篩選、原子遞增瀏覽數；標籤改用 Tag 資料表並提供 `/api/me/tags`）
 - [x] 留言板（公開不含 Email、只回傳已審核、回覆時間、移除 TargetUserId 預設值 1；流量限制改為可設定）
-- [ ] 行事曆
+- [x] 行事曆（重複規則由後端展開、查詢區間最長一年、顏色格式驗證；所有時間一律以 UTC 存取）
 - [ ] 待辦、工作追蹤（Project、WorkTask、TimeEntry）
 - [ ] 檔案上傳（magic bytes、50 MB 上限）
 - [ ] Auth（httpOnly cookie refresh token、token 雜湊、重設密碼後撤銷）
