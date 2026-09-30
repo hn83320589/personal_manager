@@ -184,7 +184,6 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
-    await DatabaseSeeder.CreateIndexesAsync(db);
     await DatabaseSeeder.SeedAsync(db);
     app.Logger.LogInformation("資料庫 provider: {Provider}", db.Database.ProviderName);
 }

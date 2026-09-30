@@ -97,5 +97,73 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<BlogPost>()
             .HasIndex(b => b.Slug)
             .IsUnique();
+
+        ConfigureLookupIndexes(modelBuilder);
+    }
+
+    /// <summary>
+    /// 查詢用索引。全部由 model 定義，才會出現在兩種 provider 的 migration 中
+    /// （原本以 raw SQL 在啟動時建立，migration 看不到）。
+    /// </summary>
+    private static void ConfigureLookupIndexes(ModelBuilder b)
+    {
+        b.Entity<User>().HasIndex(e => e.IsActive);
+
+        b.Entity<PersonalProfile>().HasIndex(e => e.UserId);
+
+        b.Entity<Education>().HasIndex(e => e.UserId);
+        b.Entity<Education>().HasIndex(e => new { e.IsPublic, e.SortOrder });
+
+        b.Entity<WorkExperience>().HasIndex(e => e.UserId);
+        b.Entity<WorkExperience>().HasIndex(e => new { e.IsPublic, e.SortOrder });
+        b.Entity<WorkExperience>().HasIndex(e => e.IsCurrent);
+        b.Entity<WorkExperience>().HasIndex(e => new { e.StartDate, e.EndDate });
+
+        b.Entity<Skill>().HasIndex(e => e.UserId);
+        b.Entity<Skill>().HasIndex(e => e.Category);
+        b.Entity<Skill>().HasIndex(e => new { e.IsPublic, e.SortOrder });
+
+        b.Entity<Portfolio>().HasIndex(e => e.UserId);
+        b.Entity<Portfolio>().HasIndex(e => new { e.IsPublic, e.IsFeatured });
+        b.Entity<Portfolio>().HasIndex(e => e.SortOrder);
+
+        b.Entity<CalendarEvent>().HasIndex(e => e.UserId);
+        b.Entity<CalendarEvent>().HasIndex(e => new { e.StartTime, e.EndTime });
+        b.Entity<CalendarEvent>().HasIndex(e => e.IsPublic);
+
+        b.Entity<WorkTask>().HasIndex(e => e.UserId);
+        b.Entity<WorkTask>().HasIndex(e => e.Status);
+        b.Entity<WorkTask>().HasIndex(e => e.Priority);
+        b.Entity<WorkTask>().HasIndex(e => e.DueDate);
+
+        b.Entity<TodoItem>().HasIndex(e => e.UserId);
+        b.Entity<TodoItem>().HasIndex(e => e.Status);
+        b.Entity<TodoItem>().HasIndex(e => e.Priority);
+        b.Entity<TodoItem>().HasIndex(e => e.DueDate);
+
+        b.Entity<BlogPost>().HasIndex(e => e.UserId);
+        b.Entity<BlogPost>().HasIndex(e => e.Status);
+        b.Entity<BlogPost>().HasIndex(e => e.PublishedAt);
+        b.Entity<BlogPost>().HasIndex(e => e.Category);
+        b.Entity<BlogPost>().HasIndex(e => e.ViewCount);
+
+        b.Entity<GuestBookEntry>().HasIndex(e => new { e.TargetUserId, e.IsApproved });
+        b.Entity<GuestBookEntry>().HasIndex(e => e.CreatedAt);
+        b.Entity<GuestBookEntry>().HasIndex(e => e.Email);
+
+        b.Entity<ContactMethod>().HasIndex(e => e.UserId);
+        b.Entity<ContactMethod>().HasIndex(e => e.Type);
+        b.Entity<ContactMethod>().HasIndex(e => new { e.IsPublic, e.SortOrder });
+
+        b.Entity<TimeEntry>().HasIndex(e => e.UserId);
+        b.Entity<Project>().HasIndex(e => e.UserId);
+        b.Entity<FileUpload>().HasIndex(e => e.UserId);
+
+        // token 驗證時以 token 值查詢；值本身需唯一
+        b.Entity<RefreshToken>().HasIndex(e => e.Token).IsUnique();
+        b.Entity<PasswordResetToken>().Property(e => e.Token).HasMaxLength(256);
+        b.Entity<PasswordResetToken>().HasIndex(e => e.Token).IsUnique();
+
+        b.Entity<Tag>().HasIndex(e => new { e.UserId, e.Name }).IsUnique();
     }
 }

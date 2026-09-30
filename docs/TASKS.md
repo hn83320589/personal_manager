@@ -10,7 +10,7 @@
 - D1 移除 JSON fallback，本地與暫時的執行環境一律使用 SQLite，保留 Pomelo（MySQL/MariaDB）套件以便日後切換
 - D2 合併為 monorepo（`backend/`、`frontend/`、`docs/`）
 - D3 refresh token 改用 httpOnly cookie，access token 只放記憶體
-- D4 引入 DOMPurify、HtmlSanitizer、ESLint + Prettier、openapi-typescript、GitHub Actions
+- D4 引入 DOMPurify、HtmlSanitizer、ESLint + Prettier、openapi-typescript、GitHub Actions；部落格編輯器另加 `@tiptap/extension-code-block-lowlight` + `lowlight`、`@tiptap/extension-character-count`、`@tiptap/suggestion`（2026-09-30 核准）
 - D5 後端改為 feature folder
 - 目前沒有雲端環境（Zeabur 已停用），不使用 Docker
 
@@ -26,7 +26,7 @@
 - [x] 後端改為 `src/`、`tests/` 同層並建立 `PersonalManager.sln`
 - [x] 預設 SQLite、`Database:Provider` 切換、兩組 migration；移除 JSON fallback
 - [x] 整合測試基礎（WebApplicationFactory + 暫存 SQLite）
-- [ ] 索引改由 `HasIndex` 管理，移除 `DatabaseSeeder.CreateIndexesAsync` 的 raw SQL
+- [x] 索引改由 `HasIndex` 管理，移除 `DatabaseSeeder.CreateIndexesAsync` 的 raw SQL；補上 token、Tag、留言板 TargetUserId 等缺少的索引
 - [x] 移除寫死的 JWT 金鑰，啟動時驗證 `Jwt:SecretKey`（背景安全審查發現原始碼內有預設金鑰）
 - [ ] seeder 只在 Development 執行；CORS 來源改從設定讀取；Swagger 只在 Development 開啟
 - [ ] `Program.cs` 拆成擴充方法；改用 `ILogger`

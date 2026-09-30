@@ -98,8 +98,18 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Category");
+
+                    b.HasIndex("PublishedAt");
+
                     b.HasIndex("Slug")
                         .IsUnique();
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ViewCount");
 
                     b.ToTable("BlogPosts");
                 });
@@ -153,6 +163,12 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IsPublic");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("StartTime", "EndTime");
+
                     b.ToTable("CalendarEvents");
                 });
 
@@ -200,6 +216,12 @@ namespace PersonalManager.Api.Migrations.MySql
                         .HasColumnType("varchar(500)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Type");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("IsPublic", "SortOrder");
 
                     b.ToTable("ContactMethods");
                 });
@@ -254,6 +276,10 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("IsPublic", "SortOrder");
+
                     b.ToTable("Educations");
                 });
 
@@ -295,6 +321,8 @@ namespace PersonalManager.Api.Migrations.MySql
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("FileUploads");
                 });
@@ -339,6 +367,12 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Email");
+
+                    b.HasIndex("TargetUserId", "IsApproved");
+
                     b.ToTable("GuestBookEntries");
                 });
 
@@ -361,12 +395,16 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
 
                     b.ToTable("PasswordResetTokens");
                 });
@@ -423,6 +461,8 @@ namespace PersonalManager.Api.Migrations.MySql
                         .HasColumnType("varchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("PersonalProfiles");
                 });
@@ -482,6 +522,12 @@ namespace PersonalManager.Api.Migrations.MySql
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SortOrder");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("IsPublic", "IsFeatured");
 
                     b.ToTable("Portfolios");
                 });
@@ -562,6 +608,8 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Projects");
                 });
 
@@ -591,6 +639,9 @@ namespace PersonalManager.Api.Migrations.MySql
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
 
                     b.ToTable("RefreshTokens");
                 });
@@ -638,6 +689,12 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Category");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("IsPublic", "SortOrder");
+
                     b.ToTable("Skills");
                 });
 
@@ -661,6 +718,9 @@ namespace PersonalManager.Api.Migrations.MySql
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Name")
+                        .IsUnique();
 
                     b.ToTable("Tags");
                 });
@@ -717,6 +777,8 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("TimeEntries");
                 });
 
@@ -763,6 +825,14 @@ namespace PersonalManager.Api.Migrations.MySql
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DueDate");
+
+                    b.HasIndex("Priority");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TodoItems");
                 });
@@ -812,6 +882,8 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasIndex("Email")
                         .IsUnique();
+
+                    b.HasIndex("IsActive");
 
                     b.HasIndex("Username")
                         .IsUnique();
@@ -866,6 +938,14 @@ namespace PersonalManager.Api.Migrations.MySql
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IsCurrent");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("IsPublic", "SortOrder");
+
+                    b.HasIndex("StartDate", "EndDate");
 
                     b.ToTable("WorkExperiences");
                 });
@@ -927,7 +1007,15 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DueDate");
+
+                    b.HasIndex("Priority");
+
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("WorkTasks");
                 });

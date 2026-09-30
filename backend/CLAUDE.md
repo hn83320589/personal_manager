@@ -153,7 +153,7 @@ backend/
 │   ├── ApplicationDbContext.cs   # EF Core 資料模型
 │   ├── ProviderDbContexts.cs     # Sqlite／MySql 子類別與 design-time factory
 │   ├── PersistenceSetup.cs       # AddPersistence()：依設定選擇 provider
-│   └── DatabaseSeeder.cs         # 初始資料種子 + 索引建立
+│   └── DatabaseSeeder.cs         # 初始資料種子（索引由 ApplicationDbContext 定義）
 │
 ├── Mappings/
 │   └── MappingExtensions.cs      # Model ↔ DTO 手動映射擴展方法
