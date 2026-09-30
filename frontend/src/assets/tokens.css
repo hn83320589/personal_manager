@@ -1,0 +1,66 @@
+/*
+ * 設計 token（來自前台 prototype）。顏色以 RGB 通道定義，Tailwind 才能加透明度（bg-accent/10）。
+ * 深淺色：預設跟隨系統；<html data-theme="light|dark"> 表示使用者手動選擇。
+ * 主題色：<html data-accent="green|purple|rose|slate">，未設定為藍色；每種主題色各有淺色與深色模式用的版本。
+ */
+:root {
+  --paper: 245 246 248;
+  --surface: 255 255 255;
+  --ink: 21 23 28;
+  --muted: 91 98 112;
+  --rule: 225 228 234;
+  --soft: 236 238 242;
+  --accent-l: 39 84 197;
+  --accent-d: 138 171 255;
+  --accent: var(--accent-l);
+  --accent-ink: 255 255 255;
+  --danger: 185 28 28;
+  --success: 21 128 61;
+}
+
+:root[data-accent='green'] {
+  --accent-l: 29 117 80;
+  --accent-d: 114 211 165;
+}
+:root[data-accent='purple'] {
+  --accent-l: 101 65 192;
+  --accent-d: 187 163 255;
+}
+:root[data-accent='rose'] {
+  --accent-l: 189 50 89;
+  --accent-d: 255 146 178;
+}
+:root[data-accent='slate'] {
+  --accent-l: 58 70 88;
+  --accent-d: 179 191 208;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --paper: 15 17 21;
+    --surface: 23 26 32;
+    --ink: 236 238 242;
+    --muted: 154 161 173;
+    --rule: 39 43 51;
+    --soft: 30 34 41;
+    --accent: var(--accent-d);
+    --accent-ink: 15 17 21;
+    --danger: 248 113 113;
+    --success: 74 222 128;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: 15 17 21;
+  --surface: 23 26 32;
+  --ink: 236 238 242;
+  --muted: 154 161 173;
+  --rule: 39 43 51;
+  --soft: 30 34 41;
+  --accent: var(--accent-d);
+  --accent-ink: 15 17 21;
+  --danger: 248 113 113;
+  --success: 74 222 128;
+}

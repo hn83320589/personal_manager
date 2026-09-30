@@ -1,4 +1,4 @@
-@import './base.css';
+@import './tokens.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,7 +6,21 @@
 /* Custom CSS for Personal Manager */
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-paper text-ink font-sans antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition: none !important;
+      animation: none !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   /* Ensure all raw inputs/selects/textareas have visible text on white background */

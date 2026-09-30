@@ -196,7 +196,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   HomeIcon,
@@ -218,6 +218,16 @@ import {
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
 import BaseButton from '@/components/ui/BaseButton.vue'
+
+// 過渡：舊的後台頁面寫死淺色樣式，在 Phase 5 重寫前固定使用淺色，避免深色背景配白色卡片
+const previousTheme = document.documentElement.dataset.theme
+onMounted(() => {
+  document.documentElement.dataset.theme = 'light'
+})
+onUnmounted(() => {
+  if (previousTheme) document.documentElement.dataset.theme = previousTheme
+  else delete document.documentElement.dataset.theme
+})
 
 // Router & Route
 const router = useRouter()

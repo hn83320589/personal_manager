@@ -14,14 +14,7 @@ export default mergeConfig(
       },
       exclude: [...configDefaults.exclude, 'e2e/**'],
       root: fileURLToPath(new URL('./', import.meta.url)),
-      globalSetup: ['./src/test-utils/globalSetup.ts'],
       setupFiles: ['./src/test-utils/setup.ts'],
-      pool: 'threads',
-      poolOptions: {
-        threads: {
-          execArgv: ['--localstorage-file', '/tmp/vitest-localstorage.json'],
-        },
-      },
       coverage: {
         provider: 'v8',
         reporter: ['text', 'json', 'html'],

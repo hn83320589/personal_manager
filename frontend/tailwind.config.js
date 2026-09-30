@@ -5,7 +5,20 @@ export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      // 設計 token（src/assets/tokens.css），會隨深淺色與主題色切換
       colors: {
+        paper: 'rgb(var(--paper) / <alpha-value>)',
+        surface: 'rgb(var(--surface) / <alpha-value>)',
+        ink: 'rgb(var(--ink) / <alpha-value>)',
+        muted: 'rgb(var(--muted) / <alpha-value>)',
+        rule: 'rgb(var(--rule) / <alpha-value>)',
+        soft: 'rgb(var(--soft) / <alpha-value>)',
+        accent: {
+          DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
+          ink: 'rgb(var(--accent-ink) / <alpha-value>)',
+        },
+        danger: 'rgb(var(--danger) / <alpha-value>)',
+        success: 'rgb(var(--success) / <alpha-value>)',
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -30,6 +43,26 @@ export default {
           800: '#1f2937',
           900: '#111827',
         },
+      },
+      fontFamily: {
+        sans: [
+          '"Noto Sans TC"',
+          'system-ui',
+          '-apple-system',
+          '"PingFang TC"',
+          '"Microsoft JhengHei"',
+          'sans-serif',
+        ],
+        hand: ['"LXGW WenKai TC"', '"Noto Serif TC"', 'serif'],
+        latin: ['"Schibsted Grotesk"', '"Noto Sans TC"', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'Consolas', 'monospace'],
+      },
+      maxWidth: {
+        wrap: '70rem',
+        read: '42rem',
+      },
+      borderRadius: {
+        card: '10px',
       },
     },
   },
