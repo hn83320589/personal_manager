@@ -45,13 +45,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { publicApi } from '@/api/public'
 import { useAsyncData } from '@/composables/useAsyncData'
 import { setPageSeo, stripHtml } from '@/composables/useSeo'
 import { useTableOfContents } from '@/composables/useTableOfContents'
 import { formatDate } from '@/lib/format'
+import { highlightIn } from '@/lib/highlight'
 import { sanitizeHtml } from '@/lib/sanitizeHtml'
 import PageState from '@/components/public/PageState.vue'
 import TagList from '@/components/public/TagList.vue'
@@ -72,6 +73,12 @@ const {
 const html = computed(() => sanitizeHtml(post.value?.content))
 const content = ref<HTMLElement>()
 const { items: toc, activeId } = useTableOfContents(content, html)
+
+// 文章中的程式碼區塊在內容渲染後上色
+watch(html, async () => {
+  await nextTick()
+  if (content.value) highlightIn(content.value)
+})
 
 function scrollToHeading(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })

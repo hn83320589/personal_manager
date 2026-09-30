@@ -81,3 +81,41 @@
     @apply text-gray-700 font-medium text-sm;
   }
 }
+
+/* 程式碼上色（lowlight／highlight.js 的 class）。程式碼區塊在深淺色模式都是深色底 */
+@layer components {
+  .hljs-keyword,
+  .hljs-selector-tag,
+  .hljs-built_in,
+  .hljs-meta {
+    color: #c792ea;
+  }
+  .hljs-string,
+  .hljs-regexp,
+  .hljs-addition {
+    color: #c3e88d;
+  }
+  .hljs-comment,
+  .hljs-quote,
+  .hljs-deletion {
+    color: #697386;
+    font-style: italic;
+  }
+  .hljs-title,
+  .hljs-type,
+  .hljs-class,
+  .hljs-function {
+    color: #82aaff;
+  }
+  .hljs-number,
+  .hljs-literal,
+  .hljs-symbol {
+    color: #f78c6c;
+  }
+  .hljs-attr,
+  .hljs-attribute,
+  .hljs-variable,
+  .hljs-property {
+    color: #ffcb6b;
+  }
+}
