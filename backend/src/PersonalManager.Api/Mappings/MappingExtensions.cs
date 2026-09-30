@@ -51,14 +51,6 @@ public static class MappingExtensions
         if (d.SortOrder.HasValue) p.SortOrder = d.SortOrder.Value;
     }
 
-    // ===== FileUpload =====
-    public static FileUploadResponse ToResponse(this FileUpload f) => new()
-    {
-        Id = f.Id, UserId = f.UserId, FileName = f.FileName, StoredName = f.StoredName,
-        FileUrl = f.FileUrl, FileType = f.FileType, FileSize = f.FileSize,
-        MimeType = f.MimeType, CreatedAt = f.CreatedAt
-    };
-
     // ===== PortfolioAttachment =====
     public static PortfolioAttachmentResponse ToResponse(this PortfolioAttachment a) => new()
     {

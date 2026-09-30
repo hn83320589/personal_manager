@@ -71,20 +71,6 @@ public class PortfolioResponse
     public DateTime CreatedAt { get; set; }
 }
 
-// ===== FileUpload =====
-public class FileUploadResponse
-{
-    public int Id { get; set; }
-    public int UserId { get; set; }
-    public string FileName { get; set; } = string.Empty;
-    public string StoredName { get; set; } = string.Empty;
-    public string FileUrl { get; set; } = string.Empty;
-    public string FileType { get; set; } = string.Empty;
-    public long FileSize { get; set; }
-    public string MimeType { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-}
-
 // ===== PortfolioAttachment =====
 public class CreatePortfolioAttachmentDto
 {

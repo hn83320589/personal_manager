@@ -14,6 +14,8 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
 
     private readonly string _databasePath =
         Path.Combine(Path.GetTempPath(), $"personal-manager-test-{Guid.NewGuid():N}.db");
+    private readonly string _uploadRoot =
+        Path.Combine(Path.GetTempPath(), $"personal-manager-test-files-{Guid.NewGuid():N}");
     private readonly string _environment;
     private readonly string? _jwtSecret;
     private readonly IReadOnlyDictionary<string, string?> _settings;
@@ -40,6 +42,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
         builder.UseEnvironment(_environment);
         builder.UseSetting("Database:Provider", "Sqlite");
         builder.UseSetting("ConnectionStrings:DefaultConnection", $"Data Source={_databasePath}");
+        builder.UseSetting("FileStorage:RootPath", _uploadRoot);   // 上傳的檔案不寫進專案目錄
         // 測試都從同一個「IP」發出，放寬限流以免互相影響；限流本身由專門的測試以較低額度驗證
         builder.UseSetting("RateLimiting:AuthPermitsPerMinute", "10000");
         builder.UseSetting("RateLimiting:PublicWritePermitsPerMinute", "10000");
@@ -55,5 +58,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
         SqliteConnection.ClearAllPools();
         if (File.Exists(_databasePath))
             File.Delete(_databasePath);
+        if (Directory.Exists(_uploadRoot))
+            Directory.Delete(_uploadRoot, recursive: true);
     }
 }

@@ -83,6 +83,11 @@ public class ApplicationDbContext : DbContext
             .HasConversion<string>()
             .HasMaxLength(20);
 
+        modelBuilder.Entity<FileUpload>()
+            .Property(e => e.Kind)
+            .HasConversion<string>()
+            .HasMaxLength(20);
+
         modelBuilder.Entity<CalendarEvent>()
             .Property(e => e.Recurrence)
             .HasConversion<string>()

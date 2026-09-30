@@ -29,7 +29,7 @@ public static class ApplicationSetup
         services.AddScoped<Features.Blog.TagService>();
         services.AddScoped<Features.Guestbook.GuestbookService>();
         services.AddScoped<Features.Contacts.ContactMethodService>();
-        services.AddScoped<IFileUploadService, FileUploadService>();
+        services.AddScoped<Features.Files.FileService>();
         services.AddScoped<IPortfolioAttachmentService, PortfolioAttachmentService>();
         services.AddScoped<Features.WorkTracking.TimeEntryService>();
         return services;

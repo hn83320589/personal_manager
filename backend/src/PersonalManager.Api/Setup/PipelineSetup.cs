@@ -45,7 +45,13 @@ public static class PipelineSetup
     {
         var root = Path.Combine(app.Environment.ContentRootPath, app.Configuration["FileStorage:RootPath"] ?? "files");
         Directory.CreateDirectory(root);
-        app.UseStaticFiles(new StaticFileOptions { FileProvider = new PhysicalFileProvider(root), RequestPath = "/files" });
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(root),
+            RequestPath = "/files",
+            // 使用者上傳的內容：禁止瀏覽器自行猜測類型，避免被當成 HTML 執行
+            OnPrepareResponse = context => context.Context.Response.Headers.XContentTypeOptions = "nosniff"
+        });
     }
 
     private static Task WriteHealthJson(HttpContext context, Microsoft.Extensions.Diagnostics.HealthChecks.HealthReport report)

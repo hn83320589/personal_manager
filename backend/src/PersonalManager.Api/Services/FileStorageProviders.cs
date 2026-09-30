@@ -9,7 +9,8 @@ namespace PersonalManager.Api.Services;
 
 public interface IFileStorageProvider
 {
-    Task<(string fileUrl, string storedName)> UploadAsync(IFormFile file, string ext);
+    /// <param name="mimeType">由伺服器依檔案內容判定的類型。</param>
+    Task<(string fileUrl, string storedName)> UploadAsync(Stream content, string extension, string mimeType);
     Task DeleteAsync(string storedName);
 }
 
@@ -24,12 +25,12 @@ public class LocalFileStorageProvider : IFileStorageProvider
         Directory.CreateDirectory(_rootPath);
     }
 
-    public async Task<(string fileUrl, string storedName)> UploadAsync(IFormFile file, string ext)
+    public async Task<(string fileUrl, string storedName)> UploadAsync(Stream content, string extension, string mimeType)
     {
-        var storedName = $"{Guid.NewGuid()}{ext}";
+        var storedName = $"{Guid.NewGuid()}{extension}";
         var filePath = Path.Combine(_rootPath, storedName);
-        using var stream = new FileStream(filePath, FileMode.Create);
-        await file.CopyToAsync(stream);
+        await using var stream = new FileStream(filePath, FileMode.Create);
+        await content.CopyToAsync(stream);
         return ($"/files/{storedName}", storedName);
     }
 
@@ -53,16 +54,15 @@ public class S3FileStorageProvider : IFileStorageProvider
         _s3Settings = settings.Value.S3!;
     }
 
-    public async Task<(string fileUrl, string storedName)> UploadAsync(IFormFile file, string ext)
+    public async Task<(string fileUrl, string storedName)> UploadAsync(Stream content, string extension, string mimeType)
     {
-        var storedName = $"{Guid.NewGuid()}{ext}";
-        using var stream = file.OpenReadStream();
+        var storedName = $"{Guid.NewGuid()}{extension}";
         await _s3.PutObjectAsync(new PutObjectRequest
         {
             BucketName = _s3Settings.BucketName,
             Key = storedName,
-            InputStream = stream,
-            ContentType = file.ContentType,
+            InputStream = content,
+            ContentType = mimeType,
             CannedACL = S3CannedACL.PublicRead,
         });
         var fileUrl = $"{_s3Settings.PublicBaseUrl.TrimEnd('/')}/{storedName}";

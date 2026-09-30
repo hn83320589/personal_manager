@@ -42,7 +42,7 @@
 - [x] 留言板（公開不含 Email、只回傳已審核、回覆時間、移除 TargetUserId 預設值 1；流量限制改為可設定）
 - [x] 行事曆（重複規則由後端展開、查詢區間最長一年、顏色格式驗證；所有時間一律以 UTC 存取）
 - [x] 待辦、工作追蹤（實際時數改由時間紀錄加總、時間紀錄改用 DateOnly／TimeOnly 並自動計算時長、移除重複的任務與專案名稱、統計 API）
-- [ ] 檔案上傳（magic bytes、50 MB 上限）
+- [x] 檔案上傳（副檔名與 magic bytes 須一致、不收 SVG／原始檔、伺服器判定 MIME、記錄圖片寬高、50 MB 上限且超過時不先寫入暫存、nosniff、S3 改用伺服器判定的 Content-Type）
 - [ ] Auth（httpOnly cookie refresh token、token 雜湊、重設密碼後撤銷）
 - [ ] Admin：使用者管理、建立第一位管理員的方式
 - [ ] 移除 `IRepository`、`CrudService` 與舊的 DTO／Mapping 檔

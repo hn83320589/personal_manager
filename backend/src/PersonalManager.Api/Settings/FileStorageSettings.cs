@@ -3,12 +3,8 @@ namespace PersonalManager.Api.Settings;
 public class FileStorageSettings
 {
     public string RootPath { get; set; } = "files";
+    /// <summary>單檔上限（ADR-012：50 MB）。允許的格式固定於 <see cref="Features.Files.FileInspector"/>，不開放設定。</summary>
     public long MaxFileSizeMB { get; set; } = 50;
-    public string[] AllowedExtensions { get; set; } =
-    [
-        ".jpg", ".jpeg", ".png", ".gif", ".webp",
-        ".pdf", ".doc", ".docx", ".ppt", ".pptx"
-    ];
     public S3StorageSettings? S3 { get; set; }
 }
 

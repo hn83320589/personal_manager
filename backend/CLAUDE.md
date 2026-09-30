@@ -39,6 +39,7 @@ dotnet test PersonalManager.sln                # 執行測試
   dotnet ef migrations add <Name> --context MySqlApplicationDbContext --output-dir Migrations/MySql
   ```
 - **產生 migration 後要檢查內容**：一個欄位刪除、另一個同型別欄位新增時，EF 可能判斷成「改名」而沿用舊資料（例如 `IsPublic` → `ReadingMinutes`），需手動改成刪除後新增。
+  會轉換既有資料的 migration，請在 `tests/.../Data/DataMigrationTests.cs` 補上「遷移到前一版 → 寫入舊資料 → 遷移到最新版」的測試。
   新增「以字串儲存的 enum」且不可為 null 的欄位時，EF 產生的預設值是空字串，既有資料讀取時會無法轉換，需改成合法的 enum 值（例如 `"None"`）。
 - **重設本地資料庫**：刪除 `App_Data/` 後重新啟動即可。
 
@@ -213,7 +214,7 @@ backend/
 | PublicContactMethodsController／MyContactMethodsController | `/api/public/users/{username}/contact-methods`、`/api/me/contact-methods` | 聯絡方式（已重建） |
 | MyProjectsController | `/api/me/projects` | 工作追蹤專案（已重建） |
 | MyTimeEntriesController | `/api/me/time-entries`（含 `summary`） | 時間紀錄（已重建） |
-| FileUploadsController | `/api/fileuploads` | 檔案上傳 |
+| MyFilesController | `/api/me/files` | 檔案上傳（已重建：副檔名與 magic bytes 須一致、伺服器判定 MIME、記錄圖片寬高） |
 | PortfolioAttachmentsController | `/api/portfolioattachments` | 作品集附件 |
 
 所有資料回應格式：
