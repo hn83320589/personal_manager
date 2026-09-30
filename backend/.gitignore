@@ -466,3 +466,5 @@ App_Data/
 *.db
 *.db-shm
 *.db-wal
+# 本機上傳的檔案（FileStorage:RootPath 預設為 files/），不提交
+src/PersonalManager.Api/files/
