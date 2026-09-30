@@ -16,6 +16,12 @@ public static class RateLimitPolicies
     /// <summary>登入、註冊、重設密碼等認證端點。</summary>
     public const string Auth = "auth";
 
+    /// <summary>
+    /// 還原與結束工作階段（refresh、logout）。前端每次開啟頁面都會 refresh，額度需寬鬆些，
+    /// 也不能與登入共用額度，否則多開分頁就會被登出。refresh token 為 256 位元亂數，無法猜測。
+    /// </summary>
+    public const string Session = "session";
+
     /// <summary>不需登入即可寫入的端點（留言板）。</summary>
     public const string PublicWrite = "public_write";
 }
@@ -98,17 +104,19 @@ public static class ApiSetup
         return services;
     }
 
-    /// <summary>每個 IP 每分鐘的次數上限，可由 <c>RateLimiting:*PermitsPerMinute</c> 調整（預設 10）。</summary>
+    /// <summary>每個 IP 每分鐘的次數上限，可由 <c>RateLimiting:*PermitsPerMinute</c> 調整（預設 10；工作階段 60）。</summary>
     public static IServiceCollection AddRateLimitPolicies(this IServiceCollection services, IConfiguration configuration)
     {
         var authLimit = configuration.GetValue("RateLimiting:AuthPermitsPerMinute", 10);
         var publicWriteLimit = configuration.GetValue("RateLimiting:PublicWritePermitsPerMinute", 10);
+        var sessionLimit = configuration.GetValue("RateLimiting:SessionPermitsPerMinute", 60);
 
         services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
             options.AddPolicy(RateLimitPolicies.Auth, PerClientIp(authLimit));
             options.AddPolicy(RateLimitPolicies.PublicWrite, PerClientIp(publicWriteLimit));
+            options.AddPolicy(RateLimitPolicies.Session, PerClientIp(sessionLimit));
         });
         return services;
     }

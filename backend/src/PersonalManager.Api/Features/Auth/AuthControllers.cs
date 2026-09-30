@@ -27,11 +27,13 @@ public sealed class AuthController(AuthService auth) : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("refresh")]
+    [EnableRateLimiting(RateLimitPolicies.Session)]
     public async Task<ApiResponse<AccessTokenDto>> Refresh() =>
         ApiResponse<AccessTokenDto>.Ok(IssueCookie(await auth.RefreshAsync(Request.Cookies[RefreshCookieName])));
 
     [AllowAnonymous]
     [HttpPost("logout")]
+    [EnableRateLimiting(RateLimitPolicies.Session)]
     public async Task<ApiResponse> Logout()
     {
         await auth.LogoutAsync(Request.Cookies[RefreshCookieName]);

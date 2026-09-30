@@ -328,3 +328,52 @@ public partial class AuthApiTests(ApiFactory factory) : IClassFixture<ApiFactory
         Assert.Equal(HttpStatusCode.Unauthorized, otherDeviceRefresh.StatusCode);
     }
 }
+
+/// <summary>
+/// 登入有嚴格的次數限制（防暴力破解），但前端每次開啟頁面都會呼叫 refresh 還原登入；
+/// 兩者若共用同一個額度，多開幾個分頁就會被登出。
+/// </summary>
+public class AuthRateLimitTests
+{
+    private static ApiFactory LowLoginLimit() => ApiFactory.For("Testing", settings: new Dictionary<string, string?>
+    {
+        ["RateLimiting:AuthPermitsPerMinute"] = "2",
+        ["RateLimiting:SessionPermitsPerMinute"] = "20",
+    });
+
+    private static HttpClient Browser(ApiFactory factory) => factory.CreateClient(
+        new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions
+        {
+            BaseAddress = new Uri("https://localhost"),
+            HandleCookies = true
+        });
+
+    [Fact]
+    public async Task TooManyLoginAttempts_AreRejectedWith429()
+    {
+        using var factory = LowLoginLimit();
+        var client = factory.CreateClient();
+        var body = new { username = "nobody", password = "wrong-password" };
+
+        await client.PostJsonAsync("/api/auth/login", body);
+        await client.PostJsonAsync("/api/auth/login", body);
+        var third = await client.PostJsonAsync("/api/auth/login", body);
+
+        Assert.Equal(HttpStatusCode.TooManyRequests, third.StatusCode);
+    }
+
+    [Fact]
+    public async Task RestoringTheSessionRepeatedly_DoesNotUseUpTheLoginLimit()
+    {
+        using var factory = LowLoginLimit();
+        var browser = Browser(factory);
+        await browser.PostJsonAsync("/api/auth/register",
+            new { username = "tabs", email = "tabs@test.local", password = "correct horse battery", fullName = "多分頁" });
+
+        var refreshes = new List<HttpStatusCode>();
+        for (var i = 0; i < 5; i++)
+            refreshes.Add((await browser.PostAsync("/api/auth/refresh", null)).StatusCode);
+
+        Assert.All(refreshes, status => Assert.Equal(HttpStatusCode.OK, status));
+    }
+}
