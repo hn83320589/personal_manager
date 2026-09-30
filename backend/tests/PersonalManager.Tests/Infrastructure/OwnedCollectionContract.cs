@@ -4,9 +4,9 @@ using System.Text.Json;
 namespace PersonalManager.Tests.Infrastructure;
 
 /// <summary>
-/// 「使用者自己的清單」類資源（技能、學歷、經歷、聯絡方式…）共同必須遵守的行為。
+/// 「使用者自己的清單」類資源在後台（/api/me）共同必須遵守的行為。
 /// 每個資源繼承這個類別並提供路由與範例資料，就會自動跑完整組測試；
-/// 資源特有的規則（驗證、欄位）寫在繼承的類別裡。
+/// 資源特有的規則（驗證、欄位）寫在繼承的類別裡。有公開頁面的資源改繼承 <see cref="PublicCollectionContract"/>。
 /// </summary>
 public abstract class OwnedCollectionContract(ApiFactory factory) : IClassFixture<ApiFactory>
 {
@@ -15,7 +15,10 @@ public abstract class OwnedCollectionContract(ApiFactory factory) : IClassFixtur
     /// <summary>路由片段，例如 <c>skills</c> → <c>/api/me/skills</c>、<c>/api/public/users/{u}/skills</c>。</summary>
     protected abstract string Resource { get; }
 
-    /// <summary>建立一筆合法的資料；<paramref name="label"/> 必須出現在 <see cref="LabelOf"/> 讀得到的欄位。</summary>
+    /// <summary>
+    /// 建立一筆合法的資料；<paramref name="label"/> 必須出現在 <see cref="LabelOf"/> 讀得到的欄位。
+    /// 沒有公開頁面的資源可忽略 <paramref name="isPublic"/>。
+    /// </summary>
     protected abstract object NewItem(string label, bool isPublic = true);
 
     protected abstract string LabelOf(JsonElement item);
@@ -120,7 +123,11 @@ public abstract class OwnedCollectionContract(ApiFactory factory) : IClassFixtur
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
+}
 
+/// <summary>同時有公開頁面（/api/public/users/{username}/...）的清單型資源：額外驗證公開資料的過濾。</summary>
+public abstract class PublicCollectionContract(ApiFactory factory) : OwnedCollectionContract(factory)
+{
     [Fact]
     public async Task Public_ReturnsOnlyPublicItemsInDisplayOrder()
     {

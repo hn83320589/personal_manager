@@ -4,7 +4,7 @@ using PersonalManager.Tests.Infrastructure;
 
 namespace PersonalManager.Tests.Features;
 
-public class SkillsApiTests(ApiFactory factory) : OwnedCollectionContract(factory)
+public class SkillsApiTests(ApiFactory factory) : PublicCollectionContract(factory)
 {
     protected override string Resource => "skills";
 
