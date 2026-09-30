@@ -37,25 +37,21 @@ This file provides guidance to Claude Code when working in this repository.
 
 ---
 
-## 倉庫架構（分離倉庫）
-
-此專案採用三個獨立 Git 倉庫：
+## 倉庫架構（monorepo）
 
 ```
-personal_manager/                         # 主專案（本倉庫）
-├── CLAUDE.md                             # 主專案文件
-├── README.md
-├── docs/                                 # 共用文件
-└── local-development/                    # 本地開發（不提交至主倉庫）
-    ├── PersonalManagerBackend/           # 後端倉庫 clone
-    └── PersonalManagerFrontend/          # 前端倉庫 clone
+personal_manager/
+├── CLAUDE.md                     # 本檔案
+├── .github/workflows/ci.yml      # 後端 build/test、前端 test/type-check/build
+├── backend/
+│   ├── PersonalManager.sln
+│   ├── src/PersonalManager.Api/  # .NET 9 Web API
+│   └── tests/PersonalManager.Tests/
+├── frontend/                     # Vue 3 SPA
+└── docs/                         # 規格、ADR、TASKS.md
 ```
 
-| 倉庫 | GitHub | 本地路徑 |
-|------|--------|----------|
-| 主專案 | `hn83320589/personal_manager` | `.` |
-| 後端 | `hn83320589/PersonalManagerBackend` | `./local-development/PersonalManagerBackend` |
-| 前端 | `hn83320589/PersonalManagerFrontend` | `./local-development/PersonalManagerFrontend` |
+`local-development/` 是合併前的舊 repo clone，已不再使用（git-ignored）。
 
 ---
 
@@ -63,19 +59,22 @@ personal_manager/                         # 主專案（本倉庫）
 
 ```bash
 # 終端 1 — 後端
-cd local-development/PersonalManagerBackend
-dotnet run
+cd backend
+dotnet run --project src/PersonalManager.Api
 # → http://localhost:5037
 # → Swagger: http://localhost:5037/swagger
 
+# 測試
+dotnet test PersonalManager.sln
+
 # 終端 2 — 前端
-cd local-development/PersonalManagerFrontend
+cd frontend
 npm install   # 首次或 package.json 有變動
 npm run dev
 # → http://localhost:5173
 ```
 
-> 後端若無法連接 MariaDB，會自動 fallback 至本地 JSON 資料（`Data/JsonData/*.json`），不影響開發。
+> 重構進行中：後端將改為預設使用 SQLite（ADR-008），完成前仍沿用 MariaDB／JSON fallback 的舊行為。
 
 ---
 
@@ -85,8 +84,8 @@ npm run dev
 |----|------|
 | 後端 | C# .NET 9.0 Web API + EF Core 9 + MariaDB |
 | 前端 | Vue 3 + TypeScript + Pinia + Axios + Tailwind CSS |
-| 部署 | Zeabur |
-| 資料庫 | MariaDB（Zeabur 雲端） |
+| 部署 | 暫無（Zeabur 已停用，目前僅本地開發） |
+| 資料庫 | SQLite（本地，重構中）；保留 MySQL/MariaDB 支援 |
 | 認證 | JWT Bearer Token |
 
 ---
@@ -94,8 +93,8 @@ npm run dev
 ## 重要規則
 
 **每次異動後：**
-- 後端有異動 → 更新 `local-development/PersonalManagerBackend/CLAUDE.md`
-- 前端有異動 → 更新 `local-development/PersonalManagerFrontend/CLAUDE.md`
+- 後端有異動 → 更新 `backend/CLAUDE.md`
+- 前端有異動 → 更新 `frontend/CLAUDE.md`
 - 重大進度 → 同步更新本檔案
 
 **開發規範：**

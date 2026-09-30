@@ -17,10 +17,10 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-      - name: Build API
-        run: dotnet build PersonalManager.Api.csproj --configuration Release
+      - name: Build
+        run: dotnet build PersonalManager.sln --configuration Release
       - name: Test
-        run: dotnet test tests/PersonalManager.Tests.csproj --configuration Release
+        run: dotnet test PersonalManager.sln --configuration Release --no-build
 
   frontend:
     name: Frontend (type-check + unit test + build)

@@ -17,8 +17,9 @@ This file provides guidance to Claude Code when working with the backend codebas
 ## 快速啟動
 
 ```bash
-# 開發模式啟動 (自動偵測 DB 連線，無 DB 則 fallback JSON)
-dotnet run
+# 在 backend/ 目錄下
+dotnet run --project src/PersonalManager.Api   # 啟動 API
+dotnet test PersonalManager.sln                # 執行測試
 
 # API 服務預設跑在:
 # http://localhost:5037
@@ -29,7 +30,7 @@ dotnet run
 
 - **.NET SDK 版本**：需要 .NET 9.0。若出現 `Roll Forward` 錯誤，執行：
   ```bash
-  DOTNET_ROLL_FORWARD=LatestMajor dotnet run
+  DOTNET_ROLL_FORWARD=LatestMajor dotnet run --project src/PersonalManager.Api
   ```
 - **DB 連線**：若 `appsettings.json` 的 `ConnectionStrings.DefaultConnection` 可連線，自動使用 MariaDB（EF Core）；無法連線時自動 fallback 至 `Data/JsonData/*.json`。
 - **Schema 由 EF Core Migrations 管理**：啟動時 `db.Database.Migrate()` 自動套用未執行的 migration（只在 DB 模式有效）。Model 異動後需執行 `dotnet ef migrations add <Name>`。
@@ -111,7 +112,10 @@ HTTP 請求
 ## 專案結構
 
 ```
-PersonalManagerBackend/
+backend/
+├── PersonalManager.sln
+├── tests/PersonalManager.Tests/  # xUnit
+└── src/PersonalManager.Api/      # 以下皆位於此目錄
 ├── Program.cs                    # 進入點：DI、DB 偵測、Middleware
 ├── appsettings.json              # 設定（包含 DB 連線字串與 JWT）
 ├── appsettings.Development.json  # 開發環境補充設定
@@ -175,9 +179,7 @@ PersonalManagerBackend/
 │   ├── FileStorageProviders.cs   # 檔案儲存（本地 / S3 相容 Object Storage）
 │   └── DbHealthCheck.cs          # DB 連線健康檢查
 │
-├── Settings/                     # EmailSettings、FileStorageSettings
-│
-└── tests/                        # PersonalManager.Tests（xUnit）
+└── Settings/                     # EmailSettings、FileStorageSettings
 ```
 
 ---
