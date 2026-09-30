@@ -28,7 +28,7 @@ namespace PersonalManager.Api.Migrations.Sqlite
                 type: "TEXT",
                 maxLength: 20,
                 nullable: false,
-                defaultValue: "");
+                defaultValue: "Portrait");
 
             migrationBuilder.AddColumn<string>(
                 name: "CardStyle",
@@ -36,7 +36,7 @@ namespace PersonalManager.Api.Migrations.Sqlite
                 type: "TEXT",
                 maxLength: 20,
                 nullable: false,
-                defaultValue: "");
+                defaultValue: "Visual");
 
             migrationBuilder.AddColumn<string>(
                 name: "PortfolioMode",
@@ -44,7 +44,7 @@ namespace PersonalManager.Api.Migrations.Sqlite
                 type: "TEXT",
                 maxLength: 20,
                 nullable: false,
-                defaultValue: "");
+                defaultValue: "Designer");
 
             migrationBuilder.AddColumn<string>(
                 name: "SkillDisplay",
@@ -52,7 +52,7 @@ namespace PersonalManager.Api.Migrations.Sqlite
                 type: "TEXT",
                 maxLength: 20,
                 nullable: false,
-                defaultValue: "");
+                defaultValue: "NameOnly");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersonalProfiles_UserId",

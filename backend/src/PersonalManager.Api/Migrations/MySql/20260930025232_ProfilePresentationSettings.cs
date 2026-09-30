@@ -29,7 +29,7 @@ namespace PersonalManager.Api.Migrations.MySql
                 type: "varchar(20)",
                 maxLength: 20,
                 nullable: false,
-                defaultValue: "")
+                defaultValue: "Portrait")
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.AddColumn<string>(
@@ -38,7 +38,7 @@ namespace PersonalManager.Api.Migrations.MySql
                 type: "varchar(20)",
                 maxLength: 20,
                 nullable: false,
-                defaultValue: "")
+                defaultValue: "Visual")
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.AddColumn<string>(
@@ -47,7 +47,7 @@ namespace PersonalManager.Api.Migrations.MySql
                 type: "varchar(20)",
                 maxLength: 20,
                 nullable: false,
-                defaultValue: "")
+                defaultValue: "Designer")
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.AddColumn<string>(
@@ -56,7 +56,7 @@ namespace PersonalManager.Api.Migrations.MySql
                 type: "varchar(20)",
                 maxLength: 20,
                 nullable: false,
-                defaultValue: "")
+                defaultValue: "NameOnly")
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
