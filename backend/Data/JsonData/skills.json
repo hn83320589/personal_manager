@@ -1,0 +1,74 @@
+[
+  {
+    "Id": 1,
+    "UserId": 1,
+    "Name": "C# .NET Core",
+    "Category": "後端開發",
+    "Level": "Expert",
+    "YearsOfExperience": 5,
+    "IsPublic": true,
+    "SortOrder": 1,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  },
+  {
+    "Id": 2,
+    "UserId": 1,
+    "Name": "Vue.js",
+    "Category": "前端開發",
+    "Level": "Advanced",
+    "YearsOfExperience": 3,
+    "IsPublic": true,
+    "SortOrder": 2,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  },
+  {
+    "Id": 3,
+    "UserId": 1,
+    "Name": "MariaDB/MySQL",
+    "Category": "資料庫",
+    "Level": "Advanced",
+    "YearsOfExperience": 4,
+    "IsPublic": true,
+    "SortOrder": 3,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  },
+  {
+    "Id": 4,
+    "UserId": 1,
+    "Name": "Docker",
+    "Category": "DevOps",
+    "Level": "Intermediate",
+    "YearsOfExperience": 2,
+    "IsPublic": true,
+    "SortOrder": 4,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  },
+  {
+    "Id": 5,
+    "UserId": 1,
+    "Name": "TypeScript",
+    "Category": "前端開發",
+    "Level": "Advanced",
+    "YearsOfExperience": 3,
+    "IsPublic": true,
+    "SortOrder": 5,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  },
+  {
+    "Id": 6,
+    "UserId": 1,
+    "Name": "Git",
+    "Category": "版本控制",
+    "Level": "Expert",
+    "YearsOfExperience": 5,
+    "IsPublic": true,
+    "SortOrder": 6,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  }
+]

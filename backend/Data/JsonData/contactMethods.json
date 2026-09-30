@@ -1,0 +1,74 @@
+[
+  {
+    "Id": 1,
+    "UserId": 1,
+    "Type": "Email",
+    "Label": "工作信箱",
+    "Value": "admin@example.com",
+    "Icon": "email",
+    "IsPublic": true,
+    "SortOrder": 1,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  },
+  {
+    "Id": 2,
+    "UserId": 1,
+    "Type": "Phone",
+    "Label": "手機",
+    "Value": "0912345678",
+    "Icon": "phone",
+    "IsPublic": true,
+    "SortOrder": 2,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  },
+  {
+    "Id": 3,
+    "UserId": 1,
+    "Type": "GitHub",
+    "Label": "GitHub",
+    "Value": "https://github.com/example",
+    "Icon": "github",
+    "IsPublic": true,
+    "SortOrder": 3,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  },
+  {
+    "Id": 4,
+    "UserId": 1,
+    "Type": "LinkedIn",
+    "Label": "LinkedIn",
+    "Value": "https://linkedin.com/in/example",
+    "Icon": "linkedin",
+    "IsPublic": true,
+    "SortOrder": 4,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  },
+  {
+    "Id": 5,
+    "UserId": 1,
+    "Type": "Twitter",
+    "Label": "Twitter",
+    "Value": "https://twitter.com/example",
+    "Icon": "twitter",
+    "IsPublic": true,
+    "SortOrder": 5,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  },
+  {
+    "Id": 6,
+    "UserId": 1,
+    "Type": "Other",
+    "Label": "Discord Server",
+    "Value": "https://discord.gg/example",
+    "Icon": "discord",
+    "IsPublic": false,
+    "SortOrder": 6,
+    "CreatedAt": "2025-08-12T09:00:00Z",
+    "UpdatedAt": "2025-08-12T09:00:00Z"
+  }
+]
