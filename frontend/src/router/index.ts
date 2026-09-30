@@ -98,22 +98,26 @@ const router = createRouter({
       ],
     },
 
-    // 管理後台
+    // 管理後台（新版）：AdminShell 提供側欄；尚未重寫的頁面仍是下方各自獨立的舊路由
     {
       path: '/admin',
-      redirect: '/admin/dashboard',
+      component: () => import('../views/manage/AdminShell.vue'),
+      meta: { requiresAuth: true },
+      children: [
+        { path: '', redirect: '/admin/dashboard' },
+        {
+          path: 'profile',
+          name: 'manage-profile',
+          component: () => import('../views/manage/ProfileView.vue'),
+          meta: { title: '個人資料' },
+        },
+      ],
     },
     {
       path: '/admin/dashboard',
       name: 'dashboard',
       component: () => import('../views/admin/DashboardView.vue'),
       meta: { title: '管理儀表板', requiresAuth: true },
-    },
-    {
-      path: '/admin/profile',
-      name: 'profile-manage',
-      component: () => import('../views/admin/ProfileManageView.vue'),
-      meta: { title: '個人資料管理', requiresAuth: true },
     },
     {
       path: '/admin/experience',

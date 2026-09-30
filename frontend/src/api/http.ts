@@ -111,6 +111,15 @@ export function createHttpClient({
     post: <T = void>(url: string, body?: unknown) => send<T>({ method: 'POST', url, data: body }),
     put: <T = void>(url: string, body?: unknown) => send<T>({ method: 'PUT', url, data: body }),
     delete: <T = void>(url: string) => send<T>({ method: 'DELETE', url }),
+    /** 上傳檔案：不設逾時（大檔案可能要數分鐘），可回報進度 0–1。 */
+    upload: <T>(url: string, form: FormData, onProgress?: (ratio: number) => void) =>
+      send<T>({
+        method: 'POST',
+        url,
+        data: form,
+        timeout: 0,
+        onUploadProgress: (e) => onProgress?.(e.total ? e.loaded / e.total : 0),
+      }),
   }
 }
 

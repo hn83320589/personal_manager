@@ -181,3 +181,14 @@ describe('http client', () => {
     })
   })
 })
+
+describe('http client uploads', () => {
+  it('sends the form without a timeout so large files can finish', async () => {
+    const { http, requests } = client(() => ok({ id: 1 }))
+    const form = new FormData()
+
+    await http.upload('/me/files', form)
+
+    expect([requests[0]!.data, requests[0]!.timeout]).toEqual([form, 0])
+  })
+})
