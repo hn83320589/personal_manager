@@ -30,7 +30,7 @@
 - [x] 移除寫死的 JWT 金鑰，啟動時驗證 `Jwt:SecretKey`（背景安全審查發現原始碼內有預設金鑰）
 - [x] seeder 只在 Development 執行；CORS 來源改從設定讀取；Swagger 只在 Development 開啟
 - [ ] `Program.cs` 拆成擴充方法；改用 `ILogger`
-- [ ] `ICurrentUser` 與統一錯誤處理（不外洩例外訊息）
+- [x] `ICurrentUser` 與統一錯誤處理（不外洩例外訊息）
 - [ ] feature folder 骨架
 
 ### 技術債（重構期間發現）

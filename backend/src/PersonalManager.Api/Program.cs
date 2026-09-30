@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using PersonalManager.Api.Auth;
+using PersonalManager.Api.Common;
 using PersonalManager.Api.Data;
 using PersonalManager.Api.Middleware;
 using PersonalManager.Api.Services;
@@ -152,6 +153,10 @@ builder.Services.AddCors(options =>
 
 // Database（ADR-008：預設 SQLite，可由 Database:Provider 切換為 MySql）
 builder.Services.AddPersistence(builder.Configuration, builder.Environment);
+
+// 目前使用者（service 以此判斷資料擁有者）
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();

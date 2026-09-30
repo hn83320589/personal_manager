@@ -1,50 +1,41 @@
-using System.Net;
-using System.Text.Json;
+using PersonalManager.Api.Common;
 using PersonalManager.Api.DTOs;
 
 namespace PersonalManager.Api.Middleware;
 
-public class ErrorHandlingMiddleware
+/// <summary>
+/// 將 <see cref="AppException"/> 轉成對應的狀態碼與訊息；其他例外一律回傳 500 與通用訊息，
+/// 詳細內容只寫進 log，避免 SQL、路徑等內部資訊外洩給使用者。
+/// </summary>
+public class ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ErrorHandlingMiddleware> _logger;
-
-    public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
-
     public async Task InvokeAsync(HttpContext context)
     {
         try
         {
-            await _next(context);
+            await next(context);
         }
-        catch (KeyNotFoundException ex)
+        catch (AppException ex)
         {
-            await WriteErrorResponse(context, HttpStatusCode.NotFound, ex.Message);
+            var errors = ex is DomainValidationException validation ? validation.Errors.ToList() : null;
+            await WriteError(context, ex.StatusCode, ApiResponse.Fail(ex.Message, errors));
         }
-        catch (ArgumentException ex)
+        catch (OperationCanceledException) when (context.RequestAborted.IsCancellationRequested)
         {
-            await WriteErrorResponse(context, HttpStatusCode.BadRequest, ex.Message);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            await WriteErrorResponse(context, HttpStatusCode.Unauthorized, ex.Message);
+            // 用戶端已中斷連線，沒有人會收到回應
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception");
-            await WriteErrorResponse(context, HttpStatusCode.InternalServerError, "An unexpected error occurred");
+            logger.LogError(ex, "處理 {Method} {Path} 時發生未預期的錯誤", context.Request.Method, context.Request.Path);
+            await WriteError(context, StatusCodes.Status500InternalServerError, ApiResponse.Fail("系統發生錯誤，請稍後再試"));
         }
     }
 
-    private static async Task WriteErrorResponse(HttpContext context, HttpStatusCode statusCode, string message)
+    private static async Task WriteError(HttpContext context, int statusCode, ApiResponse body)
     {
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)statusCode;
-        var response = ApiResponse.Fail(message);
-        await context.Response.WriteAsJsonAsync(response);
+        if (context.Response.HasStarted)
+            return;
+        context.Response.StatusCode = statusCode;
+        await context.Response.WriteAsJsonAsync(body);
     }
 }
