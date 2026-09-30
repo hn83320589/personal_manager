@@ -28,12 +28,13 @@
 - [x] 整合測試基礎（WebApplicationFactory + 暫存 SQLite）
 - [x] 索引改由 `HasIndex` 管理，移除 `DatabaseSeeder.CreateIndexesAsync` 的 raw SQL；補上 token、Tag、留言板 TargetUserId 等缺少的索引
 - [x] 移除寫死的 JWT 金鑰，啟動時驗證 `Jwt:SecretKey`（背景安全審查發現原始碼內有預設金鑰）
-- [ ] seeder 只在 Development 執行；CORS 來源改從設定讀取；Swagger 只在 Development 開啟
+- [x] seeder 只在 Development 執行；CORS 來源改從設定讀取；Swagger 只在 Development 開啟
 - [ ] `Program.cs` 拆成擴充方法；改用 `ILogger`
 - [ ] `ICurrentUser` 與統一錯誤處理（不外洩例外訊息）
 - [ ] feature folder 骨架
 
 ### 技術債（重構期間發現）
+- [ ] 非 Development 環境不再自動建立 admin 帳號 → Phase 2 Admin 功能需提供建立第一個管理員的方式（例如以設定指定的 Email 註冊時授予 Admin）
 - [ ] 【Bug】部落格編輯器的「特色圖片」欄位不存在於前端型別與後端資料表，上傳的圖片從未被儲存 → Phase 2 Blog 重建時補上 `CoverImage`
 - [ ] `BlogPost.Tags`、`WorkTask.Tags` 字串欄位與其註解仍寫著「供 JSON fallback 使用」，JSON 模式已移除 → Phase 2 一併刪除欄位
 - [ ] 本地 `dotnet ef` 工具為 9.0.8，runtime 為 9.0.13（產生 migration 時會出現警告，不影響結果）

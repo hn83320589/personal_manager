@@ -143,7 +143,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:4173")
+        policy.WithOrigins(ResolveCorsOrigins(builder.Configuration, builder.Environment))
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -184,15 +184,19 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
-    await DatabaseSeeder.SeedAsync(db);
+    if (app.Environment.IsDevelopment())
+        await DatabaseSeeder.SeedAsync(db);   // 示範資料含已知密碼的帳號，只能用於開發
     app.Logger.LogInformation("資料庫 provider: {Provider}", db.Database.ProviderName);
 }
 
 // Middleware pipeline
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // Static files for uploaded content
 var fileStoragePath = Path.Combine(app.Environment.ContentRootPath,
@@ -229,4 +233,17 @@ app.MapHealthChecks("/api/health", new Microsoft.AspNetCore.Diagnostics.HealthCh
 });
 
 app.Run();
+/// <summary>
+/// 允許的前端來源由 <c>Cors:AllowedOrigins</c> 設定（環境變數 <c>Cors__AllowedOrigins__0</c>）。
+/// localhost 預設值只在 Development 且未設定時套用，不寫進 appsettings.json，
+/// 避免設定陣列依索引合併時殘留到正式環境。
+/// </summary>
+static string[] ResolveCorsOrigins(IConfiguration configuration, IHostEnvironment environment)
+{
+    var configured = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+    if (configured.Length > 0 || !environment.IsDevelopment())
+        return configured;
+    return ["http://localhost:5173", "http://localhost:4173"];
+}
+
 public partial class Program { }

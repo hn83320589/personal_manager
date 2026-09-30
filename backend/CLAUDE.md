@@ -261,6 +261,8 @@ Jwt__SecretKey = <隨機密鑰>
 ```
 
 - JWT 設定區段名稱為 `Jwt`（非 `JwtSettings`）
+- **只在 Development 發生的行為**：示範資料 seeder（含 `admin/password123`）、Swagger、未設定時預設允許 `localhost:5173`／`4173` 的 CORS
+- **`Cors:AllowedOrigins`**：正式環境以 `Cors__AllowedOrigins__0` 等環境變數設定前端網址；`appsettings.json` 刻意留空陣列，避免依索引合併時殘留 localhost
 - **`Jwt:SecretKey` 在啟動時驗證**（`Auth/JwtSetup.cs`）：需至少 32 字元且不可為占位字串。Development 未設定時會產生臨時金鑰（重啟後需重新登入）；其他環境未設定則拒絕啟動。程式碼中沒有預設金鑰
 - `DefaultConnection` 為空字串且 provider 為 Sqlite 時，使用 `App_Data/personal_manager.db`
 
