@@ -130,12 +130,16 @@ backend/
 │
 ├── Common/
 │   ├── AppExceptions.cs          # NotFound／Forbidden／Unauthenticated／Conflict／DomainValidation
-│   └── CurrentUser.cs            # ICurrentUser：service 取得目前登入者
+│   ├── CurrentUser.cs            # ICurrentUser：service 取得目前登入者
+│   ├── QueryExtensions.cs        # OwnedBy()、RequirePublicUserIdAsync()
+│   ├── Reordering.cs Paging.cs   # 排序、分頁
+│   ├── RichTextSanitizer.cs      # 富文本清洗（HtmlSanitizer）
+│   ├── EmbedProviders.cs         # 嵌入白名單（與前端 lib/embeds.ts 一致）
+│   └── Slugs.cs                  # 網址代稱
 │
 ├── Auth/
-│   ├── AuthService.cs            # JWT token 產生、使用者驗證
 │   ├── JwtSettings.cs            # JWT 設定 model（無預設金鑰）
-│   └── JwtSetup.cs               # 金鑰驗證與 JWT 驗證註冊
+│   └── JwtSetup.cs               # 金鑰驗證與 JWT 驗證註冊（登入流程在 Features/Auth）
 │
 ├── Features/<名稱>/               # 各功能的 Controller、Service、DTO（見下方「Feature 寫法」）
 │
@@ -205,7 +209,7 @@ backend/
 |------|-----------|------|
 | `appsettings.json` | ✅ 是 | 只含占位符與非機密設定，**不能放真實密碼** |
 | `appsettings.Development.json` | ❌ 否（gitignored） | 本地開發的真實連線字串與密鑰 |
-| Zeabur 環境變數 | — | 生產環境覆寫，格式為雙底線（`__`）分隔層級 |
+| 環境變數 | — | 正式環境覆寫設定，以雙底線（`__`）分隔層級，例如 `Jwt__SecretKey`（部署平台尚未決定，見 `docs/deployment-guide.md`） |
 
 ### `appsettings.json`（已提交，只有占位符）
 
@@ -228,20 +232,22 @@ backend/
 
 ```json
 {
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=...;Database=personal_manager;User=...;Password=...;"
-  },
   "Jwt": {
     "SecretKey": "your_local_secret_key_at_least_32_chars"
   }
 }
 ```
 
-### 生產環境（Zeabur 環境變數）
+本機開發通常不需要這個檔案：Development 未設定 JWT 金鑰時會產生臨時金鑰，資料庫預設為 SQLite。
+
+### 正式環境（環境變數）
 
 ```
-ConnectionStrings__DefaultConnection = <MariaDB 連線字串>
-Jwt__SecretKey = <隨機密鑰>
+Jwt__SecretKey = <至少 32 字元的隨機字串>
+Database__Provider = MySql                               # 使用 SQLite 時可省略
+ConnectionStrings__DefaultConnection = <MySQL／MariaDB 連線字串>
+Cors__AllowedOrigins__0 = https://<前端網址>              # 前後端同網址反向代理時可省略
+Admin__BootstrapEmails__0 = <第一位管理員的 Email>
 ```
 
 - JWT 設定區段名稱為 `Jwt`（非 `JwtSettings`）
