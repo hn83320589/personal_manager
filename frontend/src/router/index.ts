@@ -111,6 +111,24 @@ const router = createRouter({
           component: () => import('../views/manage/ProfileView.vue'),
           meta: { title: '個人資料' },
         },
+        {
+          path: 'experience',
+          name: 'manage-resume',
+          component: () => import('../views/manage/ResumeView.vue'),
+          meta: { title: '經歷' },
+        },
+        {
+          path: 'skills',
+          name: 'manage-skills',
+          component: () => import('../views/manage/SkillsView.vue'),
+          meta: { title: '技能' },
+        },
+        {
+          path: 'contacts',
+          name: 'manage-contacts',
+          component: () => import('../views/manage/ContactsView.vue'),
+          meta: { title: '聯絡方式' },
+        },
       ],
     },
     {
@@ -118,18 +136,6 @@ const router = createRouter({
       name: 'dashboard',
       component: () => import('../views/admin/DashboardView.vue'),
       meta: { title: '管理儀表板', requiresAuth: true },
-    },
-    {
-      path: '/admin/experience',
-      name: 'experience-manage',
-      component: () => import('../views/admin/ExperienceManageView.vue'),
-      meta: { title: '學經歷管理', requiresAuth: true },
-    },
-    {
-      path: '/admin/skills',
-      name: 'skill-manage',
-      component: () => import('../views/admin/SkillManageView.vue'),
-      meta: { title: '專長管理', requiresAuth: true },
     },
     {
       path: '/admin/projects',
@@ -178,12 +184,6 @@ const router = createRouter({
       name: 'comment-manage',
       component: () => import('../views/admin/CommentManageView.vue'),
       meta: { title: '留言管理', requiresAuth: true },
-    },
-    {
-      path: '/admin/contacts',
-      name: 'contact-manage',
-      component: () => import('../views/admin/ContactManageView.vue'),
-      meta: { title: '聯絡方式管理', requiresAuth: true },
     },
     {
       path: '/admin/files',
