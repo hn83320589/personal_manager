@@ -1,0 +1,51 @@
+@import './base.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS for Personal Manager */
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+
+  /* Ensure all raw inputs/selects/textareas have visible text on white background */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="range"]):not([type="color"]),
+  select,
+  textarea {
+    @apply bg-white text-gray-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+  }
+
+  .input-primary {
+    @apply border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+  }
+
+  .form-input {
+    @apply bg-white text-gray-900 border border-gray-300 rounded-md px-3 py-2
+           focus:ring-2 focus:ring-primary-500 focus:border-primary-500
+           placeholder:text-gray-400;
+  }
+
+  .form-select {
+    @apply bg-white text-gray-900 border border-gray-300 rounded-md px-3 py-2
+           focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+  }
+
+  .form-label {
+    @apply text-gray-700 font-medium text-sm;
+  }
+}

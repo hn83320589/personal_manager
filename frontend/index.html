@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8">
+    
+    <!-- Basic Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="個人作品集與管理系統 - 展示專業技能、管理專案作品與個人資訊的現代化平台">
+    <meta name="keywords" content="個人作品集,專案管理,技能展示,部落格,履歷">
+    <meta name="author" content="Personal Manager">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    
+    <!-- Theme and Display -->
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="color-scheme" content="light dark">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#3b82f6">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Personal Manager">
+    <meta property="og:title" content="Personal Manager - 個人作品集與管理系統">
+    <meta property="og:description" content="現代化的個人作品集與管理平台，展示專業技能與管理個人專案">
+    <meta property="og:image" content="/images/og-image.png">
+    <meta property="og:image:alt" content="Personal Manager Logo">
+    <meta property="og:url" content="https://personalmanager.app">
+    <meta property="og:locale" content="zh_TW">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Personal Manager - 個人作品集與管理系統">
+    <meta name="twitter:description" content="現代化的個人作品集與管理平台">
+    <meta name="twitter:image" content="/images/twitter-card.png">
+    
+    <!-- Preconnect to External Domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="//api.github.com">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/src/main.ts" as="script" crossorigin>
+    <link rel="preload" href="/src/assets/main.css" as="style">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://personalmanager.app">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Personal Manager",
+      "description": "個人作品集與管理系統",
+      "url": "https://personalmanager.app",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Personal Manager Team"
+      }
+    }
+    </script>
+    
+    <title>Personal Manager - 個人作品集與管理系統</title>
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.3s ease-out;
+    ">
+      <div style="text-align: center;">
+        <div style="
+          width: 40px;
+          height: 40px;
+          border: 3px solid #e5e7eb;
+          border-top: 3px solid #3b82f6;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 16px;
+        "></div>
+        <p style="color: #6b7280; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+          載入中...
+        </p>
+      </div>
+    </div>
+    
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+    
+    <!-- Main App -->
+    <div id="app"></div>
+    
+    <!-- Fallback for users without JavaScript -->
+    <noscript>
+      <div style="
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        color: #374151;
+      ">
+        <h1>Personal Manager</h1>
+        <p>此應用程式需要 JavaScript 才能正常運作。</p>
+        <p>請啟用 JavaScript 並重新整理頁面。</p>
+      </div>
+    </noscript>
+    
+    <!-- App Scripts -->
+    <script type="module" src="/src/main.ts"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      // Remove loading screen when app is ready
+      window.addEventListener('load', () => {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+          setTimeout(() => {
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+              loadingScreen.remove();
+            }, 300);
+          }, 500);
+        }
+      });
+      
+      // Unregister all service workers and clear all caches
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          registrations.forEach(r => r.unregister())
+        })
+      }
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => caches.delete(name))
+        })
+      }
+      
+      // Performance monitoring
+      if (window.performance && window.performance.mark) {
+        window.performance.mark('app-start');
+        
+        window.addEventListener('load', () => {
+          window.performance.mark('app-loaded');
+          window.performance.measure('app-load-time', 'app-start', 'app-loaded');
+          
+          // Log performance metrics
+          const measure = window.performance.getEntriesByName('app-load-time')[0];
+          if (measure) {
+            console.log(`App load time: ${measure.duration.toFixed(2)}ms`);
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

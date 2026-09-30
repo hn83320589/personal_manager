@@ -1,0 +1,67 @@
+User-agent: *
+Allow: /
+
+# 允許所有搜尋引擎訪問公開內容
+Allow: /
+Allow: /about
+Allow: /experience
+Allow: /skills
+Allow: /portfolio
+Allow: /portfolio/*
+Allow: /calendar
+Allow: /blog
+Allow: /blog/*
+Allow: /guestbook
+Allow: /contact
+
+# 禁止訪問管理後台
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /login
+
+# 禁止訪問 API 路徑
+Disallow: /api/
+Disallow: /api/*
+
+# 禁止訪問私人檔案
+Disallow: /private/
+Disallow: /_nuxt/
+Disallow: /.well-known/
+
+# 允許特定檔案
+Allow: /manifest.json
+Allow: /sw.js
+Allow: /favicon.ico
+Allow: /icons/
+Allow: /images/
+
+# 爬蟲延遲設定（毫秒）
+Crawl-delay: 1
+
+# Sitemap 位置
+Sitemap: https://personalmanager.app/sitemap.xml
+Sitemap: https://personalmanager.app/sitemap-blog.xml
+Sitemap: https://personalmanager.app/sitemap-portfolio.xml
+
+# 特定搜尋引擎設定
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+# 社群媒體爬蟲
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
