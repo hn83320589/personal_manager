@@ -1,239 +1,99 @@
-# 資料庫設計文檔
+# 資料庫設計
 
-## 概述
+模型以 EF Core 定義在 `backend/src/PersonalManager.Api/Models` 與 `Data/ApplicationDbContext.cs`，由 migration 建立資料表。
+本文件說明資料表的用途與關係；欄位的最新定義以程式碼為準。
 
-Personal Manager 使用 MariaDB（生產環境）或本地 JSON 檔案（開發 fallback）。Schema 由 EF Core `EnsureCreated()` 自動建立，不需要手動 migration。
+## 原則
 
----
+- **資料庫**：預設 SQLite，可切換 MySQL／MariaDB；兩種資料庫各有一組 migration（`Migrations/Sqlite`、`Migrations/MySql`），模型相同（ADR-008）
+- **時間**：`DateTime` 一律以 UTC 存取（`UtcDateTimeConverter`）；只有日期或時間的欄位使用 `DateOnly`／`TimeOnly`
+- **Enum**：以字串儲存（例如 `"Published"`），新增選項不影響既有資料
+- **擁有者**：屬於使用者的資料表都有 `UserId`（實作 `IOwnedByUser`），API 以 `OwnedBy(userId)` 限定範圍
+- **排序**：可由使用者排序的資料表有 `SortOrder`（實作 `ISortable`）
+- **索引**：全部以 `HasIndex` 定義，會出現在 migration 中
 
-## 實體關係圖
+## 關係總覽
 
+```mermaid
+erDiagram
+  Users ||--o| PersonalProfiles : "一份個人資料"
+  Users ||--o{ Educations : ""
+  Users ||--o{ WorkExperiences : ""
+  Users ||--o{ Skills : ""
+  Users ||--o{ ContactMethods : ""
+  Users ||--o{ Portfolios : ""
+  Users ||--o{ BlogPosts : ""
+  Users ||--o{ Tags : "每人一份標籤"
+  Portfolios }o--o{ Tags : "PortfolioTags"
+  BlogPosts }o--o{ Tags : "BlogPostTags"
+  Users ||--o{ GuestBookEntries : "收到的留言（TargetUserId）"
+  Users ||--o{ CalendarEvents : ""
+  Users ||--o{ TodoItems : ""
+  Users ||--o{ Projects : ""
+  Projects |o--o{ WorkTasks : "刪除專案時設為 NULL"
+  WorkTasks |o--o{ TimeEntries : "刪除任務時設為 NULL"
+  Users ||--o{ FileUploads : ""
+  Users ||--o{ RefreshTokens : ""
+  Users ||--o{ PasswordResetTokens : ""
 ```
-Users (1) ──── (1) PersonalProfiles
-Users (1) ──── (N) Educations
-Users (1) ──── (N) WorkExperiences
-Users (1) ──── (N) Skills
-Users (1) ──── (N) Portfolios
-Users (1) ──── (N) CalendarEvents
-Users (1) ──── (N) TodoItems
-Users (1) ──── (N) WorkTasks
-Users (1) ──── (N) BlogPosts
-Users (1) ──── (N) ContactMethods
-GuestBookEntries.TargetUserId ──── (N:1) Users
-```
 
----
+## 帳號與認證
 
-## 資料表設計
+| 資料表 | 用途 | 重點欄位 |
+| --- | --- | --- |
+| `Users` | 帳號 | `Username`（唯一，英數底線連字號）、`Email`（唯一）、`PasswordHash`（BCrypt）、`Role`（`User`／`Admin`）、`IsActive` |
+| `RefreshTokens` | 登入工作階段 | `TokenHash`（SHA-256，唯一；不存原始 token）、`ExpiresAt`、`IsRevoked`。每次 refresh 輪換（ADR-010） |
+| `PasswordResetTokens` | 重設密碼連結 | `TokenHash`（唯一）、`ExpiresAt`、`IsUsed` |
 
-### Users（使用者）
+## 公開頁面內容
 
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | 使用者 ID |
-| Username | varchar(50) | NOT NULL, UNIQUE | 帳號名稱 |
-| Email | varchar(100) | NOT NULL, UNIQUE | 電子郵件 |
-| PasswordHash | varchar(255) | NOT NULL | BCrypt 雜湊密碼 |
-| FullName | varchar(100) | | 顯示名稱 |
-| Role | varchar(20) | 預設 `User` | 角色（User / Admin） |
-| IsActive | bool | 預設 true | 帳號啟用狀態 |
-| CreatedAt | datetime | NOT NULL | 建立時間 |
-| UpdatedAt | datetime | NOT NULL | 更新時間 |
+| 資料表 | 用途 | 重點欄位 |
+| --- | --- | --- |
+| `PersonalProfiles` | 個人介紹與公開頁面呈現設定（每人一份，`UserId` 唯一） | `Title`、`Summary`、`ProfileImageUrl`、`ThemeColor`、`AvailabilityStatus`；呈現設定 `PortfolioMode`、`CardStyle`、`CardRatio`、`SkillDisplay`（ADR-012） |
+| `Educations` | 學歷 | `School`、`Degree`、`FieldOfStudy`、`StartYear`／`EndYear`、`IsPublic`、`SortOrder` |
+| `WorkExperiences` | 工作經歷 | `Company`、`Position`、`StartDate`／`EndDate`（`DateOnly`）、`IsCurrent`、`IsPublic`、`SortOrder` |
+| `Skills` | 技能 | `Name`、`Category`（自由輸入）、`Level`（選填）、`YearsOfExperience`（選填）、`IsPublic`、`SortOrder` |
+| `ContactMethods` | 聯絡方式 | `Type`（Email、Phone、GitHub、Behance…）、`Label`、`Value`、`IsPublic`、`SortOrder` |
+| `Portfolios` | 作品 | 見下方 |
+| `BlogPosts` | 文章 | `Slug`（每位使用者範圍內唯一）、`Content`（已清洗的 HTML）、`Status`、`PublishedAt`（未來時間即為排程）、`CoverImageUrl`、`ReadingMinutes`、`ViewCount` |
+| `Tags` | 使用者自己的標籤，文章與作品共用 | `(UserId, Name)` 唯一 |
+| `GuestBookEntries` | 留言板 | `TargetUserId`（留言給誰）、`Name`、`Email`（不公開）、`Message`、`IsApproved`、`AdminReply`、`RepliedAt` |
 
-### PersonalProfiles（個人資料）
+### Portfolios（作品）
 
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | |
-| UserId | int | FK → Users | 所屬用戶 |
-| Title | varchar(100) | | 職稱 |
-| Summary | varchar(500) | | 一行摘要 |
-| Description | text | | 詳細自介 |
-| ProfileImageUrl | varchar(500) | | 大頭照 URL |
-| Website | varchar(200) | | 個人網站 |
-| Location | varchar(100) | | 所在地 |
-| ThemeColor | varchar(50) | 預設 `blue` | 主題色（blue/green/purple/rose/slate） |
-| CreatedAt | datetime | | |
-| UpdatedAt | datetime | | |
+一般欄位存放基本資訊，內容以 JSON 文字存在同一列（ADR-012），整份作品一起讀寫：
 
-### Educations（學歷）
+| 欄位 | 內容 |
+| --- | --- |
+| `Title`、`Slug`、`Summary`、`Category`、`Year` | 基本資訊；`(UserId, Slug)` 唯一 |
+| `Role`、`Period` | 固定的作品資訊欄位 |
+| `IsFeatured`、`IsPublic`、`SortOrder` | 顯示設定 |
+| `CoverFocus` | 封面裁切時保留的位置（CSS `object-position`，例如 `50% 30%`） |
+| `Covers`（JSON） | 封面圖片清單：網址、尺寸、說明、替代文字、`FileId` |
+| `Fields`（JSON） | 自訂的作品資訊欄位（名稱／內容） |
+| `Links`（JSON） | 連結 |
+| `Blocks`（JSON） | 內容區塊，以 `type` 區分：`text`、`image`、`gallery`、`files`、`embed`、`metrics`、`code` |
 
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | |
-| UserId | int | FK → Users | |
-| School | varchar(200) | NOT NULL | 學校名稱 |
-| Degree | varchar(100) | | 學位 |
-| FieldOfStudy | varchar(200) | | 科系 |
-| StartYear | int? | | 入學年 |
-| EndYear | int? | | 畢業年（null = 就讀中） |
-| Description | text | | 說明 |
-| IsPublic | bool | 預設 true | 是否公開 |
-| SortOrder | int | | 排序 |
-| CreatedAt / UpdatedAt | datetime | | |
+JSON 欄位使用一般文字型別，SQLite 與 MySQL 都適用（`Data/JsonColumns.cs`）；缺點是無法在資料庫中查詢區塊內容。
 
-### WorkExperiences（工作經歷）
+## 個人工具
 
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | |
-| UserId | int | FK → Users | |
-| Company | varchar(200) | NOT NULL | 公司名稱 |
-| Position | varchar(200) | NOT NULL | 職位 |
-| StartDate | datetime? | | 到職日 |
-| EndDate | datetime? | | 離職日 |
-| IsCurrent | bool | | 是否在職 |
-| Description | text | | 職責說明 |
-| IsPublic | bool | 預設 true | |
-| SortOrder | int | | |
-| CreatedAt / UpdatedAt | datetime | | |
+| 資料表 | 用途 | 重點欄位 |
+| --- | --- | --- |
+| `CalendarEvents` | 行事曆 | `StartTime`／`EndTime`（UTC）、`IsAllDay`、`IsPublic`、`Color`、`Recurrence`（每天／週／月／年）、`RecurrenceUntil`；重複行程由後端展開 |
+| `TodoItems` | 待辦 | `Priority`、`Status`、`DueDate`、`CompletedAt` |
+| `Projects` | 工作追蹤的專案 | `Name`、`Color`、`SortOrder` |
+| `WorkTasks` | 工作任務 | `ProjectId`（選填）、`Priority`、`Status`、`EstimatedHours`；實際時數由時間紀錄加總，不另外儲存 |
+| `TimeEntries` | 時間紀錄 | `WorkTaskId`（選填；沒有任務時以 `Title` 描述）、`Date`、`StartTime`／`EndTime`（選填）、`DurationMinutes` |
 
-### Skills（技能）
+## 檔案
 
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | |
-| UserId | int | FK → Users | |
-| Name | varchar(100) | NOT NULL | 技能名稱 |
-| Category | varchar(50) | | 分類 |
-| Level | enum | Beginner/Intermediate/Advanced/Expert | 等級 |
-| YearsOfExperience | int | | 年資 |
-| IsPublic | bool | 預設 true | |
-| SortOrder | int | | |
-| CreatedAt / UpdatedAt | datetime | | |
+| 資料表 | 用途 | 重點欄位 |
+| --- | --- | --- |
+| `FileUploads` | 上傳的檔案 | `FileName`（原始檔名，只用於顯示）、`StoredName`（GUID）、`FileUrl`、`Kind`、`MimeType`（由伺服器依檔案內容判斷）、`FileSize`、`Width`／`Height`（圖片） |
 
-### Portfolios（作品集）
+作品與文章以網址或 `FileId` 引用檔案，沒有外鍵；刪除前由 `GET /api/me/files/{id}/usages` 找出使用中的內容並提示。
 
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | |
-| UserId | int | FK → Users | |
-| Title | varchar(200) | NOT NULL | 專案名稱 |
-| Description | text | | 專案說明 |
-| ImageUrl | varchar(500) | | 封面圖 URL |
-| ProjectUrl | varchar(500) | | 專案連結 |
-| RepositoryUrl | varchar(500) | | 原始碼連結 |
-| Technologies | text | | 使用技術（逗號分隔） |
-| IsFeatured | bool | | 是否精選 |
-| IsPublic | bool | 預設 true | |
-| SortOrder | int | | |
-| CreatedAt / UpdatedAt | datetime | | |
+## 修改資料表
 
-### CalendarEvents（行事曆事件）
-
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | |
-| UserId | int | FK → Users | |
-| Title | varchar(200) | NOT NULL | 事件標題 |
-| Description | text | | 說明 |
-| StartTime | datetime | NOT NULL | 開始時間 |
-| EndTime | datetime | NOT NULL | 結束時間 |
-| IsAllDay | bool | | 是否全天事件 |
-| IsPublic | bool | | 是否公開 |
-| Color | varchar(20) | | 顯示顏色（hex） |
-| CreatedAt / UpdatedAt | datetime | | |
-
-### TodoItems（待辦事項）
-
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | |
-| UserId | int | FK → Users | |
-| Title | varchar(200) | NOT NULL | 標題 |
-| Description | text | | 說明 |
-| Priority | enum | Low/Medium/High | 優先度 |
-| Status | enum | Pending/InProgress/Completed | 狀態 |
-| DueDate | datetime? | | 截止日 |
-| CompletedAt | datetime? | | 完成時間 |
-| CreatedAt / UpdatedAt | datetime | | |
-
-### WorkTasks（工作任務）
-
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | |
-| UserId | int | FK → Users | |
-| Title | varchar(200) | NOT NULL | 任務名稱 |
-| Description | text | | 說明 |
-| Project | varchar(100) | | 所屬專案名稱（字串，非外鍵） |
-| Priority | enum | Low/Medium/High/Urgent | 優先度 |
-| Status | enum | Pending/Planning/InProgress/Testing/Completed/OnHold/Cancelled | 狀態 |
-| EstimatedHours | double | | 預估工時 |
-| ActualHours | double | | 實際工時 |
-| Tags | text | | 標籤（逗號分隔） |
-| DueDate | datetime? | | 截止日 |
-| CompletedAt | datetime? | | 完成時間 |
-| CreatedAt / UpdatedAt | datetime | | |
-
-> 注意：WorkTask 沒有獨立的 Project 實體，project 只是任務上的字串欄位。時間計時記錄（TimeEntry）存在前端 localStorage，後端無對應資料表。
-
-### BlogPosts（部落格文章）
-
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | |
-| UserId | int | FK → Users | |
-| Title | varchar(200) | NOT NULL | 文章標題 |
-| Slug | varchar(200) | UNIQUE | URL 識別碼 |
-| Content | text | | Markdown 內容 |
-| Summary | varchar(500) | | 摘要 |
-| Category | varchar(50) | | 分類（字串，無獨立分類表） |
-| Tags | text | | 標籤（逗號分隔） |
-| Status | enum | Draft/Published/Archived | 狀態 |
-| IsPublic | bool | 預設 true | |
-| ViewCount | int | 預設 0 | 瀏覽次數 |
-| PublishedAt | datetime? | | 發布時間 |
-| CreatedAt / UpdatedAt | datetime | | |
-
-### GuestBookEntries（訪客留言）
-
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | |
-| TargetUserId | int | FK → Users | 留言目標用戶（每人獨立留言板） |
-| Name | varchar(100) | NOT NULL | 留言者姓名 |
-| Email | varchar(200) | | 留言者 Email |
-| Message | text | NOT NULL | 留言內容 |
-| IsApproved | bool | 預設 false | 是否通過審核 |
-| AdminReply | text | | 管理員回覆 |
-| CreatedAt / UpdatedAt | datetime | | |
-
-### ContactMethods（聯絡方式）
-
-| 欄位 | 型別 | 限制 | 說明 |
-|------|------|------|------|
-| Id | int | PK, AI | |
-| UserId | int | FK → Users | |
-| Type | enum | Email/Phone/LinkedIn/GitHub/Facebook/Twitter/Instagram/Discord/Other | 類型 |
-| Label | varchar(50) | | 自訂標籤 |
-| Value | varchar(500) | NOT NULL | 聯絡值（URL / Email / 電話） |
-| Icon | varchar(50) | | 圖示名稱（預留） |
-| IsPublic | bool | 預設 true | |
-| SortOrder | int | | |
-| CreatedAt / UpdatedAt | datetime | | |
-
----
-
-## 索引設計
-
-以下索引由 `DatabaseSeeder.cs` 在啟動時自動建立：
-
-| 資料表 | 欄位 | 說明 |
-|--------|------|------|
-| Users | Username | UNIQUE |
-| Users | Email | UNIQUE |
-| PersonalProfiles | UserId | |
-| BlogPosts | Slug | UNIQUE |
-| BlogPosts | UserId, Status | 複合索引 |
-| GuestBookEntries | TargetUserId, IsApproved | 複合索引 |
-| Skills | UserId | |
-| CalendarEvents | UserId, StartTime | 複合索引 |
-
----
-
-## Schema 異動注意事項
-
-- **本地開發（JSON 模式）**：不受 schema 影響，直接讀寫 `Data/JsonData/*.json`
-- **本地開發（DB 模式）**：`EnsureCreated()` 只在 DB 不存在時建立，若已存在不會異動。欄位新增需手動 `ALTER TABLE` 或 DROP + 重建
-- **生產環境（Zeabur）**：同上，schema 異動需在 Zeabur 的 MariaDB 控制台手動執行 SQL
+步驟見 [`development-guide.md`](development-guide.md#修改資料表)。
