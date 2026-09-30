@@ -51,7 +51,7 @@
 - [ ] 非 Development 環境不再自動建立 admin 帳號 → Phase 2 Admin 功能需提供建立第一個管理員的方式（例如以設定指定的 Email 註冊時授予 Admin）
 - [ ] 【Bug】部落格編輯器的「特色圖片」欄位不存在於前端型別與後端資料表，上傳的圖片從未被儲存 → Phase 2 Blog 重建時補上 `CoverImage`
 - [ ] `BlogPost.Tags`、`WorkTask.Tags` 字串欄位與其註解仍寫著「供 JSON fallback 使用」，JSON 模式已移除 → Phase 2 一併刪除欄位
-- [ ] 本地 `dotnet ef` 工具為 9.0.8，runtime 為 9.0.13（產生 migration 時會出現警告，不影響結果）
+- [x] `dotnet-ef` 以 local tool 鎖定 9.0.13；CI 檢查兩組 migration 是否都已產生
 
 ---
 

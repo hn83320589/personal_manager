@@ -21,6 +21,13 @@ jobs:
         run: dotnet build PersonalManager.sln --configuration Release
       - name: Test
         run: dotnet test PersonalManager.sln --configuration Release --no-build
+      # 每次 schema 異動都要同時產生 Sqlite 與 MySql 兩組 migration（ADR-008），漏掉任一組就讓 CI 失敗
+      - name: Check migrations are up to date
+        working-directory: backend/src/PersonalManager.Api
+        run: |
+          dotnet tool restore
+          dotnet ef migrations has-pending-model-changes --context SqliteApplicationDbContext
+          dotnet ef migrations has-pending-model-changes --context MySqlApplicationDbContext
 
   frontend:
     name: Frontend (type-check + unit test + build)
