@@ -16,14 +16,12 @@ public interface ICurrentUser
 
 public sealed class HttpCurrentUser(IHttpContextAccessor accessor) : ICurrentUser
 {
-    public const string AdminRole = "Admin";
-
     private ClaimsPrincipal? Principal => accessor.HttpContext?.User;
 
     public int? UserId =>
         int.TryParse(Principal?.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : null;
 
-    public bool IsAdmin => Principal?.IsInRole(AdminRole) == true;
+    public bool IsAdmin => Principal?.IsInRole(Models.Roles.Admin) == true;
 
     public int RequireUserId() => UserId ?? throw new UnauthenticatedException();
 }

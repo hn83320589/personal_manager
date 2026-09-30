@@ -44,11 +44,11 @@
 - [x] 待辦、工作追蹤（實際時數改由時間紀錄加總、時間紀錄改用 DateOnly／TimeOnly 並自動計算時長、移除重複的任務與專案名稱、統計 API）
 - [x] 檔案上傳（副檔名與 magic bytes 須一致、不收 SVG／原始檔、伺服器判定 MIME、記錄圖片寬高、50 MB 上限且超過時不先寫入暫存、nosniff、S3 改用伺服器判定的 Content-Type）
 - [x] Auth（httpOnly cookie refresh token、token 雜湊、輪換與重用偵測、登入與 refresh 檢查停用帳號、重設／修改密碼後撤銷全部工作階段、帳號限英數底線連字號、密碼至少 8 碼、access token 15 分鐘）
-- [ ] Admin：使用者管理、建立第一位管理員的方式
-- [ ] 移除 `IRepository`、`CrudService` 與舊的 DTO／Mapping 檔
+- [x] Admin：使用者列表、停用／啟用（停用時結束工作階段）、角色變更（不可停用或降級自己）；第一位管理員以 `Admin:BootstrapEmails` 建立
+- [ ] 移除 `IRepository`、`CrudService` 與舊的 DTO／Mapping 檔 → 只剩作品集使用，Phase 3 重建作品集後一併移除
 
 ### 技術債（重構期間發現）
-- [ ] 非 Development 環境不再自動建立 admin 帳號 → Phase 2 Admin 功能需提供建立第一個管理員的方式（例如以設定指定的 Email 註冊時授予 Admin）
+- [x] 第一位管理員以 `Admin:BootstrapEmails` 建立
 - [x] 【Bug】部落格「特色圖片」從未被儲存 → 後端已新增 `CoverImageUrl`（前端於 Phase 4 串接）
 - [x] 移除 `WorkTask.Tags` 字串欄位
 - [x] `dotnet-ef` 以 local tool 鎖定 9.0.13；CI 檢查兩組 migration 是否都已產生

@@ -19,6 +19,7 @@ public sealed class AuthService(
     ICurrentUser currentUser,
     IOptions<JwtSettings> jwtOptions,
     IOptions<EmailSettings> emailOptions,
+    IOptions<AdminSettings> adminOptions,
     IEmailService email,
     TimeProvider clock)
 {
@@ -53,7 +54,7 @@ public sealed class AuthService(
             Email = emailAddress,
             FullName = request.FullName.Trim(),
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            Role = "User",
+            Role = IsBootstrapAdmin(emailAddress) ? Roles.Admin : Roles.User,
             IsActive = true
         };
         db.Users.Add(user);
@@ -164,6 +165,9 @@ public sealed class AuthService(
         await RevokeAllSessionsAsync(userId);
         await transaction.CommitAsync();
     }
+
+    private bool IsBootstrapAdmin(string emailAddress) =>
+        adminOptions.Value.BootstrapEmails.Any(e => e.Trim().Equals(emailAddress, StringComparison.OrdinalIgnoreCase));
 
     private Task RevokeAllSessionsAsync(int userId) =>
         db.RefreshTokens.Where(t => t.UserId == userId && !t.IsRevoked)

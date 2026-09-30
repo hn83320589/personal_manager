@@ -200,7 +200,7 @@ backend/
 | Controller | 路由前綴 | 說明 |
 |------------|----------|------|
 | AuthController／MyPasswordController | `/api/auth/login`、`register`、`refresh`、`logout`、`me`、`forgot-password`、`reset-password`；`/api/me/password` | 認證（已重建，ADR-010） |
-| UsersController | `/api/users` | 使用者管理（待 Admin 重建；公開端點已移至 `/api/public/users`） |
+| AdminUsersController | `/api/admin/users`（含 `{id}/status`、`{id}/role`） | 使用者管理（已重建，限 Admin） |
 | PublicProfilesController／MyProfileController | `/api/public/users`（目錄）、`/api/public/users/{username}`、`/api/me/profile` | 個人資料與前台呈現設定（已重建） |
 | PublicResumeController／MyEducationsController | `/api/public/users/{username}/educations`、`/api/me/educations` | 學歷（已重建） |
 | PublicResumeController／MyWorkExperiencesController | `/api/public/users/{username}/work-experiences`、`/api/me/work-experiences` | 工作經歷（已重建） |
@@ -275,6 +275,7 @@ Jwt__SecretKey = <隨機密鑰>
 ```
 
 - JWT 設定區段名稱為 `Jwt`（非 `JwtSettings`）
+- **第一位管理員**：`Admin:BootstrapEmails`（環境變數 `Admin__BootstrapEmails__0`）中的 Email 註冊後直接成為 Admin；正式環境不會執行示範資料 seeder
 - **流量限制**：`RateLimiting:AuthPermitsPerMinute`、`RateLimiting:PublicWritePermitsPerMinute`（每個 IP 每分鐘，預設 10）
 - **只在 Development 發生的行為**：示範資料 seeder（含 `admin/password123`）、Swagger、未設定時預設允許 `localhost:5173`／`4173` 的 CORS
 - **`Cors:AllowedOrigins`**：正式環境以 `Cors__AllowedOrigins__0` 等環境變數設定前端網址；`appsettings.json` 刻意留空陣列，避免依索引合併時殘留 localhost

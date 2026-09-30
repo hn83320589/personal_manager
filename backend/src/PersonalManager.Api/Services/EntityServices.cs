@@ -9,22 +9,6 @@ using PersonalManager.Api.Settings;
 
 namespace PersonalManager.Api.Services;
 
-// ===== User Service =====
-public interface IUserService : ICrudService<User, CreateUserDto, UpdateUserDto, UserResponse> { }
-
-public class UserService : CrudService<User, CreateUserDto, UpdateUserDto, UserResponse>, IUserService
-{
-    public UserService(IRepository<User> repo) : base(repo) { }
-    protected override User MapToEntity(CreateUserDto dto)
-    {
-        var entity = dto.ToEntity();
-        entity.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-        return entity;
-    }
-    protected override UserResponse MapToResponse(User entity) => entity.ToResponse();
-    protected override void ApplyUpdate(User entity, UpdateUserDto dto) => entity.ApplyUpdate(dto);
-}
-
 // ===== Portfolio Service =====
 public interface IPortfolioService : ICrudService<Portfolio, CreatePortfolioDto, UpdatePortfolioDto, PortfolioResponse>
 {

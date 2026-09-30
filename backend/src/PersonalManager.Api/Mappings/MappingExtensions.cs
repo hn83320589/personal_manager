@@ -5,24 +5,6 @@ namespace PersonalManager.Api.Mappings;
 
 public static class MappingExtensions
 {
-    // ===== User =====
-    public static UserResponse ToResponse(this User u) => new()
-    {
-        Id = u.Id, Username = u.Username, Email = u.Email,
-        FullName = u.FullName, Role = u.Role, IsActive = u.IsActive, CreatedAt = u.CreatedAt
-    };
-    public static User ToEntity(this CreateUserDto d) => new()
-    {
-        Username = d.Username, Email = d.Email, FullName = d.FullName, Role = d.Role
-    };
-    public static void ApplyUpdate(this User u, UpdateUserDto d)
-    {
-        if (d.Email != null) u.Email = d.Email;
-        if (d.FullName != null) u.FullName = d.FullName;
-        if (d.Role != null) u.Role = d.Role;
-        if (d.IsActive.HasValue) u.IsActive = d.IsActive.Value;
-    }
-
     // ===== Portfolio =====
     public static PortfolioResponse ToResponse(this Portfolio p) => new()
     {

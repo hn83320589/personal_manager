@@ -18,7 +18,7 @@ builder.Services
     .AddPersistence(builder.Configuration, builder.Environment)   // ADR-008：預設 SQLite
     .AddEmail(builder.Configuration, startupLogger)
     .AddFileStorage(builder.Configuration, startupLogger)
-    .AddApplicationServices();
+    .AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 
