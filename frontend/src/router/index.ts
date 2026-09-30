@@ -125,6 +125,20 @@ const router = createRouter({
         },
         { path: 'projects', redirect: '/admin/works' },
         {
+          path: 'blog',
+          name: 'manage-posts',
+          component: () => import('../views/manage/PostsView.vue'),
+          meta: { title: '文章' },
+        },
+        {
+          path: 'blog/:id(\\d+)',
+          name: 'manage-post',
+          component: () => import('../views/manage/PostEditorView.vue'),
+          meta: { title: '編輯文章' },
+        },
+        { path: 'blog/editor/:id(\\d+)', redirect: (to) => `/admin/blog/${to.params.id}` },
+        { path: 'blog/editor', redirect: '/admin/blog' },
+        {
           path: 'experience',
           name: 'manage-resume',
           component: () => import('../views/manage/ResumeView.vue'),
@@ -167,24 +181,6 @@ const router = createRouter({
       name: 'task-manage',
       component: () => import('../views/admin/TaskManageView.vue'),
       meta: { title: '待辦事項管理', requiresAuth: true },
-    },
-    {
-      path: '/admin/blog',
-      name: 'blog-manage',
-      component: () => import('../views/admin/BlogManageView.vue'),
-      meta: { title: '文章管理', requiresAuth: true },
-    },
-    {
-      path: '/admin/blog/editor',
-      name: 'blog-editor',
-      component: () => import('../views/admin/BlogEditorView.vue'),
-      meta: { title: '文章編輯器', requiresAuth: true },
-    },
-    {
-      path: '/admin/blog/editor/:id',
-      name: 'blog-editor-edit',
-      component: () => import('../views/admin/BlogEditorView.vue'),
-      meta: { title: '編輯文章', requiresAuth: true },
     },
     {
       path: '/admin/comments',

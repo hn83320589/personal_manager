@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center gap-4">
+  <div :class="['flex gap-4', shape === 'wide' ? 'flex-col items-start' : 'items-center']">
     <div
       :class="[
         'grid shrink-0 place-items-center overflow-hidden border border-rule bg-soft text-muted',
@@ -59,7 +59,7 @@ const props = withDefaults(
 const emit = defineEmits<{ 'update:modelValue': [url: string] }>()
 
 const shapeClass = computed(() =>
-  props.shape === 'wide' ? 'aspect-[16/9] w-40 rounded-lg' : 'h-20 w-20 rounded-2xl',
+  props.shape === 'wide' ? 'aspect-[16/9] w-full rounded-lg' : 'h-20 w-20 rounded-2xl',
 )
 const uploading = ref(false)
 const progress = ref(0)

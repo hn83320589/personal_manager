@@ -23,12 +23,14 @@
     }
   }
 
-  /* Ensure all raw inputs/selects/textareas have visible text on white background */
-  input:not([type='checkbox']):not([type='radio']):not([type='submit']):not([type='button']):not(
-      [type='range']
-    ):not([type='color']),
-  select,
-  textarea {
+  /* 舊頁面的原生輸入框預設白底深字。以 :where() 包起來讓權重為 0，新元件的 class 才能覆蓋（例如深色模式、透明標題列） */
+  :where(
+    input:not([type='checkbox']):not([type='radio']):not([type='submit']):not([type='button']):not(
+        [type='range']
+      ):not([type='color']),
+    select,
+    textarea
+  ) {
     @apply bg-white text-gray-900;
   }
 }

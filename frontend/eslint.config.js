@@ -30,7 +30,6 @@ export default defineConfigWithVueTs(
       'src/views/admin/**',
       'src/views/*.vue',
       'src/components/{admin,blog,calendar,layout,task,work,ui,common}/**',
-      'src/stores/blog.ts',
       'src/stores/calendar.ts',
       'src/stores/comment.ts',
       'src/stores/profile.ts',
