@@ -4,6 +4,7 @@ using PersonalManager.Api.Auth;
 using PersonalManager.Api.DTOs;
 using PersonalManager.Api.Models;
 using PersonalManager.Api.Repositories;
+using PersonalManager.Api.Services;
 
 namespace PersonalManager.Tests;
 
@@ -26,7 +27,12 @@ public class AuthServiceTests
             ExpiryHours = 24
         });
 
-        _sut = new AuthService(_userRepo.Object, _refreshTokenRepo.Object, jwt);
+        _sut = new AuthService(
+            _userRepo.Object,
+            _refreshTokenRepo.Object,
+            new Mock<IRepository<PasswordResetToken>>().Object,
+            new Mock<IEmailService>().Object,
+            jwt);
     }
 
     private User MakeUser(int id = 1, string username = "admin", string password = "password123") => new()
