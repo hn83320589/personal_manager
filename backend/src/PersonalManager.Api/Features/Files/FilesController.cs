@@ -21,6 +21,10 @@ public sealed class MyFilesController(FileService files) : ControllerBase
     public async Task<ActionResult<ApiResponse<FileDto>>> Upload(IFormFile? file) =>
         StatusCode(StatusCodes.Status201Created, ApiResponse<FileDto>.Ok(await files.UploadAsync(file), "已上傳檔案"));
 
+    [HttpGet("{id:int}/usages")]
+    public async Task<ApiResponse<List<FileUsageDto>>> Usages(int id) =>
+        ApiResponse<List<FileUsageDto>>.Ok(await files.GetUsagesAsync(id));
+
     [HttpDelete("{id:int}")]
     public async Task<ApiResponse> Delete(int id)
     {

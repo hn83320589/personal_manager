@@ -1011,6 +1011,45 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/me/files/{id}/usages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["FileUsageDtoListApiResponse"];
+                        "application/json": components["schemas"]["FileUsageDtoListApiResponse"];
+                        "text/json": components["schemas"]["FileUsageDtoListApiResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/me/files/{id}": {
         parameters: {
             query?: never;
@@ -3601,6 +3640,20 @@ export interface components {
         };
         /** @enum {string} */
         FileKind: "Image" | "Pdf" | "Word" | "PowerPoint" | "Excel" | "Archive";
+        FileUsageDto: {
+            kind: components["schemas"]["FileUsageKind"];
+            /** Format: int32 */
+            id: number;
+            title: string;
+        };
+        FileUsageDtoListApiResponse: {
+            success: boolean;
+            message: string;
+            data?: components["schemas"]["FileUsageDto"][] | null;
+            errors: string[];
+        };
+        /** @enum {string} */
+        FileUsageKind: "Portfolio" | "Post" | "Profile";
         FilesBlock: Omit<components["schemas"]["PortfolioBlock"], "type"> & {
             title: string;
             items: components["schemas"]["PortfolioFile"][];

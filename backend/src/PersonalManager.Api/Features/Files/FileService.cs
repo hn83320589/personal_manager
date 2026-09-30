@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using PersonalManager.Api.Common;
@@ -8,6 +9,11 @@ using PersonalManager.Api.Services;
 using PersonalManager.Api.Settings;
 
 namespace PersonalManager.Api.Features.Files;
+
+public enum FileUsageKind { Portfolio, Post, Profile }
+
+/// <summary>使用這個檔案的內容，刪除前提示使用者（刪除後這些地方的圖片或附件會失效）。</summary>
+public sealed record FileUsageDto(FileUsageKind Kind, int Id, string Title);
 
 public sealed record FileDto(
     int Id, string FileName, string Url, FileKind Kind, string MimeType, long Size, int? Width, int? Height, DateTime CreatedAt);
@@ -76,6 +82,38 @@ public sealed class FileService(
         await storage.DeleteAsync(upload.StoredName);
         db.FileUploads.Remove(upload);
         await db.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// 找出使用這個檔案的作品、文章與個人資料。檔案網址含 GUID、不會重複，以網址比對即可；
+    /// 作品內容存成 JSON，個人網站的作品數量不多，直接在記憶體中比對。
+    /// </summary>
+    public async Task<List<FileUsageDto>> GetUsagesAsync(int id)
+    {
+        var userId = currentUser.RequireUserId();
+        var url = await db.FileUploads.AsNoTracking().OwnedBy(userId).Where(f => f.Id == id).Select(f => f.FileUrl)
+                      .FirstOrDefaultAsync()
+                  ?? throw new NotFoundException("找不到這個檔案");
+
+        var portfolios = await db.Portfolios.AsNoTracking().OwnedBy(userId)
+            .Select(p => new { p.Id, p.Title, p.Covers, p.Blocks })
+            .ToListAsync();
+        var usages = portfolios
+            .Where(p => JsonSerializer.Serialize(p.Covers, JsonColumns.Options).Contains(url)
+                        || JsonSerializer.Serialize(p.Blocks, JsonColumns.Options).Contains(url))
+            .Select(p => new FileUsageDto(FileUsageKind.Portfolio, p.Id, p.Title))
+            .ToList();
+
+        usages.AddRange(await db.BlogPosts.AsNoTracking().OwnedBy(userId)
+            .Where(p => p.CoverImageUrl == url || p.Content.Contains(url))
+            .OrderBy(p => p.Id)
+            .Select(p => new FileUsageDto(FileUsageKind.Post, p.Id, p.Title))
+            .ToListAsync());
+
+        if (await db.PersonalProfiles.AnyAsync(p => p.UserId == userId && p.ProfileImageUrl == url))
+            usages.Add(new FileUsageDto(FileUsageKind.Profile, 0, "個人資料"));
+
+        return usages;
     }
 
     private static async Task<byte[]> ReadHeaderAsync(IFormFile file)

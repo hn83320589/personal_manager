@@ -124,6 +124,75 @@ public class FilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Single(await MyFiles(owner));
     }
+
+    // ---------- 檔案被哪些內容使用 ----------
+
+    private static async Task<List<JsonElement>> Usages(TestUser user, int fileId) =>
+        await (await user.Client().GetAsync($"/api/me/files/{fileId}/usages")).ReadDataAsync<List<JsonElement>>();
+
+    private static string Describe(JsonElement usage) =>
+        $"{usage.GetProperty("kind").GetString()}:{usage.GetProperty("title").GetString()}";
+
+    [Fact]
+    public async Task Usages_ListWorksPostsAndProfileThatUseTheFile()
+    {
+        var me = await factory.CreateUserAsync();
+        var image = await UploadOk(me, "poster.png", SampleFiles.Png(10, 10));
+        var (id, url) = (image.GetProperty("id").GetInt32(), image.GetProperty("url").GetString()!);
+        var work = await (await me.Client().PostJsonAsync("/api/me/portfolios", new { title = "海報" })).ReadDataAsync<JsonElement>();
+        await me.Client().PutJsonAsync($"/api/me/portfolios/{work.GetProperty("id").GetInt32()}", new
+        {
+            title = "海報",
+            blocks = new object[] { new { type = "gallery", items = new[] { new { fileId = id } } } },
+        });
+        await me.Client().PostJsonAsync("/api/me/posts", new { title = "設計筆記", status = "Draft", coverImageUrl = url });
+        await me.Client().PutJsonAsync("/api/me/profile", new
+        {
+            fullName = "Dada", themeColor = "blue", profileImageUrl = url,
+            portfolioMode = "Designer", cardStyle = "Visual", cardRatio = "Portrait", skillDisplay = "NameOnly",
+        });
+
+        var usages = await Usages(me, id);
+
+        Assert.Equal(["Portfolio:海報", "Post:設計筆記", "Profile:個人資料"], usages.Select(Describe).Order());
+    }
+
+    [Fact]
+    public async Task Usages_FindImagesInsidePostContent()
+    {
+        var me = await factory.CreateUserAsync();
+        var image = await UploadOk(me, "inline.png", SampleFiles.Png(10, 10));
+        var url = image.GetProperty("url").GetString()!;
+        await me.Client().PostJsonAsync("/api/me/posts", new
+        {
+            title = "有圖的文章", status = "Draft", content = $"<figure><img src=\"{url}\" alt=\"\"><figcaption></figcaption></figure>",
+        });
+
+        var usages = await Usages(me, image.GetProperty("id").GetInt32());
+
+        Assert.Equal(["Post:有圖的文章"], usages.Select(Describe));
+    }
+
+    [Fact]
+    public async Task Usages_OfAnUnusedFile_IsEmpty()
+    {
+        var me = await factory.CreateUserAsync();
+        var file = await UploadOk(me, "spare.png", SampleFiles.Png(2, 2));
+
+        Assert.Empty(await Usages(me, file.GetProperty("id").GetInt32()));
+    }
+
+    [Fact]
+    public async Task UsagesOfSomeoneElsesFile_IsNotFound()
+    {
+        var owner = await factory.CreateUserAsync();
+        var intruder = await factory.CreateUserAsync();
+        var file = await UploadOk(owner, "mine.png", SampleFiles.Png(2, 2));
+
+        var response = await intruder.Client().GetAsync($"/api/me/files/{file.GetProperty("id").GetInt32()}/usages");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
 }
 
 public class FileSizeLimitTests
