@@ -34,6 +34,7 @@
 - [ ] feature folder 骨架
 
 ### 技術債（重構期間發現）
+- [ ] 【Bug】部落格編輯器的「特色圖片」欄位不存在於前端型別與後端資料表，上傳的圖片從未被儲存 → Phase 2 Blog 重建時補上 `CoverImage`
 - [ ] `BlogPost.Tags`、`WorkTask.Tags` 字串欄位與其註解仍寫著「供 JSON fallback 使用」，JSON 模式已移除 → Phase 2 一併刪除欄位
 - [ ] 本地 `dotnet ef` 工具為 9.0.8，runtime 為 9.0.13（產生 migration 時會出現警告，不影響結果）
 
