@@ -85,8 +85,11 @@ else
 }
 
 // JWT Authentication
-var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>() ?? new JwtSettings();
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+// 驗證後的設定同時供 JwtBearer 驗簽與 AuthService 簽發使用，確保兩邊是同一把金鑰
+using var startupLoggerFactory = LoggerFactory.Create(logging => logging.AddConsole());
+var jwtSettings = builder.Configuration.LoadJwtSettings(
+    builder.Environment, startupLoggerFactory.CreateLogger("Startup"));
+builder.Services.AddSingleton(Microsoft.Extensions.Options.Options.Create(jwtSettings));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

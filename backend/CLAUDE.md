@@ -232,7 +232,7 @@ backend/
     "DefaultConnection": ""
   },
   "Jwt": {
-    "SecretKey": "CHANGE_THIS_TO_A_RANDOM_SECRET_KEY_AT_LEAST_32_CHARACTERS",
+    "SecretKey": "",
     "Issuer": "PersonalManagerAPI",
     "Audience": "PersonalManagerClient",
     "ExpiryHours": 24
@@ -261,6 +261,7 @@ Jwt__SecretKey = <隨機密鑰>
 ```
 
 - JWT 設定區段名稱為 `Jwt`（非 `JwtSettings`）
+- **`Jwt:SecretKey` 在啟動時驗證**（`Auth/JwtSetup.cs`）：需至少 32 字元且不可為占位字串。Development 未設定時會產生臨時金鑰（重啟後需重新登入）；其他環境未設定則拒絕啟動。程式碼中沒有預設金鑰
 - `DefaultConnection` 為空字串且 provider 為 Sqlite 時，使用 `App_Data/personal_manager.db`
 
 ---
