@@ -33,7 +33,6 @@ export default defineConfigWithVueTs(
       'src/stores/blog.ts',
       'src/stores/calendar.ts',
       'src/stores/comment.ts',
-      'src/stores/portfolio.ts',
       'src/stores/profile.ts',
       'src/stores/task.ts',
       'src/services/**',

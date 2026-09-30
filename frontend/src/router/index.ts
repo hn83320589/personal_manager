@@ -112,6 +112,19 @@ const router = createRouter({
           meta: { title: '個人資料' },
         },
         {
+          path: 'works',
+          name: 'manage-works',
+          component: () => import('../views/manage/WorksView.vue'),
+          meta: { title: '作品' },
+        },
+        {
+          path: 'works/:id(\\d+)',
+          name: 'manage-work',
+          component: () => import('../views/manage/WorkEditorView.vue'),
+          meta: { title: '編輯作品' },
+        },
+        { path: 'projects', redirect: '/admin/works' },
+        {
           path: 'experience',
           name: 'manage-resume',
           component: () => import('../views/manage/ResumeView.vue'),
@@ -136,12 +149,6 @@ const router = createRouter({
       name: 'dashboard',
       component: () => import('../views/admin/DashboardView.vue'),
       meta: { title: '管理儀表板', requiresAuth: true },
-    },
-    {
-      path: '/admin/projects',
-      name: 'project-manage',
-      component: () => import('../views/admin/ProjectManageView.vue'),
-      meta: { title: '作品管理', requiresAuth: true },
     },
     {
       path: '/admin/calendar',

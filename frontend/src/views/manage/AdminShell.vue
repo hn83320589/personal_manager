@@ -123,7 +123,7 @@ const groups = computed<{ label: string; items: NavItem[] }[]>(() => [
     label: '公開頁面內容',
     items: [
       { label: '個人資料', to: '/admin/profile', icon: UserCircleIcon },
-      { label: '作品', to: '/admin/projects', icon: BriefcaseIcon },
+      { label: '作品', to: '/admin/works', icon: BriefcaseIcon },
       { label: '文章', to: '/admin/blog', icon: DocumentTextIcon },
       { label: '經歷', to: '/admin/experience', icon: AcademicCapIcon },
       { label: '技能', to: '/admin/skills', icon: SparklesIcon },
