@@ -6,13 +6,11 @@ This file provides guidance to Claude Code when working in this repository.
 
 ## 給 AI 的指示
 
-每次任務完成後，你必須：
-1. 更新下方「進度」區塊的 checkbox
-2. 若有新的技術債，加入「已知問題」
-3. 若做了未預期的架構決策，加入「架構決策」並說明原因
-4. 回報你更新了哪些區塊
-
-以上未完成，任務視為未完成。
+每次任務完成時：
+1. 在 `docs/TASKS.md` 勾選對應項目的 checkbox
+2. 有新的技術債時，加入 `docs/TASKS.md` 的「技術債」區塊
+3. 做了未預期的架構決策時，記錄到 `docs/system-specification.md` §12 架構決策紀錄（ADR），附上原因
+4. 回報更新了哪些檔案與區塊
 
 ---
 
