@@ -2,6 +2,9 @@ import { fileURLToPath } from 'node:url'
 import { mergeConfig, defineConfig, configDefaults } from 'vitest/config'
 import viteConfig from './vite.config'
 
+// 固定時區，日期相關的測試在任何機器（包含 CI）結果都相同
+process.env.TZ = 'Asia/Taipei'
+
 export default mergeConfig(
   viteConfig,
   defineConfig({
