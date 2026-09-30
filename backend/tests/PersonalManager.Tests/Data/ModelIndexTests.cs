@@ -28,7 +28,7 @@ public class ModelIndexTests
     [MemberData(nameof(Providers))]
     public void RefreshTokenLookup_IsUniqueIndexed(string provider)
     {
-        var index = FindIndex(BuildModel(provider), typeof(RefreshToken), nameof(RefreshToken.Token));
+        var index = FindIndex(BuildModel(provider), typeof(RefreshToken), nameof(RefreshToken.TokenHash));
 
         Assert.NotNull(index);
         Assert.True(index.IsUnique);
@@ -39,13 +39,13 @@ public class ModelIndexTests
     public void PasswordResetTokenLookup_IsUniqueIndexedWithBoundedLength(string provider)
     {
         var model = BuildModel(provider);
-        var index = FindIndex(model, typeof(PasswordResetToken), nameof(PasswordResetToken.Token));
+        var index = FindIndex(model, typeof(PasswordResetToken), nameof(PasswordResetToken.TokenHash));
 
         Assert.NotNull(index);
         Assert.True(index.IsUnique);
         // MySQL 無法對沒有長度上限的 longtext 欄位建立索引
         Assert.NotNull(model.FindEntityType(typeof(PasswordResetToken))!
-            .FindProperty(nameof(PasswordResetToken.Token))!.GetMaxLength());
+            .FindProperty(nameof(PasswordResetToken.TokenHash))!.GetMaxLength());
     }
 
     [Theory]

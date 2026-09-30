@@ -1,8 +1,7 @@
 using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
-using PersonalManager.Api.Auth;
 using PersonalManager.Api.Data;
-using PersonalManager.Api.DTOs;
+using PersonalManager.Api.Features.Auth;
 using PersonalManager.Api.Models;
 
 namespace PersonalManager.Tests.Infrastructure;
@@ -23,7 +22,7 @@ public static class TestUsers
     private const string Password = "integration-test-password";
 
     /// <summary>
-    /// 直接寫入資料庫建立使用者，再以 <see cref="IAuthService"/> 取得 token。
+    /// 直接寫入資料庫建立使用者，再以 <see cref="AuthService"/> 取得 token。
     /// 不經過註冊／登入 API，避免測試數量多時觸發流量限制。
     /// </summary>
     public static async Task<TestUser> CreateUserAsync(this ApiFactory factory, string? username = null,
@@ -44,9 +43,12 @@ public static class TestUsers
         db.Users.Add(user);
         await db.SaveChangesAsync();
 
-        var auth = scope.ServiceProvider.GetRequiredService<IAuthService>();
-        var login = await auth.LoginAsync(new LoginRequest { Username = username, Password = Password })
-                    ?? throw new InvalidOperationException("測試使用者登入失敗");
-        return new TestUser(user.Id, username, login.Token, factory);
+        // 停用的帳號無法登入；回傳沒有 token 的使用者，用於測試公開頁面與登入不接受停用帳號
+        if (!isActive)
+            return new TestUser(user.Id, username, "", factory);
+
+        var auth = scope.ServiceProvider.GetRequiredService<AuthService>();
+        var session = await auth.LoginAsync(new LoginRequest(username, Password));
+        return new TestUser(user.Id, username, session.Access.AccessToken, factory);
     }
 }

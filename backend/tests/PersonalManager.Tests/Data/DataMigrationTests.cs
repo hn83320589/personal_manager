@@ -51,6 +51,25 @@ public sealed class DataMigrationTests : IDisposable
         Assert.Equal(expectedKind, kind);
     }
 
+    [Fact]
+    public async Task HashedAuthTokens_ClearsLegacyPlaintextTokens()
+    {
+        await MigrateToMigrationBeforeAsync("HashedAuthTokens");
+        await _db.Database.ExecuteSqlAsync($"""
+            INSERT INTO Users (Username, Email, PasswordHash, FullName, Role, IsActive, CreatedAt, UpdatedAt)
+            VALUES ('legacy', 'legacy@test.local', 'x', 'Legacy', 'User', 1, '2026-01-01', '2026-01-01')
+            """);
+        await _db.Database.ExecuteSqlAsync($"""
+            INSERT INTO RefreshTokens (UserId, Token, ExpiresAt, IsRevoked, CreatedAt)
+            VALUES (1, 'plain-1', '2030-01-01', 0, '2026-01-01'), (1, 'plain-2', '2030-01-01', 0, '2026-01-01')
+            """);
+
+        await _db.Database.MigrateAsync();
+        var remaining = await _db.Database.SqlQuery<int>($"SELECT COUNT(*) AS Value FROM RefreshTokens").SingleAsync();
+
+        Assert.Equal(0, remaining);
+    }
+
     public void Dispose()
     {
         _db.Dispose();

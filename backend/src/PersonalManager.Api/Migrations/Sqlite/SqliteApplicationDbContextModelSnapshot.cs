@@ -390,9 +390,9 @@ namespace PersonalManager.Api.Migrations.Sqlite
                     b.Property<bool>("IsUsed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Token")
+                    b.Property<string>("TokenHash")
                         .IsRequired()
-                        .HasMaxLength(256)
+                        .HasMaxLength(64)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
@@ -400,8 +400,10 @@ namespace PersonalManager.Api.Migrations.Sqlite
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Token")
+                    b.HasIndex("TokenHash")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("PasswordResetTokens");
                 });
@@ -643,9 +645,9 @@ namespace PersonalManager.Api.Migrations.Sqlite
                     b.Property<bool>("IsRevoked")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Token")
+                    b.Property<string>("TokenHash")
                         .IsRequired()
-                        .HasMaxLength(256)
+                        .HasMaxLength(64)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
@@ -653,8 +655,10 @@ namespace PersonalManager.Api.Migrations.Sqlite
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Token")
+                    b.HasIndex("TokenHash")
                         .IsUnique();
+
+                    b.HasIndex("UserId", "IsRevoked");
 
                     b.ToTable("RefreshTokens");
                 });

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonalManager.Api.Data;
 
@@ -11,9 +12,11 @@ using PersonalManager.Api.Data;
 namespace PersonalManager.Api.Migrations.MySql
 {
     [DbContext(typeof(MySqlApplicationDbContext))]
-    partial class MySqlApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260930035956_HashedAuthTokens")]
+    partial class HashedAuthTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -199,7 +199,7 @@ backend/
 
 | Controller | 路由前綴 | 說明 |
 |------------|----------|------|
-| AuthController | `/api/auth` | 登入、註冊、refresh、登出、密碼重設 |
+| AuthController／MyPasswordController | `/api/auth/login`、`register`、`refresh`、`logout`、`me`、`forgot-password`、`reset-password`；`/api/me/password` | 認證（已重建，ADR-010） |
 | UsersController | `/api/users` | 使用者管理（待 Admin 重建；公開端點已移至 `/api/public/users`） |
 | PublicProfilesController／MyProfileController | `/api/public/users`（目錄）、`/api/public/users/{username}`、`/api/me/profile` | 個人資料與前台呈現設定（已重建） |
 | PublicResumeController／MyEducationsController | `/api/public/users/{username}/educations`、`/api/me/educations` | 學歷（已重建） |
@@ -248,7 +248,8 @@ backend/
     "SecretKey": "",
     "Issuer": "PersonalManagerAPI",
     "Audience": "PersonalManagerClient",
-    "ExpiryHours": 24
+    "AccessTokenMinutes": 15,
+    "RefreshTokenDays": 14
   }
 }
 ```
@@ -277,6 +278,7 @@ Jwt__SecretKey = <隨機密鑰>
 - **流量限制**：`RateLimiting:AuthPermitsPerMinute`、`RateLimiting:PublicWritePermitsPerMinute`（每個 IP 每分鐘，預設 10）
 - **只在 Development 發生的行為**：示範資料 seeder（含 `admin/password123`）、Swagger、未設定時預設允許 `localhost:5173`／`4173` 的 CORS
 - **`Cors:AllowedOrigins`**：正式環境以 `Cors__AllowedOrigins__0` 等環境變數設定前端網址；`appsettings.json` 刻意留空陣列，避免依索引合併時殘留 localhost
+- **認證（ADR-010）**：登入後回應本文只有 access token（預設 15 分鐘）；refresh token 以 `pm_refresh` cookie 傳遞（httpOnly、Secure、SameSite=Strict、Path=/api/auth，預設 14 天），資料庫只存 SHA-256 雜湊。每次 refresh 輪換；已撤銷的 token 被重用時撤銷該使用者全部工作階段。前端與 API 必須同一個 site（相同的註冊網域），cookie 才會送出
 - **`Jwt:SecretKey` 在啟動時驗證**（`Auth/JwtSetup.cs`）：需至少 32 字元且不可為占位字串。Development 未設定時會產生臨時金鑰（重啟後需重新登入）；其他環境未設定則拒絕啟動。程式碼中沒有預設金鑰
 - `DefaultConnection` 為空字串且 provider 為 Sqlite 時，使用 `App_Data/personal_manager.db`
 

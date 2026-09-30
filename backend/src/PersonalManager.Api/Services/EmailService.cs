@@ -47,23 +47,17 @@ public class SmtpEmailService : IEmailService
 }
 
 /// <summary>
-/// No-op email service used when SMTP is not configured.
-/// Logs the email content to console so developers can use the reset link locally.
+/// 未設定 SMTP 時使用。開發環境把信件內容（含重設密碼連結）寫進 log 方便測試；
+/// 其他環境只記錄「沒有寄出」，避免把重設連結留在 log 中被他人取得。
 /// </summary>
-public class NoOpEmailService : IEmailService
+public class NoOpEmailService(ILogger<NoOpEmailService> logger, IHostEnvironment environment) : IEmailService
 {
-    private readonly ILogger<NoOpEmailService> _logger;
-
-    public NoOpEmailService(ILogger<NoOpEmailService> logger)
-    {
-        _logger = logger;
-    }
-
     public Task SendEmailAsync(string to, string subject, string htmlBody)
     {
-        _logger.LogWarning(
-            "[NoOp Email] To: {To} | Subject: {Subject}\n--- Body ---\n{Body}\n---",
-            to, subject, htmlBody);
+        if (environment.IsDevelopment())
+            logger.LogWarning("[未寄出的信件] To: {To} | Subject: {Subject} | Body: {Body}", to, subject, htmlBody);
+        else
+            logger.LogWarning("未設定 SMTP，信件「{Subject}」沒有寄出", subject);
         return Task.CompletedTask;
     }
 }

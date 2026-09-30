@@ -1,4 +1,3 @@
-using PersonalManager.Api.Auth;
 using PersonalManager.Api.Common;
 using PersonalManager.Api.Services;
 
@@ -14,7 +13,7 @@ public static class ApplicationSetup
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<RichTextSanitizer>();
 
-        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<Features.Auth.AuthService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<Features.Profiles.ProfileService>();
         services.AddScoped<Features.Resume.EducationService>();

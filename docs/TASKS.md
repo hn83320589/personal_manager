@@ -43,7 +43,7 @@
 - [x] 行事曆（重複規則由後端展開、查詢區間最長一年、顏色格式驗證；所有時間一律以 UTC 存取）
 - [x] 待辦、工作追蹤（實際時數改由時間紀錄加總、時間紀錄改用 DateOnly／TimeOnly 並自動計算時長、移除重複的任務與專案名稱、統計 API）
 - [x] 檔案上傳（副檔名與 magic bytes 須一致、不收 SVG／原始檔、伺服器判定 MIME、記錄圖片寬高、50 MB 上限且超過時不先寫入暫存、nosniff、S3 改用伺服器判定的 Content-Type）
-- [ ] Auth（httpOnly cookie refresh token、token 雜湊、重設密碼後撤銷）
+- [x] Auth（httpOnly cookie refresh token、token 雜湊、輪換與重用偵測、登入與 refresh 檢查停用帳號、重設／修改密碼後撤銷全部工作階段、帳號限英數底線連字號、密碼至少 8 碼、access token 15 分鐘）
 - [ ] Admin：使用者管理、建立第一位管理員的方式
 - [ ] 移除 `IRepository`、`CrudService` 與舊的 DTO／Mapping 檔
 

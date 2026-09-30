@@ -9,5 +9,9 @@ public class JwtSettings
     public string SecretKey { get; set; } = string.Empty;
     public string Issuer { get; set; } = "PersonalManagerAPI";
     public string Audience { get; set; } = "PersonalManagerClient";
-    public int ExpiryHours { get; set; } = 24;
+    /// <summary>Access token 效期。token 只放在前端記憶體，過期後以 refresh cookie 換發。</summary>
+    public int AccessTokenMinutes { get; set; } = 15;
+
+    /// <summary>Refresh token（登入狀態）效期。</summary>
+    public int RefreshTokenDays { get; set; } = 14;
 }

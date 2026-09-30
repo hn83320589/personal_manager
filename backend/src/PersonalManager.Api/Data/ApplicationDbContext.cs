@@ -195,9 +195,10 @@ public class ApplicationDbContext : DbContext
         b.Entity<FileUpload>().HasIndex(e => e.UserId);
 
         // token 驗證時以 token 值查詢；值本身需唯一
-        b.Entity<RefreshToken>().HasIndex(e => e.Token).IsUnique();
-        b.Entity<PasswordResetToken>().Property(e => e.Token).HasMaxLength(256);
-        b.Entity<PasswordResetToken>().HasIndex(e => e.Token).IsUnique();
+        b.Entity<RefreshToken>().HasIndex(e => e.TokenHash).IsUnique();
+        b.Entity<RefreshToken>().HasIndex(e => new { e.UserId, e.IsRevoked });
+        b.Entity<PasswordResetToken>().HasIndex(e => e.TokenHash).IsUnique();
+        b.Entity<PasswordResetToken>().HasIndex(e => e.UserId);
 
         b.Entity<Tag>().HasIndex(e => new { e.UserId, e.Name }).IsUnique();
     }

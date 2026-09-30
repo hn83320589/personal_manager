@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
+using PersonalManager.Api.Services;
 using Microsoft.Data.Sqlite;
 
 namespace PersonalManager.Tests.Infrastructure;
@@ -19,6 +22,12 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
     private readonly string _environment;
     private readonly string? _jwtSecret;
     private readonly IReadOnlyDictionary<string, string?> _settings;
+
+    /// <summary>測試期間寄出的信件。</summary>
+    public TestEmailOutbox Outbox { get; } = new();
+
+    /// <summary>應用程式使用的時鐘，可在測試中快轉。</summary>
+    public AdjustableClock Clock { get; } = new();
 
     /// <summary>xUnit fixture 使用的預設設定：Testing 環境 + 合法的測試用簽章金鑰。</summary>
     public ApiFactory() : this("Testing", TestJwtSecret, null) { }
@@ -50,6 +59,12 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
             builder.UseSetting("Jwt:SecretKey", _jwtSecret);
         foreach (var (key, value) in _settings)
             builder.UseSetting(key, value);
+
+        builder.ConfigureTestServices(services =>
+        {
+            services.AddSingleton<IEmailService>(Outbox);
+            services.AddSingleton<TimeProvider>(Clock);
+        });
     }
 
     protected override void Dispose(bool disposing)
