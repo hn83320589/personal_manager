@@ -25,26 +25,6 @@ public class UserService : CrudService<User, CreateUserDto, UpdateUserDto, UserR
     protected override void ApplyUpdate(User entity, UpdateUserDto dto) => entity.ApplyUpdate(dto);
 }
 
-// ===== Profile Service =====
-public interface IProfileService : ICrudService<PersonalProfile, CreateProfileDto, UpdateProfileDto, ProfileResponse>
-{
-    Task<ProfileResponse?> GetByUserIdAsync(int userId);
-}
-
-public class ProfileService : CrudService<PersonalProfile, CreateProfileDto, UpdateProfileDto, ProfileResponse>, IProfileService
-{
-    public ProfileService(IRepository<PersonalProfile> repo) : base(repo) { }
-    protected override PersonalProfile MapToEntity(CreateProfileDto dto) => dto.ToEntity();
-    protected override ProfileResponse MapToResponse(PersonalProfile entity) => entity.ToResponse();
-    protected override void ApplyUpdate(PersonalProfile entity, UpdateProfileDto dto) => entity.ApplyUpdate(dto);
-
-    public async Task<ProfileResponse?> GetByUserIdAsync(int userId)
-    {
-        var items = await Repository.FindAsync(p => p.UserId == userId);
-        return items.FirstOrDefault()?.ToResponse();
-    }
-}
-
 // ===== Education Service =====
 public interface IEducationService : ICrudService<Education, CreateEducationDto, UpdateEducationDto, EducationResponse>
 {

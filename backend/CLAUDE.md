@@ -198,8 +198,8 @@ backend/
 | Controller | 路由前綴 | 說明 |
 |------------|----------|------|
 | AuthController | `/api/auth` | 登入、註冊、refresh、登出、密碼重設 |
-| UsersController | `/api/users` | 使用者管理 |
-| ProfilesController | `/api/profiles` | 個人資料 |
+| UsersController | `/api/users` | 使用者管理（待 Admin 重建；公開端點已移至 `/api/public/users`） |
+| PublicProfilesController／MyProfileController | `/api/public/users`（目錄）、`/api/public/users/{username}`、`/api/me/profile` | 個人資料與前台呈現設定（已重建） |
 | EducationsController | `/api/educations` | 學歷 |
 | WorkExperiencesController | `/api/workexperiences` | 工作經歷 |
 | PublicSkillsController／MySkillsController | `/api/public/users/{username}/skills`、`/api/me/skills` | 技能（已重建） |

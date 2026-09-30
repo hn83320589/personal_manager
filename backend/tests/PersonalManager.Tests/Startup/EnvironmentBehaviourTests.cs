@@ -79,8 +79,8 @@ public class EnvironmentBehaviourTests
 
     private static async Task<JsonElement> GetPublicUsers(HttpClient client)
     {
-        var body = JsonDocument.Parse(await client.GetStringAsync("/api/users/public"));
-        return body.RootElement.GetProperty("data").Clone();
+        var body = JsonDocument.Parse(await client.GetStringAsync("/api/public/users"));
+        return body.RootElement.GetProperty("data").GetProperty("items").Clone();
     }
 
     private static Task<HttpResponseMessage> Preflight(HttpClient client, string origin)

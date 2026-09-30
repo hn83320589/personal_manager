@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PersonalManager.Api.Models;
 
-public class PersonalProfile
+public class PersonalProfile : IOwnedByUser
 {
     public int Id { get; set; }
     public int UserId { get; set; }
@@ -26,6 +26,15 @@ public class PersonalProfile
 
     [StringLength(50)]
     public string ThemeColor { get; set; } = "blue";
+
+    /// <summary>目前狀態，例如「接受品牌與出版委託」。</summary>
+    [StringLength(100)]
+    public string AvailabilityStatus { get; set; } = string.Empty;
+
+    public PortfolioMode PortfolioMode { get; set; } = PortfolioMode.Designer;
+    public CardStyle CardStyle { get; set; } = CardStyle.Visual;
+    public CardRatio CardRatio { get; set; } = CardRatio.Portrait;
+    public SkillDisplay SkillDisplay { get; set; } = SkillDisplay.NameOnly;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

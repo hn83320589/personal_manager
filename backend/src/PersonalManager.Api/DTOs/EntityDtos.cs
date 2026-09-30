@@ -29,61 +29,6 @@ public class UserResponse
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
 }
-public class PublicUserDto
-{
-    public int Id { get; set; }
-    public string Username { get; set; } = string.Empty;
-    public string FullName { get; set; } = string.Empty;
-}
-
-// ===== PersonalProfile =====
-public class CreateProfileDto
-{
-    public int UserId { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Summary { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public string ProfileImageUrl { get; set; } = string.Empty;
-    public string Website { get; set; } = string.Empty;
-    public string Location { get; set; } = string.Empty;
-    public string ThemeColor { get; set; } = "blue";
-}
-public class UpdateProfileDto
-{
-    public string? Title { get; set; }
-    public string? Summary { get; set; }
-    public string? Description { get; set; }
-    public string? ProfileImageUrl { get; set; }
-    public string? Website { get; set; }
-    public string? Location { get; set; }
-    public string? ThemeColor { get; set; }
-}
-public class ProfileResponse
-{
-    public int Id { get; set; }
-    public int UserId { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Summary { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public string ProfileImageUrl { get; set; } = string.Empty;
-    public string Website { get; set; } = string.Empty;
-    public string Location { get; set; } = string.Empty;
-    public string ThemeColor { get; set; } = "blue";
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
-}
-public class ProfileDirectoryDto
-{
-    public int UserId { get; set; }
-    public string Username { get; set; } = string.Empty;
-    public string FullName { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
-    public string Summary { get; set; } = string.Empty;
-    public string ProfileImageUrl { get; set; } = string.Empty;
-    public string Location { get; set; } = string.Empty;
-    public string ThemeColor { get; set; } = "blue";
-}
-
 // ===== Education =====
 public class CreateEducationDto
 {

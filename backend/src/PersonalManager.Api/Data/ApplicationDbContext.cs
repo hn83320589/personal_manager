@@ -72,6 +72,14 @@ public class ApplicationDbContext : DbContext
             .HasConversion<string>()
             .HasMaxLength(20);
 
+        modelBuilder.Entity<PersonalProfile>(profile =>
+        {
+            profile.Property(e => e.PortfolioMode).HasConversion<string>().HasMaxLength(20);
+            profile.Property(e => e.CardStyle).HasConversion<string>().HasMaxLength(20);
+            profile.Property(e => e.CardRatio).HasConversion<string>().HasMaxLength(20);
+            profile.Property(e => e.SkillDisplay).HasConversion<string>().HasMaxLength(20);
+        });
+
         // WorkTask → Project FK (nullable, set null on delete)
         modelBuilder.Entity<WorkTask>()
             .HasOne<Project>()
@@ -109,7 +117,7 @@ public class ApplicationDbContext : DbContext
     {
         b.Entity<User>().HasIndex(e => e.IsActive);
 
-        b.Entity<PersonalProfile>().HasIndex(e => e.UserId);
+        b.Entity<PersonalProfile>().HasIndex(e => e.UserId).IsUnique();   // 每位使用者一份
 
         b.Entity<Education>().HasIndex(e => e.UserId);
         b.Entity<Education>().HasIndex(e => new { e.IsPublic, e.SortOrder });

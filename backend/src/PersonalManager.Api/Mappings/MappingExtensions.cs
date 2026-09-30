@@ -23,31 +23,6 @@ public static class MappingExtensions
         if (d.IsActive.HasValue) u.IsActive = d.IsActive.Value;
     }
 
-    // ===== PersonalProfile =====
-    public static ProfileResponse ToResponse(this PersonalProfile p) => new()
-    {
-        Id = p.Id, UserId = p.UserId, Title = p.Title, Summary = p.Summary,
-        Description = p.Description, ProfileImageUrl = p.ProfileImageUrl,
-        Website = p.Website, Location = p.Location, ThemeColor = p.ThemeColor,
-        CreatedAt = p.CreatedAt, UpdatedAt = p.UpdatedAt
-    };
-    public static PersonalProfile ToEntity(this CreateProfileDto d) => new()
-    {
-        UserId = d.UserId, Title = d.Title, Summary = d.Summary, Description = d.Description,
-        ProfileImageUrl = d.ProfileImageUrl, Website = d.Website, Location = d.Location,
-        ThemeColor = d.ThemeColor
-    };
-    public static void ApplyUpdate(this PersonalProfile p, UpdateProfileDto d)
-    {
-        if (d.Title != null) p.Title = d.Title;
-        if (d.Summary != null) p.Summary = d.Summary;
-        if (d.Description != null) p.Description = d.Description;
-        if (d.ProfileImageUrl != null) p.ProfileImageUrl = d.ProfileImageUrl;
-        if (d.Website != null) p.Website = d.Website;
-        if (d.Location != null) p.Location = d.Location;
-        if (d.ThemeColor != null) p.ThemeColor = d.ThemeColor;
-    }
-
     // ===== Education =====
     public static EducationResponse ToResponse(this Education e) => new()
     {
