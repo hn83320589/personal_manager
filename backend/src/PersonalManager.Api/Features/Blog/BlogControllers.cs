@@ -64,12 +64,3 @@ public sealed class MyPostsController(BlogService blog) : ControllerBase
         return ApiResponse.Ok("已刪除文章");
     }
 }
-
-[ApiController]
-[Authorize]
-[Route("api/me/tags")]
-public sealed class MyTagsController(TagService tags) : ControllerBase
-{
-    [HttpGet]
-    public async Task<ApiResponse<List<string>>> List() => ApiResponse<List<string>>.Ok(await tags.GetMineAsync());
-}

@@ -28,7 +28,7 @@ public static class ApplicationSetup
         services.AddScoped<Features.WorkTracking.ProjectService>();
         services.AddScoped<Features.WorkTracking.WorkTaskService>();
         services.AddScoped<Features.Blog.BlogService>();
-        services.AddScoped<Features.Blog.TagService>();
+        services.AddScoped<Features.Tags.TagService>();
         services.AddScoped<Features.Guestbook.GuestbookService>();
         services.AddScoped<Features.Contacts.ContactMethodService>();
         services.AddScoped<Features.Files.FileService>();

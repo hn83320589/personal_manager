@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using PersonalManager.Api.Common;
 using PersonalManager.Api.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using PersonalManager.Api.DTOs;
 using PersonalManager.Api.Models;
 
-namespace PersonalManager.Api.Features.Blog;
+namespace PersonalManager.Api.Features.Tags;
 
 /// <summary>使用者自己的標籤（每人一份），文章與作品共用，供輸入時自動提示。</summary>
 public sealed class TagService(ApplicationDbContext db, ICurrentUser currentUser)
@@ -37,4 +40,13 @@ public sealed class TagService(ApplicationDbContext db, ICurrentUser currentUser
 
         return [.. existing, .. created];
     }
+}
+
+[ApiController]
+[Authorize]
+[Route("api/me/tags")]
+public sealed class MyTagsController(TagService tags) : ControllerBase
+{
+    [HttpGet]
+    public async Task<ApiResponse<List<string>>> List() => ApiResponse<List<string>>.Ok(await tags.GetMineAsync());
 }
