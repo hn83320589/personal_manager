@@ -29,9 +29,9 @@
 - [x] 索引改由 `HasIndex` 管理，移除 `DatabaseSeeder.CreateIndexesAsync` 的 raw SQL；補上 token、Tag、留言板 TargetUserId 等缺少的索引
 - [x] 移除寫死的 JWT 金鑰，啟動時驗證 `Jwt:SecretKey`（背景安全審查發現原始碼內有預設金鑰）
 - [x] seeder 只在 Development 執行；CORS 來源改從設定讀取；Swagger 只在 Development 開啟
-- [ ] `Program.cs` 拆成擴充方法；改用 `ILogger`
+- [x] `Program.cs` 拆成 `Setup/` 下的擴充方法（250 行 → 30 行）；啟動訊息改用 `ILogger`
 - [x] `ICurrentUser` 與統一錯誤處理（不外洩例外訊息）
-- [ ] feature folder 骨架
+- [-] feature folder 骨架 → 併入 Phase 2，各 feature 重建時直接建立於 `Features/`
 
 ### 技術債（重構期間發現）
 - [ ] 非 Development 環境不再自動建立 admin 帳號 → Phase 2 Admin 功能需提供建立第一個管理員的方式（例如以設定指定的 Email 註冊時授予 Admin）

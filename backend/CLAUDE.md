@@ -115,14 +115,25 @@ backend/
 ├── PersonalManager.sln
 ├── tests/PersonalManager.Tests/  # xUnit
 └── src/PersonalManager.Api/      # 以下皆位於此目錄
-├── Program.cs                    # 進入點：DI、DB 偵測、Middleware
+├── Program.cs                    # 進入點：只串接 Setup/ 裡的註冊與 pipeline
 ├── appsettings.json              # 設定（包含 DB 連線字串與 JWT）
 ├── appsettings.Development.json  # 開發環境補充設定
 ├── PersonalManager.Api.csproj    # 專案檔
 │
+├── Setup/                        # 服務註冊與 middleware pipeline（依關注點分檔）
+│   ├── ApiSetup.cs               # Controller、JSON、Swagger、CORS、流量限制、健康檢查
+│   ├── InfrastructureSetup.cs    # 寄信、檔案儲存
+│   ├── ApplicationSetup.cs       # 業務 service 與 ICurrentUser
+│   └── PipelineSetup.cs          # 資料庫初始化、middleware 順序
+│
+├── Common/
+│   ├── AppExceptions.cs          # NotFound／Forbidden／Unauthenticated／Conflict／DomainValidation
+│   └── CurrentUser.cs            # ICurrentUser：service 取得目前登入者
+│
 ├── Auth/
 │   ├── AuthService.cs            # JWT token 產生、使用者驗證
-│   └── JwtSettings.cs            # JWT 設定 model
+│   ├── JwtSettings.cs            # JWT 設定 model（無預設金鑰）
+│   └── JwtSetup.cs               # 金鑰驗證與 JWT 驗證註冊
 │
 ├── Controllers/                  # API 控制器（皆繼承 BaseApiController）
 │   ├── BaseApiController.cs      # GetCurrentUserId() 等共用 helper
@@ -159,7 +170,7 @@ backend/
 │   └── MappingExtensions.cs      # Model ↔ DTO 手動映射擴展方法
 │
 ├── Middleware/
-│   └── ErrorHandlingMiddleware.cs # 全域例外處理，統一回傳 ApiResponse
+│   └── ErrorHandlingMiddleware.cs # AppException → 對應狀態碼；其他例外 → 500 通用訊息（不外洩細節）
 │
 ├── Migrations/Sqlite、Migrations/MySql # 各 provider 的 migration（啟動時自動套用）
 │
@@ -312,7 +323,7 @@ Jwt__SecretKey = <隨機密鑰>
    }
    ```
 
-6. **在 `Program.cs` 註冊 Service**（repository 已由 open generic 自動註冊）：
+6. **在 `Setup/ApplicationSetup.cs` 註冊 Service**（repository 已由 open generic 自動註冊）：
    ```csharp
    builder.Services.AddScoped<INewEntityService, NewEntityService>();
    ```
