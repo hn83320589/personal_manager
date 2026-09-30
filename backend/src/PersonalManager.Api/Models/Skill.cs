@@ -12,7 +12,7 @@ public enum SkillLevel
     Expert
 }
 
-public class Skill : IOwnedByUser
+public class Skill : IOwnedByUser, ISortable
 {
     public int Id { get; set; }
     public int UserId { get; set; }

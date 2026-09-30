@@ -28,9 +28,7 @@ public sealed class SkillService(ApplicationDbContext db, ICurrentUser currentUs
     public async Task<SkillDto> CreateAsync(SaveSkillRequest request)
     {
         var userId = currentUser.RequireUserId();
-        var lastPosition = await db.Skills.OwnedBy(userId).MaxAsync(s => (int?)s.SortOrder) ?? 0;
-
-        var skill = new Skill { UserId = userId, SortOrder = lastPosition + 1 };
+        var skill = new Skill { UserId = userId, SortOrder = await db.Skills.OwnedBy(userId).NextPositionAsync() };
         Apply(skill, request);
         db.Skills.Add(skill);
         await db.SaveChangesAsync();
@@ -55,13 +53,7 @@ public sealed class SkillService(ApplicationDbContext db, ICurrentUser currentUs
     public async Task ReorderAsync(ReorderRequest request)
     {
         var skills = await db.Skills.OwnedBy(currentUser.RequireUserId()).ToListAsync();
-        var position = request.Ids.Select((id, index) => (id, index)).ToDictionary(x => x.id, x => x.index + 1);
-
-        if (position.Count != request.Ids.Count || !skills.Select(s => s.Id).ToHashSet().SetEquals(position.Keys))
-            throw new DomainValidationException("排序清單必須剛好包含你所有的技能，且不可重複");
-
-        foreach (var skill in skills)
-            skill.SortOrder = position[skill.Id];
+        skills.ApplyOrder(request);
         await db.SaveChangesAsync();
     }
 
