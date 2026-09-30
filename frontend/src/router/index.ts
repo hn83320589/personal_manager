@@ -139,6 +139,18 @@ const router = createRouter({
         { path: 'blog/editor/:id(\\d+)', redirect: (to) => `/admin/blog/${to.params.id}` },
         { path: 'blog/editor', redirect: '/admin/blog' },
         {
+          path: 'comments',
+          name: 'manage-guestbook',
+          component: () => import('../views/manage/GuestbookView.vue'),
+          meta: { title: '留言' },
+        },
+        {
+          path: 'files',
+          name: 'manage-files',
+          component: () => import('../views/manage/FilesView.vue'),
+          meta: { title: '檔案' },
+        },
+        {
           path: 'experience',
           name: 'manage-resume',
           component: () => import('../views/manage/ResumeView.vue'),
@@ -181,18 +193,6 @@ const router = createRouter({
       name: 'task-manage',
       component: () => import('../views/admin/TaskManageView.vue'),
       meta: { title: '待辦事項管理', requiresAuth: true },
-    },
-    {
-      path: '/admin/comments',
-      name: 'comment-manage',
-      component: () => import('../views/admin/CommentManageView.vue'),
-      meta: { title: '留言管理', requiresAuth: true },
-    },
-    {
-      path: '/admin/files',
-      name: 'file-manager',
-      component: () => import('../views/admin/FileManagerView.vue'),
-      meta: { title: '檔案管理', requiresAuth: true },
     },
     // Catch all 404
     {

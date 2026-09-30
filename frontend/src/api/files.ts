@@ -10,5 +10,6 @@ export const filesApi = {
     form.append('file', file)
     return http.upload<Schemas['FileDto']>('/me/files', form, onProgress)
   },
+  usages: (id: number) => http.get<Schemas['FileUsageDto'][]>(`/me/files/${id}/usages`),
   remove: (id: number) => http.delete(`/me/files/${id}`),
 }
