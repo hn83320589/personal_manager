@@ -92,7 +92,7 @@
 收尾
 - [x] 刪除舊的 services／stores／types/api.ts／舊元件，移除 eslint legacy 清單
 - [x] E2E：前台首頁、作品詳情、留言、深色模式、登入與工作階段還原、後台作品編輯（8 個測試；CI 新增 e2e job，以 SQLite 後端與建置後的前端執行）
-- 完成條件：沒有超過 400 行的 .vue；每個 store 都有單元測試
+- 完成條件：沒有超過 400 行的 .vue（最大 285 行）；每個 store 都有單元測試（auth、toast）——已達成
 
 ### 技術債（重構期間發現）
 - [x] 第一位管理員以 `Admin:BootstrapEmails` 建立
