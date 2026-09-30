@@ -458,7 +458,6 @@ function duplicateTask(task: TodoItem) {
     id: 0,
     title: `${task.title} (複製)`,
     status: 'Pending' as TodoStatus,
-    createdAt: undefined,
     completedAt: undefined
   }
   editingTask.value = duplicated

@@ -651,6 +651,7 @@ async function saveDraft(isAutoSave = false) {
       await blogStore.updatePost(post.value.id, postData)
     } else {
       const newPost = await blogStore.createPost(postData)
+      if (!newPost) throw new Error('建立文章失敗')
       post.value = newPost
       // Update URL to include the new post ID
       router.replace(`/admin/blog/editor/${newPost.id}`)

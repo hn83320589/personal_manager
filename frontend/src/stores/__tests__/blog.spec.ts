@@ -149,7 +149,7 @@ describe('useBlogStore', () => {
     it('adds new post to store on success', async () => {
       const store = useBlogStore()
       const newPost = makePost({ id: 99, title: 'New Post' })
-      vi.mocked(blogService.createBlogPost).mockResolvedValue({ data: newPost, success: true, message: '', errors: null })
+      vi.mocked(blogService.createBlogPost).mockResolvedValue({ data: newPost, success: true, message: '', errors: [] })
 
       await store.createPost({ title: 'New Post' })
 
@@ -171,7 +171,7 @@ describe('useBlogStore', () => {
     it('removes post from store on success', async () => {
       const store = useBlogStore()
       store.posts = [makePost({ id: 1 }), makePost({ id: 2 })]
-      vi.mocked(blogService.deleteBlogPost).mockResolvedValue({ data: undefined, success: true, message: '', errors: null })
+      vi.mocked(blogService.deleteBlogPost).mockResolvedValue({ data: undefined, success: true, message: '', errors: [] })
 
       await store.deletePost(1)
 

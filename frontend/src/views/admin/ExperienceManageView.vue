@@ -427,7 +427,8 @@ const filteredWorkExperiences = computed(() => {
 })
 
 // Methods
-function formatDateRange(startDate: string, endDate?: string): string {
+function formatDateRange(startDate: string | undefined, endDate?: string): string {
+  if (!startDate) return ''
   const start = new Date(startDate).toLocaleDateString('zh-TW', {
     year: 'numeric',
     month: 'short'

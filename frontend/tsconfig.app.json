@@ -8,10 +8,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    
-    // 臨時放寬型別檢查以修復編譯錯誤
-    "noImplicitAny": false,
-    "strict": false,
+
     "skipLibCheck": true
   }
 }
