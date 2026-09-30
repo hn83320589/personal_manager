@@ -122,158 +122,69 @@ Phase 5 重寫每個畫面時改用 `src/api`，並刪除對應的舊 service／
 
 ### 安全規則
 
-- `v-html` 一律寫成 `v-html="sanitizeHtml(...)"`（`src/lib/sanitizeHtml.ts`，DOMPurify）
+- `v-html` 只能接 `sanitizeHtml(...)`（DOMPurify）或 `highlightCode(...)`（所有文字已跳脫）的結果
 - 不在 localStorage／sessionStorage 存放 token
 
 ---
 
 ## 專案結構
 
+Phase 5 重寫中：新程式碼放在下列資料夾，舊頁面（`views/admin`、`components/{admin,task,work,calendar,layout,ui,common}`、`services/`、舊 store）逐頁替換後刪除。
+
 ```
-PersonalManagerFrontend/
-├── src/
-│   ├── main.ts                       # 進入點（Pinia、Router、還原登入狀態）
-│   ├── App.vue                       # 根元件
-│   │
-│   ├── api/
-│   │   ├── http.ts                   # 新的 HTTP 層（見上方說明）
-│   │   ├── schema.ts                 # 產生的型別，勿手動修改（npm run api:types）
-│   │   ├── types.ts                  # Schemas = components['schemas']
-│   │   └── auth.ts                   # /api/auth、/api/me/password
-│   │
-│   ├── lib/
-│   │   └── sanitizeHtml.ts           # DOMPurify
-│   │
-│   ├── types/
-│   │   ├── api.ts                    # 舊的手寫型別（舊頁面使用，Phase 5 移除）
-│   │   └── experience.ts             # 學經歷相關型別
-│   │
-│   ├── services/
-│   │   ├── http.ts                   # 舊的 HttpService（過渡用，Phase 5 移除）
-│   │   ├── profileService.ts         # /api/profiles
-│   │   ├── experienceService.ts      # /api/educations、/api/workexperiences
-│   │   ├── skillService.ts           # /api/skills
-│   │   ├── portfolioService.ts       # /api/portfolios
-│   │   ├── calendarService.ts        # /api/calendarevents
-│   │   ├── taskService.ts            # /api/todoitems
-│   │   ├── workTrackingService.ts    # /api/worktasks
-│   │   ├── projectService.ts         # /api/projects
-│   │   ├── timeEntryService.ts       # /api/timeentries
-│   │   ├── fileUploadService.ts      # /api/fileuploads
-│   │   ├── blogService.ts            # /api/blogposts
-│   │   ├── commentService.ts         # /api/guestbookentries
-│   │   ├── contactMethodService.ts   # /api/contactmethods
-│   │   └── userDirectoryService.ts   # /api/profiles/directory、/api/users/public
-│   │
-│   ├── stores/
-│   │   ├── auth.ts                   # 登入狀態（記憶體 + refresh cookie）
-│   │   ├── profile.ts                # 個人資料
-│   │   ├── experience.ts             # 學歷 + 工作經歷
-│   │   ├── skill.ts                  # 技能
-│   │   ├── portfolio.ts              # 作品集
-│   │   ├── calendar.ts               # 行事曆
-│   │   ├── task.ts                   # 待辦事項 + 工作任務 + 時間記錄（timeEntryService）
-│   │   ├── blog.ts                   # 部落格文章
-│   │   ├── comment.ts                # 留言
-│   │   └── userDirectory.ts          # 用戶目錄與 username → userId 解析
-│   │
-│   ├── composables/
-│   │   └── useTheme.ts               # 5 套主題 CSS 變數（blue/green/purple/rose/slate）
-│   │
-│   ├── router/
-│   │   └── index.ts                  # 路由定義（/@:username 架構 + admin 路由守衛）
-│   │
-│   ├── views/
-│   │   ├── HomeView.vue              # 首頁（用戶目錄，格狀卡片 + 搜尋）
-│   │   ├── LoginView.vue             # 登入
-│   │   ├── NotFoundView.vue          # 404
-│   │   ├── user/                     # 個人頁面（/@:username 路由，由 UserLayout 包覆）
-│   │   │   ├── UserAboutView.vue     # 關於我
-│   │   │   ├── UserExperienceView.vue # 學經歷
-│   │   │   ├── UserSkillView.vue     # 技能
-│   │   │   ├── UserPortfolioView.vue # 作品集
-│   │   │   ├── UserProjectDetailView.vue # 作品詳情
-│   │   │   ├── UserBlogListView.vue  # 部落格列表
-│   │   │   ├── UserBlogDetailView.vue # 文章詳情
-│   │   │   ├── UserCalendarView.vue  # 公開行事曆
-│   │   │   ├── UserGuestbookView.vue # 留言板
-│   │   │   └── UserContactView.vue  # 聯絡我
-│   │   └── admin/                    # 管理後台
-│   │       ├── DashboardView.vue
-│   │       ├── ProfileManageView.vue
-│   │       ├── ExperienceManageView.vue
-│   │       ├── SkillManageView.vue
-│   │       ├── ProjectManageView.vue
-│   │       ├── CalendarManageView.vue
-│   │       ├── WorkTrackingView.vue  # 工作追蹤（任務 + 時間記錄 + 報告）
-│   │       ├── TaskManageView.vue
-│   │       ├── BlogManageView.vue
-│   │       ├── BlogEditorView.vue
-│   │       ├── CommentManageView.vue
-│   │       └── ContactManageView.vue # 聯絡方式 CRUD
-│   │
-│   ├── components/
-│   │   ├── layout/
-│   │   │   ├── AdminLayout.vue       # 管理後台版面（側欄 + 頂列）
-│   │   │   └── UserLayout.vue        # 個人頁面版面（主題、用戶 Header、水平導覽）
-│   │   ├── ui/                       # BaseButton、BaseCard、BaseInput、BaseModal 等
-│   │   ├── common/                   # LoadingSpinner 等共用元件
-│   │   ├── admin/                    # 管理後台專用表單元件
-│   │   ├── blog/                     # BlogGridView、BlogTableView
-│   │   ├── calendar/                 # CalendarGrid、WeekView
-│   │   ├── task/                     # TaskListView、TaskKanbanView、TaskGridView
-│   │   └── work/                     # ProjectsView、TasksView、TimesheetView、ReportsView
-│   │
-│   ├── assets/
-│   │   └── main.css                  # Tailwind 全局樣式（含 .form-input、.form-select）
-│   └── test-utils/                   # 測試輔助工具
-│
-├── .env.development                  # 開發環境變數（不提交）
-├── .env.production                   # 生產環境變數（不提交）
-├── package.json
-├── vite.config.ts
-├── tsconfig.json
-└── tailwind.config.js
+src/
+├── main.ts / App.vue                 # 進入點；App 只有 RouterView 與全域 ToastHost
+├── api/                              # 後端 API（型別由 schema.ts 產生）
+│   ├── http.ts                       # HTTP 層（token、refresh、重試、上傳）
+│   ├── public.ts                     # /api/public/users/{username}/…
+│   ├── auth.ts profile.ts files.ts posts.ts portfolios.ts collections.ts
+│   └── schema.ts / types.ts          # 產生的型別與 Schemas 別名
+├── lib/                              # 純函式（皆有單元測試）
+│   ├── sanitizeHtml.ts highlight.ts embeds.ts format.ts readingTime.ts fileTypes.ts
+│   └── workDocument.ts postDocument.ts   # 作品／文章：API 資料與編輯器資料的轉換
+├── composables/
+│   ├── useAsyncData.ts               # 頁面讀取（loading、錯誤、404 分開）
+│   ├── useAsyncAction.ts             # 寫入操作（防重複送出、成功與錯誤提示）
+│   ├── useOwnedList.ts               # 後台清單頁（新增／更新／刪除／排序）
+│   ├── useAutosave.ts useWorkEditor.ts   # 作品與文章的自動儲存
+│   ├── useColorScheme.ts useAccent.ts    # 深淺色、主題色
+│   └── useTableOfContents.ts useSeo.ts
+├── stores/                           # auth（登入狀態）、toast（操作提示）
+├── router/index.ts                   # 路由（見下方）
+├── views/
+│   ├── public/                       # 前台：DirectoryView、PublicLayout 與各頁
+│   ├── manage/                       # 新版後台：AdminShell 與各頁
+│   └── LoginView、ForgotPasswordView、ResetPasswordView、NotFoundView
+└── components/
+    ├── public/                       # 前台元件（卡片、輪播、區塊、lightbox…）
+    └── manage/                       # 後台元件（SidePanel、ManageList、編輯器…）
+        ├── works/                    # 作品編輯器（區塊、封面、資訊欄位）
+        └── blog/                     # 文章編輯器（Tiptap：figure、embed、「/」選單）
 ```
+
+設計 token 在 `src/assets/tokens.css`，對應成 Tailwind 顏色（`bg-paper`、`text-ink`、`text-muted`、`border-rule`、`bg-accent/10`…）。新元件一律用 token，不寫死 `bg-blue-*`、`bg-white`。
 
 ---
 
 ## 路由結構
 
-### 公開路由（不需登入）
+### 公開路由
 
-| 路徑                        | View                  | 說明                        |
-| --------------------------- | --------------------- | --------------------------- |
-| `/`                         | HomeView              | 用戶目錄（格狀卡片）        |
-| `/login`                    | LoginView             | 登入                        |
-| `/@:username`               | UserAboutView         | 個人頁面（UserLayout 包覆） |
-| `/@:username/experience`    | UserExperienceView    | 學經歷                      |
-| `/@:username/skills`        | UserSkillView         | 技能                        |
-| `/@:username/portfolio`     | UserPortfolioView     | 作品集                      |
-| `/@:username/portfolio/:id` | UserProjectDetailView | 作品詳情                    |
-| `/@:username/blog`          | UserBlogListView      | 部落格列表                  |
-| `/@:username/blog/:slug`    | UserBlogDetailView    | 文章詳情                    |
-| `/@:username/calendar`      | UserCalendarView      | 公開行事曆                  |
-| `/@:username/guestbook`     | UserGuestbookView     | 留言板                      |
-| `/@:username/contact`       | UserContactView       | 聯絡我                      |
+| 路徑                                            | 說明                                           |
+| ----------------------------------------------- | ---------------------------------------------- |
+| `/`                                             | 使用者目錄                                     |
+| `/login`、`/forgot-password`、`/reset-password` | 登入與密碼                                     |
+| `/@:username`                                   | 個人首頁（介紹、作品、經歷與技能、文章、聯絡） |
+| `/@:username/works`、`/works/:slug`             | 作品列表、作品詳情                             |
+| `/@:username/blog`、`/blog/:slug`               | 文章列表、文章                                 |
+| `/@:username/guestbook`、`/calendar`            | 留言板、公開行事曆                             |
 
-### 管理後台路由（需要登入，路由守衛保護）
+舊網址（`portfolio`、`experience`、`skills`、`contact`、`about`）會導向新頁面或首頁對應區塊。
 
-| 路徑                   | View                 |
-| ---------------------- | -------------------- |
-| `/admin/dashboard`     | DashboardView        |
-| `/admin/profile`       | ProfileManageView    |
-| `/admin/experience`    | ExperienceManageView |
-| `/admin/skills`        | SkillManageView      |
-| `/admin/projects`      | ProjectManageView    |
-| `/admin/calendar`      | CalendarManageView   |
-| `/admin/work-tracking` | WorkTrackingView     |
-| `/admin/tasks`         | TaskManageView       |
-| `/admin/blog`          | BlogManageView       |
-| `/admin/blog/new`      | BlogEditorView       |
-| `/admin/blog/:id/edit` | BlogEditorView       |
-| `/admin/comments`      | CommentManageView    |
-| `/admin/contacts`      | ContactManageView    |
+### 後台（`/admin`，需登入）
+
+新版頁面是 `AdminShell` 的子路由：`profile`、`works`、`works/:id`、`blog`、`blog/:id`、`experience`、`skills`、`contacts`。
+其餘（儀表板、留言、行事曆、待辦、工作追蹤、檔案）仍是舊頁面，重寫後改為子路由。路由規則有測試（`router/__tests__/routes.spec.ts`）。
 
 ---
 
@@ -299,36 +210,20 @@ export const mySkillsApi = {
 
 3. 錯誤以 `ApiError` 處理，畫面顯示 `error.message`
 
-### 新增一個頁面
+### 新增一個後台清單頁
 
-1. 在 `src/views/` 建立 `.vue` 檔案
-2. 在 `src/router/index.ts` 新增路由（使用懶載入 `() => import(...)`）
-3. 若需要認證，路由 `meta` 加 `{ requiresAuth: true }`
-
-### UserLayout 與 provide/inject
-
-`UserLayout.vue` 透過 `provide('userId', ...)` 傳遞 userId 給子頁面，子頁面用 `inject<ComputedRef<number | null>>('userId')` 取得：
-
-```typescript
-// UserLayout.vue
-provide(
-  'userId',
-  computed(() => publicUser.value?.id ?? null),
-) // ComputedRef<number | null>
-
-// UserAboutView.vue
-const userId = inject<ComputedRef<number | null>>('userId')
-```
+參考 `views/manage/SkillsView.vue`：`useOwnedList(xxxApi)` 提供清單與寫入，`ManageList` 顯示可排序的列，
+`SidePanel` 為新增／編輯面板，`FormField` 包住每個欄位。
 
 ---
 
 ## 設計規範
 
-- **色調**：淺灰、淺藍、白色為主，冷色調
-- **元件**：基礎 UI 元件在 `src/components/ui/`，直接使用，不重複建立
-- **表單樣式**：使用 `src/assets/main.css` 定義的 `.form-input`、`.form-select`、`.form-label`，確保文字顏色可見
+- **視覺**：依前台 prototype（ADR-012）。顏色、字體、間距一律使用 `tokens.css` 與 Tailwind 設定中的 token，支援深淺色與 5 種主題色
+- **元件**：前台元件在 `components/public/`、後台元件在 `components/manage/`；按鈕用 `.btn`／`.btn-primary`／`.btn-small`，欄位用 `.input` 搭配 `FormField`
+- **無障礙**：可點的東西用 `<button>`／`<a>`，圖示按鈕要有 `aria-label`，圖片要有替代文字；尊重「減少動態」
 - **TypeScript**：strict，不使用 `any`（舊畫面暫時容許，見 `eslint.config.js` 的 legacy 清單），所有 prop 需要型別定義
-- **主題**：個人頁面透過 `useTheme(themeColor)` 取得 CSS 變數，套用至 UserLayout 的 `:style`
+- **元件根層不要放 HTML 註解**：開發模式下會變成 fragment，外部傳入的 class 不會套用（註解寫在 `<script>` 裡）
 
 ---
 
