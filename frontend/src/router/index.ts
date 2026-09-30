@@ -151,6 +151,24 @@ const router = createRouter({
           meta: { title: '檔案' },
         },
         {
+          path: 'tasks',
+          name: 'manage-todos',
+          component: () => import('../views/manage/TodosView.vue'),
+          meta: { title: '待辦' },
+        },
+        {
+          path: 'calendar',
+          name: 'manage-calendar',
+          component: () => import('../views/manage/CalendarView.vue'),
+          meta: { title: '行事曆' },
+        },
+        {
+          path: 'work-tracking',
+          name: 'manage-work-tracking',
+          component: () => import('../views/manage/WorkTrackingView.vue'),
+          meta: { title: '工作追蹤' },
+        },
+        {
           path: 'experience',
           name: 'manage-resume',
           component: () => import('../views/manage/ResumeView.vue'),
@@ -175,24 +193,6 @@ const router = createRouter({
       name: 'dashboard',
       component: () => import('../views/admin/DashboardView.vue'),
       meta: { title: '管理儀表板', requiresAuth: true },
-    },
-    {
-      path: '/admin/calendar',
-      name: 'calendar-manage',
-      component: () => import('../views/admin/CalendarManageView.vue'),
-      meta: { title: '行事曆管理', requiresAuth: true },
-    },
-    {
-      path: '/admin/work-tracking',
-      name: 'work-tracking',
-      component: () => import('../views/admin/WorkTrackingView.vue'),
-      meta: { title: '工作追蹤', requiresAuth: true },
-    },
-    {
-      path: '/admin/tasks',
-      name: 'task-manage',
-      component: () => import('../views/admin/TaskManageView.vue'),
-      meta: { title: '待辦事項管理', requiresAuth: true },
     },
     // Catch all 404
     {

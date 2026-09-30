@@ -31,3 +31,8 @@ export function formatFileSize(bytes: number): string {
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`
   return `${Math.round((bytes / 1024 / 1024) * 10) / 10} MB`
 }
+
+/** 當地日期 YYYY-MM-DD（<input type="date"> 與後端 DateOnly 使用的格式）。不用 toISOString，那是 UTC 日期。 */
+export function localDate(date = new Date()): string {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}

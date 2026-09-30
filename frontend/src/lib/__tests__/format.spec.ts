@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatDate, formatFileSize, formatPeriod } from '../format'
+import { formatDate, formatFileSize, formatPeriod, localDate } from '../format'
 
 describe('formatPeriod', () => {
   it('shows year and month for a finished job', () => {
@@ -32,5 +32,12 @@ describe('formatFileSize', () => {
     [3.5 * 1024 * 1024, '3.5 MB'],
   ])('%d bytes → %s', (bytes, text) => {
     expect(formatFileSize(bytes)).toBe(text)
+  })
+})
+
+describe('localDate', () => {
+  it('uses the local calendar date, not the UTC one', () => {
+    // 台北時間 2026-10-01 07:00 在 UTC 仍是 9 月 30 日
+    expect(localDate(new Date('2026-09-30T23:00:00Z'))).toBe('2026-10-01')
   })
 })
