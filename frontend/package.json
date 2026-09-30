@@ -32,6 +32,7 @@
     "@tiptap/vue-3": "^2.14.0",
     "autoprefixer": "^10.4.21",
     "axios": "^1.11.0",
+    "dompurify": "^3.4.16",
     "pinia": "^3.0.3",
     "tailwindcss": "^3.4.17",
     "vue": "^3.5.18",

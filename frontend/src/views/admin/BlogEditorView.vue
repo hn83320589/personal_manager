@@ -188,7 +188,7 @@
                   <p class="text-gray-600 italic" v-if="formData.summary">
                     {{ formData.summary }}
                   </p>
-                  <div v-html="formData.content"></div>
+                  <div v-html="sanitizeHtml(formData.content)"></div>
                 </article>
               </div>
             </div>
@@ -447,6 +447,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { sanitizeHtml } from '@/lib/sanitizeHtml'
 import { useRoute, useRouter } from 'vue-router'
 import {
   EyeIcon,

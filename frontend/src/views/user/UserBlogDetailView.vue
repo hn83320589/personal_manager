@@ -50,7 +50,11 @@
 
         <!-- Article Content -->
         <main class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sm:p-8">
-          <div ref="contentRef" class="prose prose-gray max-w-none" v-html="post.content"></div>
+          <div
+            ref="contentRef"
+            class="prose prose-gray max-w-none"
+            v-html="sanitizeHtml(post.content)"
+          ></div>
         </main>
 
         <!-- Footer: share + update time -->
@@ -108,6 +112,7 @@ import { useRoute, RouterLink } from 'vue-router'
 import { ClockIcon, LinkIcon } from '@heroicons/vue/24/outline'
 import httpService from '@/services/http'
 import { setPageSeo, stripHtml } from '@/composables/useSeo'
+import { sanitizeHtml } from '@/lib/sanitizeHtml'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import type { BlogPost } from '@/types/api'
 
