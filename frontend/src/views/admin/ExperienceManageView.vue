@@ -91,13 +91,7 @@
           <h3 class="mt-2 text-sm font-medium text-gray-900">沒有教育背景資料</h3>
           <p class="mt-1 text-sm text-gray-500">開始新增您的教育背景資訊。</p>
           <div class="mt-6">
-            <BaseButton
-              variant="primary"
-              @click="
-                showCreateModal = true
-                newItemType = 'education'
-              "
-            >
+            <BaseButton variant="primary" @click="openCreate('education')">
               <PlusIcon class="w-4 h-4 mr-2" />
               新增教育背景
             </BaseButton>
@@ -210,13 +204,7 @@
           <h3 class="mt-2 text-sm font-medium text-gray-900">沒有工作經歷資料</h3>
           <p class="mt-1 text-sm text-gray-500">開始新增您的工作經歷資訊。</p>
           <div class="mt-6">
-            <BaseButton
-              variant="primary"
-              @click="
-                showCreateModal = true
-                newItemType = 'work'
-              "
-            >
+            <BaseButton variant="primary" @click="openCreate('work')">
               <PlusIcon class="w-4 h-4 mr-2" />
               新增工作經歷
             </BaseButton>
@@ -457,6 +445,11 @@ function formatDateRange(startDate: string | undefined, endDate?: string): strin
   })
 
   return `${start} - ${end}`
+}
+
+function openCreate(type: 'education' | 'work') {
+  newItemType.value = type
+  showCreateModal.value = true
 }
 
 function editItem(item: Education | WorkExperience, type: 'education' | 'work') {
