@@ -25,13 +25,12 @@
           leave-from-class="opacity-100 scale-100 translate-y-0"
           leave-to-class="opacity-0 scale-95 translate-y-4"
         >
-          <div
-            v-if="show"
-            :class="modalClasses"
-            @click.stop
-          >
+          <div v-if="show" :class="modalClasses" @click.stop>
             <!-- Header -->
-            <div v-if="$slots.header || title || closable" class="flex items-center justify-between p-6 border-b border-gray-200">
+            <div
+              v-if="$slots.header || title || closable"
+              class="flex items-center justify-between p-6 border-b border-gray-200"
+            >
               <div>
                 <slot name="header">
                   <h3 class="text-lg font-semibold text-gray-900">{{ title }}</h3>
@@ -52,7 +51,10 @@
             </div>
 
             <!-- Footer -->
-            <div v-if="$slots.footer" class="flex items-center justify-end space-x-3 p-6 border-t border-gray-200">
+            <div
+              v-if="$slots.footer"
+              class="flex items-center justify-end space-x-3 p-6 border-t border-gray-200"
+            >
               <slot name="footer" :close="close" />
             </div>
           </div>
@@ -81,7 +83,7 @@ const props = withDefaults(defineProps<Props>(), {
   closable: true,
   closeOnOverlay: true,
   persistent: false,
-  scrollable: true
+  scrollable: true,
 })
 
 const emit = defineEmits<{
@@ -91,22 +93,22 @@ const emit = defineEmits<{
 
 const modalClasses = computed(() => {
   const baseClasses = 'relative bg-white rounded-lg shadow-xl max-h-full flex flex-col'
-  
+
   const sizeClasses = {
     small: 'w-full max-w-md mx-4',
     medium: 'w-full max-w-lg mx-4',
     large: 'w-full max-w-2xl mx-4',
     'extra-large': 'w-full max-w-4xl mx-4',
-    full: 'w-full h-full m-4'
+    full: 'w-full h-full m-4',
   }
-  
+
   return [baseClasses, sizeClasses[props.size]].join(' ')
 })
 
 const bodyClasses = computed(() => {
   const baseClasses = 'p-6'
   const scrollClasses = props.scrollable ? 'overflow-y-auto flex-1' : ''
-  
+
   return [baseClasses, scrollClasses].join(' ')
 })
 
@@ -124,13 +126,16 @@ function handleOverlayClick() {
 }
 
 // Handle ESC key
-watch(() => props.show, (newShow) => {
-  if (newShow) {
-    document.addEventListener('keydown', handleEscapeKey)
-  } else {
-    document.removeEventListener('keydown', handleEscapeKey)
-  }
-})
+watch(
+  () => props.show,
+  (newShow) => {
+    if (newShow) {
+      document.addEventListener('keydown', handleEscapeKey)
+    } else {
+      document.removeEventListener('keydown', handleEscapeKey)
+    }
+  },
+)
 
 function handleEscapeKey(event: KeyboardEvent) {
   if (event.key === 'Escape' && props.closable) {
@@ -139,11 +144,14 @@ function handleEscapeKey(event: KeyboardEvent) {
 }
 
 // Prevent body scroll when modal is open
-watch(() => props.show, (newShow) => {
-  if (newShow) {
-    document.body.style.overflow = 'hidden'
-  } else {
-    document.body.style.overflow = ''
-  }
-})
+watch(
+  () => props.show,
+  (newShow) => {
+    if (newShow) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+  },
+)
 </script>

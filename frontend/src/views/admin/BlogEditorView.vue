@@ -16,7 +16,9 @@
             <!-- Auto Save Status -->
             <div class="flex items-center text-sm text-gray-500">
               <div v-if="autoSaveStatus === 'saving'" class="flex items-center">
-                <div class="animate-spin rounded-full h-3 w-3 border border-blue-600 border-t-transparent mr-2"></div>
+                <div
+                  class="animate-spin rounded-full h-3 w-3 border border-blue-600 border-t-transparent mr-2"
+                ></div>
                 儲存中...
               </div>
               <div v-else-if="autoSaveStatus === 'saved'" class="flex items-center text-green-600">
@@ -30,26 +32,15 @@
             </div>
 
             <!-- Action Buttons -->
-            <BaseButton
-              variant="outline"
-              @click="showPreview = !showPreview"
-            >
+            <BaseButton variant="outline" @click="showPreview = !showPreview">
               <EyeIcon class="w-4 h-4 mr-2" />
               {{ showPreview ? '隱藏預覽' : '預覽' }}
             </BaseButton>
-            <BaseButton
-              variant="outline"
-              @click="() => saveDraft()"
-              :disabled="!isFormValid"
-            >
+            <BaseButton variant="outline" @click="() => saveDraft()" :disabled="!isFormValid">
               <DocumentIcon class="w-4 h-4 mr-2" />
               儲存草稿
             </BaseButton>
-            <BaseButton
-              variant="primary"
-              @click="showPublishModal = true"
-              :disabled="!isFormValid"
-            >
+            <BaseButton variant="primary" @click="showPublishModal = true" :disabled="!isFormValid">
               <CloudArrowUpIcon class="w-4 h-4 mr-2" />
               {{ post?.status === 'Published' ? '更新文章' : '發布文章' }}
             </BaseButton>
@@ -90,7 +81,9 @@
                     文章網址 (Slug)
                   </label>
                   <div class="mt-1 flex">
-                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
+                    <span
+                      class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"
+                    >
                       /blog/
                     </span>
                     <BaseInput
@@ -101,9 +94,7 @@
                       class="rounded-l-none"
                     />
                   </div>
-                  <p class="mt-1 text-xs text-gray-500">
-                    留空將自動從標題生成
-                  </p>
+                  <p class="mt-1 text-xs text-gray-500">留空將自動從標題生成</p>
                 </div>
 
                 <!-- Excerpt -->
@@ -135,10 +126,7 @@
               </div>
 
               <!-- TipTap Rich Text Editor -->
-              <TiptapEditor
-                v-model="formData.content"
-                placeholder="開始撰寫您的文章..."
-              />
+              <TiptapEditor v-model="formData.content" placeholder="開始撰寫您的文章..." />
             </div>
           </BaseCard>
 
@@ -160,10 +148,7 @@
                     <XMarkIcon class="w-4 h-4" />
                   </button>
                 </div>
-                <div
-                  v-else
-                  class="border-2 border-gray-300 border-dashed rounded-lg p-6"
-                >
+                <div v-else class="border-2 border-gray-300 border-dashed rounded-lg p-6">
                   <div class="text-center">
                     <PhotoIcon class="mx-auto h-12 w-12 text-gray-400" />
                     <div class="mt-4">
@@ -179,9 +164,7 @@
                           @change="handleImageUpload"
                         />
                       </label>
-                      <p class="mt-1 text-xs text-gray-500">
-                        PNG, JPG, GIF 最大 5MB
-                      </p>
+                      <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF 最大 5MB</p>
                     </div>
                   </div>
                 </div>
@@ -213,7 +196,10 @@
         </div>
 
         <!-- Sidebar Settings -->
-        <div :class="showPreview ? 'lg:col-span-12 lg:order-first' : 'lg:col-span-3'" class="space-y-6">
+        <div
+          :class="showPreview ? 'lg:col-span-12 lg:order-first' : 'lg:col-span-3'"
+          class="space-y-6"
+        >
           <!-- Publish Settings -->
           <BaseCard>
             <div class="p-6">
@@ -221,9 +207,7 @@
               <div class="space-y-4">
                 <!-- Status -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    狀態
-                  </label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"> 狀態 </label>
                   <BaseSelect
                     v-model="formData.status"
                     :options="statusOptions"
@@ -244,9 +228,7 @@
                       公開文章
                     </label>
                   </div>
-                  <p class="mt-1 text-xs text-gray-500">
-                    取消勾選則只有登入後才能查看
-                  </p>
+                  <p class="mt-1 text-xs text-gray-500">取消勾選則只有登入後才能查看</p>
                 </div>
 
                 <!-- Publish Date -->
@@ -285,7 +267,11 @@
                       list="categories"
                     />
                     <datalist id="categories">
-                      <option v-for="category in availableCategories" :key="category" :value="category">
+                      <option
+                        v-for="category in availableCategories"
+                        :key="category"
+                        :value="category"
+                      >
                         {{ category }}
                       </option>
                     </datalist>
@@ -303,18 +289,24 @@
 
                 <!-- Tags -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700">
-                    標籤
-                  </label>
+                  <label class="block text-sm font-medium text-gray-700"> 標籤 </label>
                   <!-- Tag chips -->
-                  <div class="mt-1 flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md min-h-[42px]">
+                  <div
+                    class="mt-1 flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md min-h-[42px]"
+                  >
                     <span
                       v-for="tag in tagsList"
                       :key="tag"
                       class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
                     >
                       {{ tag }}
-                      <button type="button" @click="removeTag(tag)" class="hover:text-blue-600 ml-0.5">×</button>
+                      <button
+                        type="button"
+                        @click="removeTag(tag)"
+                        class="hover:text-blue-600 ml-0.5"
+                      >
+                        ×
+                      </button>
                     </span>
                     <input
                       v-model="tagInput"
@@ -409,7 +401,7 @@
         <p class="text-sm text-gray-600">
           您即將發布文章「{{ formData.title }}」，請確認以下設定：
         </p>
-        
+
         <div class="bg-gray-50 rounded-lg p-4 space-y-2">
           <div class="flex justify-between">
             <span class="text-sm text-gray-600">狀態:</span>
@@ -431,18 +423,8 @@
       </div>
 
       <div class="mt-6 flex justify-end space-x-3">
-        <BaseButton
-          variant="outline"
-          @click="showPublishModal = false"
-        >
-          取消
-        </BaseButton>
-        <BaseButton
-          variant="primary"
-          @click="publishPost"
-        >
-          確認發布
-        </BaseButton>
+        <BaseButton variant="outline" @click="showPublishModal = false"> 取消 </BaseButton>
+        <BaseButton variant="primary" @click="publishPost"> 確認發布 </BaseButton>
       </div>
     </BaseModal>
 
@@ -457,9 +439,7 @@
       <div class="text-center py-8">
         <TagIcon class="mx-auto h-12 w-12 text-gray-400" />
         <h3 class="mt-2 text-sm font-medium text-gray-900">分類管理</h3>
-        <p class="mt-1 text-sm text-gray-500">
-          此功能將在後續版本中實現
-        </p>
+        <p class="mt-1 text-sm text-gray-500">此功能將在後續版本中實現</p>
       </div>
     </BaseModal>
   </AdminLayout>
@@ -476,7 +456,7 @@ import {
   ExclamationTriangleIcon,
   PhotoIcon,
   XMarkIcon,
-  TagIcon
+  TagIcon,
 } from '@heroicons/vue/24/outline'
 import { useBlogStore } from '@/stores/blog'
 import type { BlogPost } from '@/types/api'
@@ -523,11 +503,20 @@ const formData = ref({
 const statusOptions = [
   { value: 'Draft', label: '草稿' },
   { value: 'Published', label: '已發布' },
-  { value: 'Archived', label: '已封存' }
+  { value: 'Archived', label: '已封存' },
 ]
 
 const availableCategories = [
-  '技術', '生活', '旅遊', '美食', '閱讀', '攝影', '音樂', '電影', '健康', '學習'
+  '技術',
+  '生活',
+  '旅遊',
+  '美食',
+  '閱讀',
+  '攝影',
+  '音樂',
+  '電影',
+  '健康',
+  '學習',
 ]
 
 // Auto-save timer
@@ -535,8 +524,7 @@ let autoSaveTimer: NodeJS.Timeout | null = null
 
 // Computed
 const isFormValid = computed(() => {
-  return formData.value.title.trim().length > 0 &&
-         formData.value.content.trim().length > 0
+  return formData.value.title.trim().length > 0 && formData.value.content.trim().length > 0
 })
 
 const wordCount = computed(() => {
@@ -547,7 +535,10 @@ const wordCount = computed(() => {
 
 const tagsList = computed(() => {
   if (!formData.value.tags) return []
-  return formData.value.tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
+  return formData.value.tags
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter((tag) => tag.length > 0)
 })
 
 // Tag management
@@ -567,7 +558,7 @@ function addTag() {
 }
 
 function removeTag(tag: string) {
-  const newTags = tagsList.value.filter(t => t !== tag)
+  const newTags = tagsList.value.filter((t) => t !== tag)
   formData.value.tags = newTags.join(',')
 }
 
@@ -581,10 +572,12 @@ function applyPost(existingPost: BlogPost) {
     summary: existingPost.summary || '',
     featuredImage: '',
     category: existingPost.category || '',
-    tags: Array.isArray(existingPost.tags) ? existingPost.tags.join(',') : (existingPost.tags || ''),
+    tags: Array.isArray(existingPost.tags) ? existingPost.tags.join(',') : existingPost.tags || '',
     status: existingPost.status,
     isPublic: existingPost.isPublic ?? true,
-    publishedAt: existingPost.publishedAt ? new Date(existingPost.publishedAt).toISOString().slice(0, 16) : '',
+    publishedAt: existingPost.publishedAt
+      ? new Date(existingPost.publishedAt).toISOString().slice(0, 16)
+      : '',
     metaDescription: '',
     metaKeywords: '',
   }
@@ -594,7 +587,7 @@ async function loadPost() {
   const postId = route.params.id
   if (postId && postId !== 'new') {
     const id = Number(postId)
-    const existingPost = blogStore.posts.find(p => p.id === id)
+    const existingPost = blogStore.posts.find((p) => p.id === id)
     if (existingPost) {
       applyPost(existingPost)
     } else {
@@ -632,7 +625,7 @@ function startAutoSave() {
   if (autoSaveTimer) {
     clearTimeout(autoSaveTimer)
   }
-  
+
   autoSaveTimer = setTimeout(() => {
     if (isFormValid.value) {
       saveDraft(true)
@@ -645,12 +638,12 @@ async function saveDraft(isAutoSave = false) {
 
   try {
     autoSaveStatus.value = 'saving'
-    
+
     const postData = {
       ...formData.value,
       slug: formData.value.slug || generateSlug(formData.value.title),
       status: 'Draft' as const,
-      tags: tagsList.value
+      tags: tagsList.value,
     }
 
     if (post.value) {
@@ -662,16 +655,15 @@ async function saveDraft(isAutoSave = false) {
       // Update URL to include the new post ID
       router.replace(`/admin/blog/editor/${newPost.id}`)
     }
-    
+
     autoSaveStatus.value = 'saved'
-    
+
     if (!isAutoSave) {
       // Show success message for manual saves
       setTimeout(() => {
         autoSaveStatus.value = 'idle'
       }, 2000)
     }
-    
   } catch (error) {
     autoSaveStatus.value = 'error'
     console.error('Save error:', error)
@@ -685,8 +677,11 @@ async function publishPost() {
     const postData = {
       ...formData.value,
       slug: formData.value.slug || generateSlug(formData.value.title),
-      publishedAt: formData.value.status === 'Published' ? new Date().toISOString() : formData.value.publishedAt,
-      tags: tagsList.value
+      publishedAt:
+        formData.value.status === 'Published'
+          ? new Date().toISOString()
+          : formData.value.publishedAt,
+      tags: tagsList.value,
     }
 
     if (post.value) {
@@ -695,17 +690,16 @@ async function publishPost() {
       const newPost = await blogStore.createPost(postData)
       post.value = newPost
     }
-    
+
     showPublishModal.value = false
     router.push('/admin/blog')
-    
   } catch (error) {
     console.error('Publish error:', error)
   }
 }
 
 function getStatusLabel(status: string): string {
-  const option = statusOptions.find(opt => opt.value === status)
+  const option = statusOptions.find((opt) => opt.value === status)
   return option?.label || status
 }
 
@@ -716,20 +710,27 @@ function formatDate(dateString: string | undefined): string {
     month: 'long',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   })
 }
 
 // Watchers
-watch(() => formData.value.title, (newTitle) => {
-  if (!formData.value.slug && newTitle) {
-    formData.value.slug = generateSlug(newTitle)
-  }
-})
+watch(
+  () => formData.value.title,
+  (newTitle) => {
+    if (!formData.value.slug && newTitle) {
+      formData.value.slug = generateSlug(newTitle)
+    }
+  },
+)
 
-watch(formData, () => {
-  startAutoSave()
-}, { deep: true })
+watch(
+  formData,
+  () => {
+    startAutoSave()
+  },
+  { deep: true },
+)
 
 // Lifecycle
 onMounted(() => {

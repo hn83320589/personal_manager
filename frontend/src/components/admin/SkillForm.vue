@@ -17,9 +17,7 @@
 
     <!-- Category -->
     <div>
-      <label for="category" class="block text-sm font-medium text-gray-700">
-        技能分類
-      </label>
+      <label for="category" class="block text-sm font-medium text-gray-700"> 技能分類 </label>
       <div class="mt-1 flex rounded-md shadow-sm">
         <select
           id="category"
@@ -57,7 +55,7 @@
               'relative cursor-pointer rounded-lg p-4 border-2 transition-all',
               formData.level === level.value
                 ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 hover:border-gray-300'
+                : 'border-gray-200 hover:border-gray-300',
             ]"
           >
             <div class="flex items-center justify-between">
@@ -71,17 +69,12 @@
                   :key="i"
                   :class="[
                     'w-2 h-2 rounded-full',
-                    i <= skillLevelIndex(level.value) + 1 ? level.color : 'bg-gray-200'
+                    i <= skillLevelIndex(level.value) + 1 ? level.color : 'bg-gray-200',
                   ]"
                 ></div>
               </div>
             </div>
-            <input
-              type="radio"
-              :value="level.value"
-              v-model="formData.level"
-              class="sr-only"
-            />
+            <input type="radio" :value="level.value" v-model="formData.level" class="sr-only" />
           </div>
         </div>
       </div>
@@ -107,16 +100,12 @@
           <span class="text-gray-500 text-sm">年</span>
         </div>
       </div>
-      <p class="mt-1 text-xs text-gray-500">
-        可以使用小數，如 1.5 年
-      </p>
+      <p class="mt-1 text-xs text-gray-500">可以使用小數，如 1.5 年</p>
     </div>
 
     <!-- Competencies (Skills breakdown) -->
     <div>
-      <label class="block text-sm font-medium text-gray-700">
-        具體能力
-      </label>
+      <label class="block text-sm font-medium text-gray-700"> 具體能力 </label>
       <div class="mt-1">
         <div class="space-y-2">
           <div
@@ -156,9 +145,7 @@
 
     <!-- Related Projects/Certifications -->
     <div>
-      <label for="projects" class="block text-sm font-medium text-gray-700">
-        相關專案或證照
-      </label>
+      <label for="projects" class="block text-sm font-medium text-gray-700"> 相關專案或證照 </label>
       <BaseTextarea
         id="projects"
         v-model="formData.projects"
@@ -170,9 +157,7 @@
 
     <!-- Sort Order -->
     <div>
-      <label for="sortOrder" class="block text-sm font-medium text-gray-700">
-        排序順序
-      </label>
+      <label for="sortOrder" class="block text-sm font-medium text-gray-700"> 排序順序 </label>
       <input
         id="sortOrder"
         v-model.number="formData.sortOrder"
@@ -199,18 +184,8 @@
 
     <!-- Form Actions -->
     <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-      <BaseButton
-        type="button"
-        variant="outline"
-        @click="$emit('cancel')"
-      >
-        取消
-      </BaseButton>
-      <BaseButton
-        type="submit"
-        variant="primary"
-        :loading="loading"
-      >
+      <BaseButton type="button" variant="outline" @click="$emit('cancel')"> 取消 </BaseButton>
+      <BaseButton type="submit" variant="primary" :loading="loading">
         {{ skill ? '更新' : '建立' }}
       </BaseButton>
     </div>
@@ -231,7 +206,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  skill: null
+  skill: null,
 })
 
 // Emits
@@ -252,7 +227,7 @@ const formData = ref({
   competencies: [] as Array<{ name: string }>,
   projects: '',
   sortOrder: 0,
-  isPublic: true
+  isPublic: true,
 })
 
 // Constants
@@ -265,35 +240,36 @@ const predefinedCategories = [
   '開發工具',
   '設計工具',
   '專案管理',
-  '軟技能'
+  '軟技能',
 ]
 
-const skillLevels: Array<{ value: SkillLevel; label: string; description: string; color: string }> = [
-  {
-    value: 'Beginner',
-    label: '初學者',
-    description: '基礎了解，需要指導',
-    color: 'bg-gray-400'
-  },
-  {
-    value: 'Intermediate',
-    label: '中級',
-    description: '能獨立完成基本任務',
-    color: 'bg-blue-400'
-  },
-  {
-    value: 'Advanced',
-    label: '高級',
-    description: '能處理複雜問題',
-    color: 'bg-yellow-400'
-  },
-  {
-    value: 'Expert',
-    label: '專家',
-    description: '能指導他人，創新解決方案',
-    color: 'bg-green-400'
-  }
-]
+const skillLevels: Array<{ value: SkillLevel; label: string; description: string; color: string }> =
+  [
+    {
+      value: 'Beginner',
+      label: '初學者',
+      description: '基礎了解，需要指導',
+      color: 'bg-gray-400',
+    },
+    {
+      value: 'Intermediate',
+      label: '中級',
+      description: '能獨立完成基本任務',
+      color: 'bg-blue-400',
+    },
+    {
+      value: 'Advanced',
+      label: '高級',
+      description: '能處理複雜問題',
+      color: 'bg-yellow-400',
+    },
+    {
+      value: 'Expert',
+      label: '專家',
+      description: '能指導他人，創新解決方案',
+      color: 'bg-green-400',
+    },
+  ]
 
 // Helper to get numeric index for a skill level
 function skillLevelIndex(level: SkillLevel): number {
@@ -302,11 +278,14 @@ function skillLevelIndex(level: SkillLevel): number {
 }
 
 // Watchers
-watch(() => formData.value.category, (newValue) => {
-  if (newValue !== 'custom') {
-    customCategory.value = ''
-  }
-})
+watch(
+  () => formData.value.category,
+  (newValue) => {
+    if (newValue !== 'custom') {
+      customCategory.value = ''
+    }
+  },
+)
 
 watch(customCategory, (newValue) => {
   if (newValue && formData.value.category === 'custom') {
@@ -325,20 +304,20 @@ function removeCompetency(index: number) {
 
 async function handleSubmit() {
   loading.value = true
-  
+
   try {
     const submitData = { ...formData.value }
-    
+
     // Handle custom category
     if (submitData.category === 'custom' && customCategory.value) {
       submitData.category = customCategory.value
     }
-    
+
     // Filter out empty competencies
-    submitData.competencies = submitData.competencies.filter(c => c.name.trim())
-    
+    submitData.competencies = submitData.competencies.filter((c) => c.name.trim())
+
     // Convert competencies to string for API
-        
+
     // Prepare final data
     const finalData: Record<string, any> = {
       name: submitData.name,
@@ -346,9 +325,9 @@ async function handleSubmit() {
       category: submitData.category || undefined,
       yearsOfExperience: submitData.yearsOfExperience,
       sortOrder: submitData.sortOrder,
-      isPublic: submitData.isPublic
+      isPublic: submitData.isPublic,
     }
-    
+
     emit('save', finalData)
   } catch (error) {
     console.error('Submit error:', error)
@@ -360,7 +339,7 @@ async function handleSubmit() {
 function initializeForm() {
   if (props.skill) {
     const skill = props.skill
-    
+
     formData.value.name = skill.name
     formData.value.level = skill.level
     formData.value.category = skill.category || ''
@@ -377,7 +356,7 @@ function initializeForm() {
       competencies: [],
       projects: '',
       sortOrder: 0,
-      isPublic: true
+      isPublic: true,
     }
   }
 }
@@ -388,7 +367,11 @@ onMounted(() => {
 })
 
 // Watch for skill changes
-watch(() => props.skill, () => {
-  initializeForm()
-}, { immediate: true })
+watch(
+  () => props.skill,
+  () => {
+    initializeForm()
+  },
+  { immediate: true },
+)
 </script>

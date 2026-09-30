@@ -4,7 +4,7 @@
       {{ label }}
       <span v-if="required" class="text-red-500 ml-1">*</span>
     </label>
-    
+
     <div class="relative">
       <input
         :id="inputId"
@@ -22,12 +22,15 @@
         @blur="handleBlur"
         @focus="handleFocus"
       />
-      
-      <div v-if="hasError" class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+
+      <div
+        v-if="hasError"
+        class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+      >
         <ExclamationCircleIcon class="h-5 w-5 text-red-500" />
       </div>
     </div>
-    
+
     <p v-if="hasError" class="mt-1 text-sm text-red-600">{{ errorMessage }}</p>
     <p v-else-if="helpText" class="mt-1 text-sm text-gray-500">{{ helpText }}</p>
   </div>
@@ -39,7 +42,17 @@ import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
 
 interface Props {
   modelValue: string | number
-  type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local'
+  type?:
+    | 'text'
+    | 'email'
+    | 'password'
+    | 'number'
+    | 'tel'
+    | 'url'
+    | 'search'
+    | 'date'
+    | 'time'
+    | 'datetime-local'
   label?: string
   placeholder?: string
   required?: boolean
@@ -70,20 +83,19 @@ const hasError = computed(() => !!props.error)
 const errorMessage = computed(() => props.error)
 
 const inputClasses = computed(() => {
-  const baseClasses = 'block w-full px-3 py-2 border rounded-lg text-sm placeholder-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2'
-  
+  const baseClasses =
+    'block w-full px-3 py-2 border rounded-lg text-sm placeholder-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2'
+
   const stateClasses = hasError.value
     ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
     : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500'
-    
+
   const disabledClasses = props.disabled
     ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
     : 'bg-white text-gray-900'
-    
-  const readonlyClasses = props.readonly
-    ? 'bg-gray-50 cursor-default'
-    : ''
-  
+
+  const readonlyClasses = props.readonly ? 'bg-gray-50 cursor-default' : ''
+
   return [baseClasses, stateClasses, disabledClasses, readonlyClasses].join(' ')
 })
 

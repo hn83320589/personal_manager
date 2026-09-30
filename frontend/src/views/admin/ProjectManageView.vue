@@ -5,14 +5,9 @@
       <div class="flex justify-between items-center">
         <div>
           <h2 class="text-2xl font-bold text-gray-900">作品管理</h2>
-          <p class="mt-1 text-sm text-gray-600">
-            管理您的作品集項目、技術棧和專案狀態
-          </p>
+          <p class="mt-1 text-sm text-gray-600">管理您的作品集項目、技術棧和專案狀態</p>
         </div>
-        <BaseButton
-          variant="primary"
-          @click="showCreateModal = true"
-        >
+        <BaseButton variant="primary" @click="showCreateModal = true">
           <PlusIcon class="w-4 h-4 mr-2" />
           新增作品
         </BaseButton>
@@ -75,7 +70,9 @@
       <div class="flex flex-col sm:flex-row gap-4">
         <div class="flex-1">
           <div class="relative">
-            <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlassIcon
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+            />
             <input
               v-model="searchQuery"
               type="text"
@@ -130,10 +127,7 @@
         <h3 class="mt-2 text-sm font-medium text-gray-900">沒有作品資料</h3>
         <p class="mt-1 text-sm text-gray-500">開始新增您的作品項目。</p>
         <div class="mt-6">
-          <BaseButton
-            variant="primary"
-            @click="showCreateModal = true"
-          >
+          <BaseButton variant="primary" @click="showCreateModal = true">
             <PlusIcon class="w-4 h-4 mr-2" />
             新增作品
           </BaseButton>
@@ -145,22 +139,34 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 作品
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 技術棧
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 時間
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 連結
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 狀態
               </th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 操作
               </th>
             </tr>
@@ -233,12 +239,14 @@
                     <StarIcon class="w-3 h-3 mr-1" />
                     精選
                   </span>
-                  <span :class="[
-                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-                    project.isPublic
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                  ]">
+                  <span
+                    :class="[
+                      'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                      project.isPublic
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800',
+                    ]"
+                  >
                     {{ project.isPublic ? '公開' : '私人' }}
                   </span>
                 </div>
@@ -252,13 +260,11 @@
                     title="管理附件"
                   >
                     <PaperClipIcon class="w-4 h-4" />
-                    <span v-if="attachmentCounts[project.id]" class="ml-1 text-xs text-blue-600">{{ attachmentCounts[project.id] }}</span>
+                    <span v-if="attachmentCounts[project.id]" class="ml-1 text-xs text-blue-600">{{
+                      attachmentCounts[project.id]
+                    }}</span>
                   </BaseButton>
-                  <BaseButton
-                    variant="outline"
-                    size="small"
-                    @click="editProject(project)"
-                  >
+                  <BaseButton variant="outline" size="small" @click="editProject(project)">
                     <PencilIcon class="w-4 h-4" />
                   </BaseButton>
                   <BaseButton
@@ -284,11 +290,7 @@
       title="作品管理"
       max-width="4xl"
     >
-      <ProjectForm
-        :project="editingProject"
-        @save="handleSave"
-        @cancel="handleCancel"
-      />
+      <ProjectForm :project="editingProject" @save="handleSave" @cancel="handleCancel" />
     </BaseModal>
 
     <!-- Attachments Modal -->
@@ -317,7 +319,9 @@
                 type="button"
                 @click="removeAttachment(att.id)"
                 class="text-red-500 hover:text-red-700 text-sm"
-              >刪除</button>
+              >
+                刪除
+              </button>
             </div>
           </div>
         </div>
@@ -326,46 +330,33 @@
         <!-- Add via FilePicker -->
         <div>
           <h4 class="text-sm font-medium text-gray-700 mb-2">新增附件</h4>
-          <FilePicker
-            v-model="showFilePicker"
-            fileType="all"
-            @select="onAttachmentSelected"
-          />
+          <FilePicker v-model="showFilePicker" fileType="all" @select="onAttachmentSelected" />
         </div>
 
         <!-- Direct Upload -->
         <div>
-          <input type="file" ref="attFileInputRef" class="sr-only" @change="handleAttachmentUpload" />
-          <BaseButton variant="outline" @click="attFileInputRef?.click()">直接上傳新檔案</BaseButton>
+          <input
+            type="file"
+            ref="attFileInputRef"
+            class="sr-only"
+            @change="handleAttachmentUpload"
+          />
+          <BaseButton variant="outline" @click="attFileInputRef?.click()"
+            >直接上傳新檔案</BaseButton
+          >
           <span v-if="isAttachmentUploading" class="ml-3 text-sm text-blue-600">上傳中...</span>
         </div>
       </div>
     </BaseModal>
 
     <!-- Delete Confirmation Modal -->
-    <BaseModal
-      :show="showDeleteModal"
-      @close="showDeleteModal = false"
-      title="確認刪除"
-    >
+    <BaseModal :show="showDeleteModal" @close="showDeleteModal = false" title="確認刪除">
       <div class="mt-2">
-        <p class="text-sm text-gray-500">
-          您確定要刪除這個作品嗎？此操作無法復原。
-        </p>
+        <p class="text-sm text-gray-500">您確定要刪除這個作品嗎？此操作無法復原。</p>
       </div>
       <div class="mt-5 flex justify-end space-x-3">
-        <BaseButton
-          variant="outline"
-          @click="showDeleteModal = false"
-        >
-          取消
-        </BaseButton>
-        <BaseButton
-          variant="danger"
-          @click="confirmDelete"
-        >
-          刪除
-        </BaseButton>
+        <BaseButton variant="outline" @click="showDeleteModal = false"> 取消 </BaseButton>
+        <BaseButton variant="danger" @click="confirmDelete"> 刪除 </BaseButton>
       </div>
     </BaseModal>
   </AdminLayout>
@@ -383,7 +374,7 @@ import {
   PencilIcon,
   TrashIcon,
   GlobeAltIcon,
-  PaperClipIcon
+  PaperClipIcon,
 } from '@heroicons/vue/24/outline'
 import { usePortfolioStore } from '@/stores/portfolio'
 import type { Portfolio, PortfolioAttachment } from '@/types/api'
@@ -425,19 +416,19 @@ const projects = computed(() => portfolioStore.portfolios)
 
 const technologies = computed(() => {
   const techSet = new Set<string>()
-  projects.value.forEach(project => {
+  projects.value.forEach((project) => {
     const techs = getProjectTechnologies(project)
-    techs.forEach(tech => techSet.add(tech))
+    techs.forEach((tech) => techSet.add(tech))
   })
   return Array.from(techSet).sort()
 })
 
 const featuredProjectsCount = computed(() => {
-  return projects.value.filter(project => project.isFeatured).length
+  return projects.value.filter((project) => project.isFeatured).length
 })
 
 const publicProjectsCount = computed(() => {
-  return projects.value.filter(project => project.isPublic).length
+  return projects.value.filter((project) => project.isPublic).length
 })
 
 const technologiesCount = computed(() => {
@@ -450,19 +441,18 @@ const filteredProjects = computed(() => {
   // Search filter
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(project =>
-      project.title.toLowerCase().includes(query) ||
-      project.description?.toLowerCase().includes(query) ||
-      getProjectTechnologies(project).some(tech => 
-        tech.toLowerCase().includes(query)
-      )
+    filtered = filtered.filter(
+      (project) =>
+        project.title.toLowerCase().includes(query) ||
+        project.description?.toLowerCase().includes(query) ||
+        getProjectTechnologies(project).some((tech) => tech.toLowerCase().includes(query)),
     )
   }
 
   // Technology filter
   if (selectedTechnology.value) {
-    filtered = filtered.filter(project =>
-      getProjectTechnologies(project).includes(selectedTechnology.value)
+    filtered = filtered.filter((project) =>
+      getProjectTechnologies(project).includes(selectedTechnology.value),
     )
   }
 
@@ -470,13 +460,13 @@ const filteredProjects = computed(() => {
   if (statusFilter.value) {
     switch (statusFilter.value) {
       case 'featured':
-        filtered = filtered.filter(project => project.isFeatured)
+        filtered = filtered.filter((project) => project.isFeatured)
         break
       case 'public':
-        filtered = filtered.filter(project => project.isPublic)
+        filtered = filtered.filter((project) => project.isPublic)
         break
       case 'private':
-        filtered = filtered.filter(project => !project.isPublic)
+        filtered = filtered.filter((project) => !project.isPublic)
         break
     }
   }
@@ -516,15 +506,15 @@ function getProjectTechnologies(project: Portfolio): string[] {
   const technologies = project.technologies || ''
   return technologies
     .split(/[,;|]/)
-    .map(tech => tech.trim())
-    .filter(tech => tech.length > 0)
+    .map((tech) => tech.trim())
+    .filter((tech) => tech.length > 0)
 }
 
 function formatDate(dateString?: string): string {
   if (!dateString) return ''
   return new Date(dateString).toLocaleDateString('zh-TW', {
     year: 'numeric',
-    month: 'short'
+    month: 'short',
   })
 }
 
@@ -573,11 +563,16 @@ function handleCancel() {
 // Attachment methods
 function getFileIcon(fileType: string): string {
   switch (fileType) {
-    case 'image': return '🖼'
-    case 'pdf': return '📄'
-    case 'document': return '📝'
-    case 'presentation': return '📊'
-    default: return '📁'
+    case 'image':
+      return '🖼'
+    case 'pdf':
+      return '📄'
+    case 'document':
+      return '📝'
+    case 'presentation':
+      return '📊'
+    default:
+      return '📁'
   }
 }
 
@@ -594,12 +589,15 @@ async function openAttachments(project: Portfolio) {
   try {
     const res = await portfolioAttachmentService.getByPortfolio(project.id)
     if (res.success) currentAttachments.value = res.data || []
-  } catch { currentAttachments.value = [] }
+  } catch {
+    currentAttachments.value = []
+  }
 }
 
 async function onAttachmentSelected(file: FileUpload) {
   if (!attachingProject.value) return
-  const backendBase = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5037'
+  const backendBase =
+    import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5037'
   const fullUrl = file.fileUrl.startsWith('http') ? file.fileUrl : `${backendBase}${file.fileUrl}`
   try {
     const res = await portfolioAttachmentService.create({
@@ -609,13 +607,18 @@ async function onAttachmentSelected(file: FileUpload) {
       fileUrl: fullUrl,
       fileType: file.fileType,
       fileSize: file.fileSize,
-      sortOrder: currentAttachments.value.length
+      sortOrder: currentAttachments.value.length,
     })
     if (res.success && res.data) {
       currentAttachments.value.push(res.data)
-      attachmentCounts.value = { ...attachmentCounts.value, [attachingProject.value.id]: currentAttachments.value.length }
+      attachmentCounts.value = {
+        ...attachmentCounts.value,
+        [attachingProject.value.id]: currentAttachments.value.length,
+      }
     }
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 async function handleAttachmentUpload(event: Event) {
@@ -629,7 +632,9 @@ async function handleAttachmentUpload(event: Event) {
     if (uploadRes.success && uploadRes.data) {
       await onAttachmentSelected(uploadRes.data)
     }
-  } catch { /* ignore */ } finally {
+  } catch {
+    /* ignore */
+  } finally {
     isAttachmentUploading.value = false
   }
 }
@@ -638,17 +643,20 @@ async function removeAttachment(id: number) {
   if (!confirm('確定刪除此附件？')) return
   try {
     await portfolioAttachmentService.delete(id)
-    currentAttachments.value = currentAttachments.value.filter(a => a.id !== id)
+    currentAttachments.value = currentAttachments.value.filter((a) => a.id !== id)
     if (attachingProject.value) {
       const count = currentAttachments.value.length
-      if (count > 0) attachmentCounts.value = { ...attachmentCounts.value, [attachingProject.value.id]: count }
+      if (count > 0)
+        attachmentCounts.value = { ...attachmentCounts.value, [attachingProject.value.id]: count }
       else {
         const counts = { ...attachmentCounts.value }
         delete counts[attachingProject.value.id]
         attachmentCounts.value = counts
       }
     }
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 // Lifecycle
@@ -661,7 +669,9 @@ onMounted(async () => {
       if (res.success && res.data?.length) {
         attachmentCounts.value = { ...attachmentCounts.value, [p.id]: res.data.length }
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }
 })
 </script>

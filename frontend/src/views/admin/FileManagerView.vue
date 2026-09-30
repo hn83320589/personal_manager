@@ -7,7 +7,14 @@
           <p class="mt-1 text-sm text-gray-600">管理上傳的圖片與文件</p>
         </div>
         <div>
-          <input type="file" ref="fileInputRef" class="sr-only" :accept="acceptTypes" @change="handleFileInput" multiple />
+          <input
+            type="file"
+            ref="fileInputRef"
+            class="sr-only"
+            :accept="acceptTypes"
+            @change="handleFileInput"
+            multiple
+          />
           <BaseButton variant="primary" @click="fileInputRef?.click()">
             <span class="mr-2">+</span>上傳檔案
           </BaseButton>
@@ -21,19 +28,32 @@
         v-for="tab in tabs"
         :key="tab.value"
         @click="activeFilter = tab.value"
-        :class="['px-4 py-2 rounded-lg text-sm font-medium transition-colors', activeFilter === tab.value ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50']"
-      >{{ tab.label }}</button>
+        :class="[
+          'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+          activeFilter === tab.value
+            ? 'bg-blue-600 text-white'
+            : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50',
+        ]"
+      >
+        {{ tab.label }}
+      </button>
     </div>
 
     <!-- Uploading progress -->
-    <div v-if="isUploading" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
+    <div
+      v-if="isUploading"
+      class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700"
+    >
       上傳中，請稍候...
     </div>
 
     <!-- Files Grid -->
     <div v-if="isLoading" class="text-center py-12 text-gray-400">載入中...</div>
 
-    <div v-else-if="filteredFiles.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <div
+      v-else-if="filteredFiles.length > 0"
+      class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
+    >
       <div
         v-for="file in filteredFiles"
         :key="file.id"
@@ -54,7 +74,9 @@
 
         <!-- Info -->
         <div class="p-2">
-          <p class="text-xs text-gray-700 truncate font-medium" :title="file.fileName">{{ file.fileName }}</p>
+          <p class="text-xs text-gray-700 truncate font-medium" :title="file.fileName">
+            {{ file.fileName }}
+          </p>
           <p class="text-xs text-gray-400 mt-0.5">{{ formatFileSize(file.fileSize) }}</p>
         </div>
 
@@ -64,12 +86,16 @@
             @click="copyLink(file)"
             class="flex-1 text-xs py-1 text-gray-600 border border-gray-200 rounded hover:bg-gray-50 transition-colors"
             :title="copied === file.id ? '已複製！' : '複製連結'"
-          >{{ copied === file.id ? '✓' : '複製' }}</button>
+          >
+            {{ copied === file.id ? '✓' : '複製' }}
+          </button>
           <button
             @click="deleteFile(file)"
             class="text-xs py-1 px-2 text-red-600 border border-red-200 rounded hover:bg-red-50 transition-colors"
             title="刪除"
-          >✕</button>
+          >
+            ✕
+          </button>
         </div>
       </div>
     </div>
@@ -80,7 +106,11 @@
     </div>
 
     <!-- Image Preview Modal -->
-    <div v-if="previewImage" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80" @click="previewImage = null">
+    <div
+      v-if="previewImage"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80"
+      @click="previewImage = null"
+    >
       <div class="max-w-4xl max-h-screen p-4">
         <img :src="previewImage" alt="預覽" class="max-w-full max-h-full rounded-lg" />
       </div>
@@ -103,7 +133,8 @@ const fileInputRef = ref<HTMLInputElement>()
 const copied = ref<number | null>(null)
 const previewImage = ref<string | null>(null)
 
-const backendBase = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5037'
+const backendBase =
+  import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5037'
 
 const tabs = [
   { value: 'all', label: '全部' },
@@ -117,7 +148,7 @@ const acceptTypes = '.jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.ppt,.pptx'
 
 const filteredFiles = computed(() => {
   if (activeFilter.value === 'all') return files.value
-  return files.value.filter(f => f.fileType === activeFilter.value)
+  return files.value.filter((f) => f.fileType === activeFilter.value)
 })
 
 function getFileUrl(file: FileUpload): string {
@@ -126,11 +157,16 @@ function getFileUrl(file: FileUpload): string {
 
 function getFileIcon(fileType: FileUploadType | string): string {
   switch (fileType) {
-    case 'image': return '🖼'
-    case 'pdf': return '📄'
-    case 'document': return '📝'
-    case 'presentation': return '📊'
-    default: return '📁'
+    case 'image':
+      return '🖼'
+    case 'pdf':
+      return '📄'
+    case 'document':
+      return '📝'
+    case 'presentation':
+      return '📊'
+    default:
+      return '📁'
   }
 }
 
@@ -152,16 +188,22 @@ async function copyLink(file: FileUpload) {
   try {
     await navigator.clipboard.writeText(getFileUrl(file))
     copied.value = file.id
-    setTimeout(() => { copied.value = null }, 2000)
-  } catch { /* ignore */ }
+    setTimeout(() => {
+      copied.value = null
+    }, 2000)
+  } catch {
+    /* ignore */
+  }
 }
 
 async function deleteFile(file: FileUpload) {
   if (!confirm(`確定刪除「${file.fileName}」？`)) return
   try {
     await fileUploadService.delete(file.id)
-    files.value = files.value.filter(f => f.id !== file.id)
-  } catch { /* ignore */ }
+    files.value = files.value.filter((f) => f.id !== file.id)
+  } catch {
+    /* ignore */
+  }
 }
 
 async function uploadFiles(fileList: FileList) {
@@ -172,7 +214,9 @@ async function uploadFiles(fileList: FileList) {
     try {
       const res = await fileUploadService.upload(formData)
       if (res.success && res.data) files.value.unshift(res.data)
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }
   isUploading.value = false
 }

@@ -27,22 +27,40 @@
               class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 sm:left-6"
             />
           </th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
             文章
           </th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
             狀態
           </th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
             分類
           </th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
             作者
           </th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
             觀看數
           </th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
             更新時間
           </th>
           <th scope="col" class="relative px-6 py-3">
@@ -56,7 +74,7 @@
           :key="post.id"
           :class="{
             'bg-blue-50': selectedPosts.includes(post.id),
-            'hover:bg-gray-50': !selectedPosts.includes(post.id)
+            'hover:bg-gray-50': !selectedPosts.includes(post.id),
           }"
         >
           <!-- Selection Checkbox -->
@@ -74,13 +92,11 @@
             <div class="flex items-start space-x-3">
               <!-- Featured Image Thumbnail -->
               <div class="flex-shrink-0">
-                <div
-                  class="h-10 w-10 rounded bg-gray-200 flex items-center justify-center"
-                >
+                <div class="h-10 w-10 rounded bg-gray-200 flex items-center justify-center">
                   <DocumentTextIcon class="h-5 w-5 text-gray-400" />
                 </div>
               </div>
-              
+
               <div class="flex-1 min-w-0">
                 <div class="flex items-center space-x-2">
                   <h3 class="text-sm font-medium text-gray-900 truncate">
@@ -115,7 +131,10 @@
           <td class="px-6 py-4 whitespace-nowrap">
             <span :class="getStatusBadgeClass(post.status === 'Published' ? 'published' : 'draft')">
               <div class="flex items-center">
-                <div :class="getStatusDotClass(post.status === 'Published' ? 'published' : 'draft')" class="w-2 h-2 rounded-full mr-2"></div>
+                <div
+                  :class="getStatusDotClass(post.status === 'Published' ? 'published' : 'draft')"
+                  class="w-2 h-2 rounded-full mr-2"
+                ></div>
                 {{ getStatusLabel(post.status === 'Published' ? 'published' : 'draft') }}
               </div>
             </span>
@@ -133,9 +152,7 @@
           </td>
 
           <!-- Author -->
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-            系統管理員
-          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">系統管理員</td>
 
           <!-- Views -->
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -163,11 +180,18 @@
                   'p-1 rounded transition-colors',
                   (post.status === 'Published' ? 'published' : 'draft') === 'published'
                     ? 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50'
-                    : 'text-green-600 hover:text-green-700 hover:bg-green-50'
+                    : 'text-green-600 hover:text-green-700 hover:bg-green-50',
                 ]"
-                :title="(post.status === 'Published' ? 'published' : 'draft') === 'published' ? '取消發布' : '發布文章'"
+                :title="
+                  (post.status === 'Published' ? 'published' : 'draft') === 'published'
+                    ? '取消發布'
+                    : '發布文章'
+                "
               >
-                <EyeSlashIcon v-if="(post.status === 'Published' ? 'published' : 'draft') === 'published'" class="w-4 h-4" />
+                <EyeSlashIcon
+                  v-if="(post.status === 'Published' ? 'published' : 'draft') === 'published'"
+                  class="w-4 h-4"
+                />
                 <EyeIcon v-else class="w-4 h-4" />
               </button>
 
@@ -212,9 +236,7 @@
     <div v-else class="text-center py-12">
       <DocumentTextIcon class="mx-auto h-12 w-12 text-gray-400" />
       <h3 class="mt-2 text-sm font-medium text-gray-900">沒有找到文章</h3>
-      <p class="mt-1 text-sm text-gray-500">
-        開始撰寫您的第一篇文章吧
-      </p>
+      <p class="mt-1 text-sm text-gray-500">開始撰寫您的第一篇文章吧</p>
     </div>
   </div>
 </template>
@@ -228,7 +250,7 @@ import {
   MagnifyingGlassIcon,
   PencilIcon,
   TrashIcon,
-  DocumentDuplicateIcon
+  DocumentDuplicateIcon,
 } from '@heroicons/vue/24/outline'
 import type { BlogPost } from '@/types/api'
 
@@ -240,7 +262,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  loading: false
+  loading: false,
 })
 
 // Emits
@@ -256,7 +278,9 @@ const emit = defineEmits<{
 
 // Computed
 const allSelected = computed(() => {
-  return props.posts.length > 0 && props.posts.every(post => props.selectedPosts.includes(post.id))
+  return (
+    props.posts.length > 0 && props.posts.every((post) => props.selectedPosts.includes(post.id))
+  )
 })
 
 const someSelected = computed(() => {
@@ -273,17 +297,21 @@ function getStatusLabel(status: string): string {
     draft: '草稿',
     published: '已發布',
     scheduled: '排程發布',
-    archived: '已封存'
+    archived: '已封存',
   }
   return statusMap[status as keyof typeof statusMap] || '草稿'
 }
 
 function getStatusBadgeClass(status: string): string {
   const classMap = {
-    draft: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800',
-    published: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800',
-    scheduled: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800',
-    archived: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800'
+    draft:
+      'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800',
+    published:
+      'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800',
+    scheduled:
+      'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800',
+    archived:
+      'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800',
   }
   return classMap[status as keyof typeof classMap] || classMap.draft
 }
@@ -293,33 +321,36 @@ function getStatusDotClass(status: string): string {
     draft: 'bg-gray-400',
     published: 'bg-green-400',
     scheduled: 'bg-blue-400',
-    archived: 'bg-red-400'
+    archived: 'bg-red-400',
   }
   return classMap[status as keyof typeof classMap] || classMap.draft
 }
 
 function formatDate(dateString: string | undefined): string {
   if (!dateString) return ''
-  
+
   const date = new Date(dateString)
   const now = new Date()
   const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
-  
+
   if (diffDays === 0) return '今天'
   if (diffDays === 1) return '昨天'
   if (diffDays < 7) return `${diffDays} 天前`
-  
+
   return date.toLocaleDateString('zh-TW', {
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 
 function getTagsList(tags: string[] | string | undefined): string[] {
   if (!tags) return []
   if (Array.isArray(tags)) return tags
-  return tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
+  return tags
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter((tag) => tag.length > 0)
 }
 </script>
 

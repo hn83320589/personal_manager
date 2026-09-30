@@ -26,7 +26,10 @@ class PortfolioService {
     return httpService.post<Portfolio>('/portfolios', portfolio)
   }
 
-  async updatePortfolio(id: number, portfolio: Partial<Portfolio>): Promise<ApiResponse<Portfolio>> {
+  async updatePortfolio(
+    id: number,
+    portfolio: Partial<Portfolio>,
+  ): Promise<ApiResponse<Portfolio>> {
     return httpService.put<Portfolio>(`/portfolios/${id}`, portfolio)
   }
 

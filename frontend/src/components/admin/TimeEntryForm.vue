@@ -7,13 +7,7 @@
         <label for="date" class="block text-sm font-medium text-gray-700">
           日期 <span class="text-red-500">*</span>
         </label>
-        <BaseInput
-          id="date"
-          v-model="formData.date"
-          type="date"
-          required
-          class="mt-1"
-        />
+        <BaseInput id="date" v-model="formData.date" type="date" required class="mt-1" />
       </div>
 
       <!-- Task/Activity -->
@@ -44,9 +38,7 @@
 
       <!-- Project -->
       <div>
-        <label for="project" class="block text-sm font-medium text-gray-700">
-          專案
-        </label>
+        <label for="project" class="block text-sm font-medium text-gray-700"> 專案 </label>
         <BaseInput
           id="project"
           v-model="formData.project"
@@ -58,18 +50,10 @@
 
       <!-- Task ID (if linked to specific task) -->
       <div v-if="formData.taskId">
-        <label class="block text-sm font-medium text-gray-700">
-          關聯任務
-        </label>
+        <label class="block text-sm font-medium text-gray-700"> 關聯任務 </label>
         <div class="mt-1 bg-gray-50 border border-gray-200 rounded-md p-2">
           <span class="text-sm text-gray-900">{{ linkedTaskTitle }}</span>
-          <BaseButton
-            type="button"
-            variant="outline"
-            size="small"
-            @click="unlinkTask"
-            class="ml-2"
-          >
+          <BaseButton type="button" variant="outline" size="small" @click="unlinkTask" class="ml-2">
             取消關聯
           </BaseButton>
         </div>
@@ -79,32 +63,18 @@
     <!-- Time Information -->
     <div class="space-y-4">
       <h3 class="text-lg font-medium text-gray-900">時間資訊</h3>
-      
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Start Time -->
         <div>
-          <label for="startTime" class="block text-sm font-medium text-gray-700">
-            開始時間
-          </label>
-          <BaseInput
-            id="startTime"
-            v-model="formData.startTime"
-            type="time"
-            class="mt-1"
-          />
+          <label for="startTime" class="block text-sm font-medium text-gray-700"> 開始時間 </label>
+          <BaseInput id="startTime" v-model="formData.startTime" type="time" class="mt-1" />
         </div>
 
         <!-- End Time -->
         <div>
-          <label for="endTime" class="block text-sm font-medium text-gray-700">
-            結束時間
-          </label>
-          <BaseInput
-            id="endTime"
-            v-model="formData.endTime"
-            type="time"
-            class="mt-1"
-          />
+          <label for="endTime" class="block text-sm font-medium text-gray-700"> 結束時間 </label>
+          <BaseInput id="endTime" v-model="formData.endTime" type="time" class="mt-1" />
         </div>
 
         <!-- Duration -->
@@ -127,17 +97,17 @@
       </div>
 
       <!-- Auto-calculate helper -->
-      <div v-if="formData.startTime && formData.endTime" class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+      <div
+        v-if="formData.startTime && formData.endTime"
+        class="bg-blue-50 border border-blue-200 rounded-lg p-3"
+      >
         <div class="flex items-center justify-between">
           <span class="text-sm text-blue-800">
-            計算時長: {{ calculateDurationFromTimes() }} 分鐘 ({{ formatDurationDisplay(calculateDurationFromTimes()) }})
+            計算時長: {{ calculateDurationFromTimes() }} 分鐘 ({{
+              formatDurationDisplay(calculateDurationFromTimes())
+            }})
           </span>
-          <BaseButton
-            type="button"
-            variant="outline"
-            size="small"
-            @click="useDurationFromTimes"
-          >
+          <BaseButton type="button" variant="outline" size="small" @click="useDurationFromTimes">
             使用此時長
           </BaseButton>
         </div>
@@ -146,9 +116,7 @@
 
     <!-- Description -->
     <div>
-      <label for="description" class="block text-sm font-medium text-gray-700">
-        工作描述
-      </label>
+      <label for="description" class="block text-sm font-medium text-gray-700"> 工作描述 </label>
       <BaseTextarea
         id="description"
         v-model="formData.description"
@@ -169,7 +137,7 @@
         </div>
         <div>
           <p v-if="formData.startTime || formData.endTime">
-            <strong>時間:</strong> 
+            <strong>時間:</strong>
             {{ formData.startTime || '--:--' }} ~ {{ formData.endTime || '--:--' }}
           </p>
           <p><strong>時長:</strong> {{ formatDurationDisplay(formData.duration) }}</p>
@@ -180,18 +148,8 @@
 
     <!-- Form Actions -->
     <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-      <BaseButton
-        type="button"
-        variant="outline"
-        @click="$emit('cancel')"
-      >
-        取消
-      </BaseButton>
-      <BaseButton
-        type="submit"
-        variant="primary"
-        :disabled="!isFormValid"
-      >
+      <BaseButton type="button" variant="outline" @click="$emit('cancel')"> 取消 </BaseButton>
+      <BaseButton type="submit" variant="primary" :disabled="!isFormValid">
         {{ entry ? '更新記錄' : '建立記錄' }}
       </BaseButton>
     </div>
@@ -206,7 +164,9 @@
       <div class="space-y-4">
         <!-- Search -->
         <div class="relative">
-          <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <MagnifyingGlassIcon
+            class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+          />
           <input
             v-model="taskSearchQuery"
             type="text"
@@ -250,11 +210,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import {
-  ListBulletIcon,
-  MagnifyingGlassIcon,
-  ChevronRightIcon
-} from '@heroicons/vue/24/outline'
+import { ListBulletIcon, MagnifyingGlassIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 import type { WorkTask, WorkTaskStatus } from '@/types/api'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import BaseTextarea from '@/components/ui/BaseTextarea.vue'
@@ -283,7 +239,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  availableTasks: () => []
+  availableTasks: () => [],
 })
 
 // Emits
@@ -304,7 +260,7 @@ const formData = ref({
   startTime: '',
   endTime: '',
   duration: 0,
-  description: ''
+  description: '',
 })
 
 // Constants
@@ -312,14 +268,12 @@ const hourlyRate = 50 // Example hourly rate for estimation
 
 // Computed
 const isFormValid = computed(() => {
-  return formData.value.task.trim().length > 0 &&
-         formData.value.date &&
-         formData.value.duration > 0
+  return formData.value.task.trim().length > 0 && formData.value.date && formData.value.duration > 0
 })
 
 const linkedTaskTitle = computed(() => {
   if (formData.value.taskId) {
-    const task = props.availableTasks.find(t => t.id === formData.value.taskId)
+    const task = props.availableTasks.find((t) => t.id === formData.value.taskId)
     return task?.title || 'Unknown Task'
   }
   return ''
@@ -329,12 +283,13 @@ const filteredAvailableTasks = computed(() => {
   if (!taskSearchQuery.value) {
     return props.availableTasks
   }
-  
+
   const query = taskSearchQuery.value.toLowerCase()
-  return props.availableTasks.filter(task =>
-    task.title.toLowerCase().includes(query) ||
-    task.description?.toLowerCase().includes(query) ||
-    task.projectName?.toLowerCase().includes(query)
+  return props.availableTasks.filter(
+    (task) =>
+      task.title.toLowerCase().includes(query) ||
+      task.description?.toLowerCase().includes(query) ||
+      task.projectName?.toLowerCase().includes(query),
   )
 })
 
@@ -347,10 +302,10 @@ const estimatedEarnings = computed(() => {
 // Methods
 function formatDurationDisplay(minutes: number): string {
   if (!minutes || minutes === 0) return '0分鐘'
-  
+
   const hours = Math.floor(minutes / 60)
   const mins = minutes % 60
-  
+
   if (hours === 0) {
     return `${mins}分鐘`
   } else if (mins === 0) {
@@ -366,24 +321,24 @@ function formatDisplayDate(dateString: string): string {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    weekday: 'long'
+    weekday: 'long',
   })
 }
 
 function calculateDurationFromTimes(): number {
   if (!formData.value.startTime || !formData.value.endTime) return 0
-  
+
   const [startHour, startMin] = formData.value.startTime.split(':').map(Number)
   const [endHour, endMin] = formData.value.endTime.split(':').map(Number)
-  
+
   const startMinutes = startHour * 60 + startMin
   let endMinutes = endHour * 60 + endMin
-  
+
   // Handle overnight work
   if (endMinutes < startMinutes) {
     endMinutes += 24 * 60
   }
-  
+
   return endMinutes - startMinutes
 }
 
@@ -407,28 +362,35 @@ function unlinkTask() {
 
 function getStatusLabel(status: WorkTaskStatus): string {
   const labelMap: Record<WorkTaskStatus, string> = {
-    'Pending': '待處理',
-    'Planning': '規劃中',
-    'InProgress': '進行中',
-    'Testing': '測試中',
-    'Completed': '已完成',
-    'OnHold': '暫停',
-    'Cancelled': '已取消'
+    Pending: '待處理',
+    Planning: '規劃中',
+    InProgress: '進行中',
+    Testing: '測試中',
+    Completed: '已完成',
+    OnHold: '暫停',
+    Cancelled: '已取消',
   }
   return labelMap[status] || '未知'
 }
 
 function getStatusStyle(status: WorkTaskStatus): string {
   const styleMap: Record<WorkTaskStatus, string> = {
-    'Pending': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800',
-    'Planning': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800',
-    'InProgress': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800',
-    'Testing': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800',
-    'Completed': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800',
-    'OnHold': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800',
-    'Cancelled': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800'
+    Pending: 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800',
+    Planning: 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800',
+    InProgress:
+      'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800',
+    Testing:
+      'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800',
+    Completed:
+      'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800',
+    OnHold:
+      'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800',
+    Cancelled: 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800',
   }
-  return styleMap[status] || 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800'
+  return (
+    styleMap[status] ||
+    'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800'
+  )
 }
 
 function handleSubmit() {
@@ -442,11 +404,11 @@ function handleSubmit() {
     startTime: formData.value.startTime || undefined,
     endTime: formData.value.endTime || undefined,
     duration: formData.value.duration,
-    description: formData.value.description?.trim() || undefined
+    description: formData.value.description?.trim() || undefined,
   }
 
   // Remove undefined values
-  Object.keys(submitData).forEach(key => {
+  Object.keys(submitData).forEach((key) => {
     if (submitData[key as keyof typeof submitData] === undefined) {
       delete submitData[key as keyof typeof submitData]
     }
@@ -464,27 +426,31 @@ function resetForm() {
     startTime: '',
     endTime: '',
     duration: 0,
-    description: ''
+    description: '',
   }
 }
 
 // Watch for entry changes
-watch(() => props.entry, (newEntry) => {
-  if (newEntry) {
-    formData.value = {
-      taskId: newEntry.taskId,
-      task: newEntry.task || '',
-      project: newEntry.project || '',
-      date: newEntry.date || new Date().toISOString().split('T')[0],
-      startTime: newEntry.startTime || '',
-      endTime: newEntry.endTime || '',
-      duration: newEntry.duration || 0,
-      description: newEntry.description || ''
+watch(
+  () => props.entry,
+  (newEntry) => {
+    if (newEntry) {
+      formData.value = {
+        taskId: newEntry.taskId,
+        task: newEntry.task || '',
+        project: newEntry.project || '',
+        date: newEntry.date || new Date().toISOString().split('T')[0],
+        startTime: newEntry.startTime || '',
+        endTime: newEntry.endTime || '',
+        duration: newEntry.duration || 0,
+        description: newEntry.description || '',
+      }
+    } else {
+      resetForm()
     }
-  } else {
-    resetForm()
-  }
-}, { immediate: true })
+  },
+  { immediate: true },
+)
 
 // Auto-calculate duration when times change
 watch([() => formData.value.startTime, () => formData.value.endTime], () => {

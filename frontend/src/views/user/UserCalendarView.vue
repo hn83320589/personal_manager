@@ -42,7 +42,20 @@ const userId = inject<ComputedRef<number | null>>('userId')
 const isLoading = ref(true)
 const events = ref<CalendarEvent[]>([])
 
-const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const monthNames = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+]
 
 function monthShort(dateStr: string): string {
   return monthNames[new Date(dateStr).getMonth()]
@@ -50,7 +63,13 @@ function monthShort(dateStr: string): string {
 
 function formatDateTime(dateStr: string): string {
   const d = new Date(dateStr)
-  return d.toLocaleString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+  return d.toLocaleString('zh-TW', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 }
 
 async function load(uid: number) {
@@ -63,6 +82,13 @@ async function load(uid: number) {
   }
 }
 
-onMounted(() => { if (userId?.value) load(userId.value) })
-watch(() => userId?.value, (uid) => { if (uid) load(uid) })
+onMounted(() => {
+  if (userId?.value) load(userId.value)
+})
+watch(
+  () => userId?.value,
+  (uid) => {
+    if (uid) load(uid)
+  },
+)
 </script>

@@ -34,9 +34,14 @@
           </div>
           <!-- Info -->
           <div class="text-center sm:text-left flex-1">
-            <h1 class="text-2xl font-bold text-gray-900">{{ publicUser.fullName || publicUser.username }}</h1>
+            <h1 class="text-2xl font-bold text-gray-900">
+              {{ publicUser.fullName || publicUser.username }}
+            </h1>
             <p v-if="profile?.title" class="text-gray-600 mt-0.5">{{ profile.title }}</p>
-            <p v-if="profile?.location" class="text-sm text-gray-500 mt-1 flex items-center justify-center sm:justify-start gap-1">
+            <p
+              v-if="profile?.location"
+              class="text-sm text-gray-500 mt-1 flex items-center justify-center sm:justify-start gap-1"
+            >
               <MapPinIcon class="h-4 w-4" />
               {{ profile.location }}
             </p>
@@ -48,7 +53,10 @@
               v-if="isAuthenticated"
               to="/admin/dashboard"
               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors"
-              :style="{ color: 'var(--color-primary,#0ea5e9)', borderColor: 'var(--color-primary,#0ea5e9)' }"
+              :style="{
+                color: 'var(--color-primary,#0ea5e9)',
+                borderColor: 'var(--color-primary,#0ea5e9)',
+              }"
             >
               <Squares2X2Icon class="h-3.5 w-3.5" />後台管理
             </RouterLink>
@@ -74,7 +82,7 @@
               'flex-shrink-0 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap',
               isActiveNav(item.path)
                 ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
             ]"
           >
             {{ item.name }}
@@ -120,7 +128,14 @@ const dynamicThemeVars = computed(() => {
 
 const initials = computed(() => {
   const name = publicUser.value?.fullName || publicUser.value?.username || ''
-  return name.split(/\s+/).map(w => w[0] ?? '').slice(0, 2).join('').toUpperCase() || 'U'
+  return (
+    name
+      .split(/\s+/)
+      .map((w) => w[0] ?? '')
+      .slice(0, 2)
+      .join('')
+      .toUpperCase() || 'U'
+  )
 })
 
 const navItems = [
@@ -176,7 +191,10 @@ async function loadUser(uname: string) {
 }
 
 // Provide userId to child views
-provide('userId', computed(() => publicUser.value?.id ?? null))
+provide(
+  'userId',
+  computed(() => publicUser.value?.id ?? null),
+)
 provide('username', username)
 
 onMounted(() => loadUser(username.value))
@@ -186,5 +204,8 @@ watch(username, (newName) => {
 })
 
 // Re-apply user-level SEO on intra-user navigation (so child-specific overrides get reset)
-watch(() => route.path, () => applyUserSeo())
+watch(
+  () => route.path,
+  () => applyUserSeo(),
+)
 </script>

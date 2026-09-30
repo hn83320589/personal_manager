@@ -5,17 +5,36 @@
 // must polyfill before any test modules are loaded.
 
 export function setup() {
-  if (typeof globalThis.localStorage === 'undefined' || typeof (globalThis.localStorage as Storage).getItem !== 'function') {
+  if (
+    typeof globalThis.localStorage === 'undefined' ||
+    typeof (globalThis.localStorage as Storage).getItem !== 'function'
+  ) {
     const store = new Map<string, string>()
     const mockStorage = {
       getItem: (key: string) => store.get(key) ?? null,
-      setItem: (key: string, value: string) => { store.set(key, String(value)) },
-      removeItem: (key: string) => { store.delete(key) },
-      clear: () => { store.clear() },
+      setItem: (key: string, value: string) => {
+        store.set(key, String(value))
+      },
+      removeItem: (key: string) => {
+        store.delete(key)
+      },
+      clear: () => {
+        store.clear()
+      },
       key: (index: number) => [...store.keys()][index] ?? null,
-      get length() { return store.size },
+      get length() {
+        return store.size
+      },
     }
-    Object.defineProperty(globalThis, 'localStorage', { value: mockStorage, writable: true, configurable: true })
-    Object.defineProperty(globalThis, 'sessionStorage', { value: mockStorage, writable: true, configurable: true })
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: mockStorage,
+      writable: true,
+      configurable: true,
+    })
+    Object.defineProperty(globalThis, 'sessionStorage', {
+      value: mockStorage,
+      writable: true,
+      configurable: true,
+    })
   }
 }

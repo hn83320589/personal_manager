@@ -6,25 +6,19 @@
         <div class="flex justify-center mb-6">
           <ExclamationTriangleIcon class="h-20 w-20 text-gray-400" />
         </div>
-        
+
         <!-- Error Message -->
         <h1 class="text-6xl font-bold text-primary-600 mb-4">404</h1>
         <h2 class="text-2xl font-semibold text-gray-900 mb-4">頁面不存在</h2>
-        <p class="text-gray-600 mb-8">
-          抱歉，您要找的頁面不存在或已被移動。
-        </p>
-        
+        <p class="text-gray-600 mb-8">抱歉，您要找的頁面不存在或已被移動。</p>
+
         <!-- Action Buttons -->
         <div class="space-y-3 sm:space-y-0 sm:space-x-3 sm:flex sm:justify-center">
-          <BaseButton @click="goHome" variant="primary">
-            回到首頁
-          </BaseButton>
-          <BaseButton @click="goBack" variant="secondary">
-            返回上頁
-          </BaseButton>
+          <BaseButton @click="goHome" variant="primary"> 回到首頁 </BaseButton>
+          <BaseButton @click="goBack" variant="secondary"> 返回上頁 </BaseButton>
         </div>
       </div>
-      
+
       <!-- Helpful Links -->
       <div class="mt-8">
         <h3 class="text-sm font-medium text-gray-900 mb-4">您可能在尋找：</h3>

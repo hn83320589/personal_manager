@@ -19,9 +19,7 @@
 
       <!-- Description -->
       <div class="md:col-span-2">
-        <label for="description" class="block text-sm font-medium text-gray-700">
-          任務描述
-        </label>
+        <label for="description" class="block text-sm font-medium text-gray-700"> 任務描述 </label>
         <BaseTextarea
           id="description"
           v-model="formData.description"
@@ -63,42 +61,23 @@
           class="mt-1"
         />
       </div>
-
     </div>
 
     <!-- Due Date -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <label for="dueDate" class="block text-sm font-medium text-gray-700">
-          到期日期
-        </label>
-        <BaseInput
-          id="dueDate"
-          v-model="formData.dueDate"
-          type="date"
-          class="mt-1"
-        />
+        <label for="dueDate" class="block text-sm font-medium text-gray-700"> 到期日期 </label>
+        <BaseInput id="dueDate" v-model="formData.dueDate" type="date" class="mt-1" />
       </div>
     </div>
 
     <!-- Form Actions -->
     <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-      <BaseButton
-        type="button"
-        variant="outline"
-        @click="$emit('cancel')"
-      >
-        取消
-      </BaseButton>
-      <BaseButton
-        type="submit"
-        variant="primary"
-        :disabled="!isFormValid"
-      >
+      <BaseButton type="button" variant="outline" @click="$emit('cancel')"> 取消 </BaseButton>
+      <BaseButton type="submit" variant="primary" :disabled="!isFormValid">
         {{ task ? '更新任務' : '建立任務' }}
       </BaseButton>
     </div>
-
   </form>
 </template>
 
@@ -129,27 +108,25 @@ const formData = ref({
   description: '',
   status: 'Pending' as TodoStatus,
   priority: 'Medium' as TodoPriority,
-  dueDate: ''
+  dueDate: '',
 })
 
 // Constants
 const taskStatuses = [
   { value: 'Pending', label: '待處理' },
   { value: 'InProgress', label: '進行中' },
-  { value: 'Completed', label: '已完成' }
+  { value: 'Completed', label: '已完成' },
 ]
 
 const taskPriorities = [
   { value: 'Low', label: '低' },
   { value: 'Medium', label: '中' },
-  { value: 'High', label: '高' }
+  { value: 'High', label: '高' },
 ]
 
 // Computed
 const isFormValid = computed(() => {
-  return formData.value.title.trim().length > 0 &&
-         formData.value.status &&
-         formData.value.priority
+  return formData.value.title.trim().length > 0 && formData.value.status && formData.value.priority
 })
 
 // Methods
@@ -165,7 +142,7 @@ function handleSubmit() {
   }
 
   // Remove undefined values
-  Object.keys(submitData).forEach(key => {
+  Object.keys(submitData).forEach((key) => {
     if (submitData[key as keyof typeof submitData] === undefined) {
       delete submitData[key as keyof typeof submitData]
     }
@@ -180,22 +157,26 @@ function resetForm() {
     description: '',
     status: 'Pending' as TodoStatus,
     priority: 'Medium' as TodoPriority,
-    dueDate: ''
+    dueDate: '',
   }
 }
 
 // Watch for task changes
-watch(() => props.task, (newTask) => {
-  if (newTask) {
-    formData.value = {
-      title: newTask.title || '',
-      description: newTask.description || '',
-      status: newTask.status || 'Pending',
-      priority: newTask.priority || 'Medium',
-      dueDate: newTask.dueDate?.split('T')[0] || ''
+watch(
+  () => props.task,
+  (newTask) => {
+    if (newTask) {
+      formData.value = {
+        title: newTask.title || '',
+        description: newTask.description || '',
+        status: newTask.status || 'Pending',
+        priority: newTask.priority || 'Medium',
+        dueDate: newTask.dueDate?.split('T')[0] || '',
+      }
+    } else {
+      resetForm()
     }
-  } else {
-    resetForm()
-  }
-}, { immediate: true })
+  },
+  { immediate: true },
+)
 </script>

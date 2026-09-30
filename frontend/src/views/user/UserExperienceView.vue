@@ -12,17 +12,15 @@
           <div class="absolute left-3.5 top-0 bottom-0 w-px bg-gray-200"></div>
 
           <div class="space-y-6">
-            <div
-              v-for="work in workExperiences"
-              :key="work.id"
-              class="relative pl-10"
-            >
+            <div v-for="work in workExperiences" :key="work.id" class="relative pl-10">
               <!-- Dot -->
               <div
                 class="absolute left-0 top-1 w-7 h-7 rounded-full flex items-center justify-center z-10"
-                :style="work.isCurrent
-                  ? { backgroundColor: 'var(--color-primary,#0ea5e9)' }
-                  : { backgroundColor: '#e5e7eb' }"
+                :style="
+                  work.isCurrent
+                    ? { backgroundColor: 'var(--color-primary,#0ea5e9)' }
+                    : { backgroundColor: '#e5e7eb' }
+                "
               >
                 <div
                   class="w-2.5 h-2.5 rounded-full"
@@ -39,18 +37,21 @@
                   </div>
                   <span
                     class="text-xs px-2 py-0.5 rounded-full flex-shrink-0 font-medium"
-                    :class="work.isCurrent
-                      ? 'text-white'
-                      : 'bg-gray-100 text-gray-500'"
-                    :style="work.isCurrent ? { backgroundColor: 'var(--color-primary,#0ea5e9)' } : {}"
+                    :class="work.isCurrent ? 'text-white' : 'bg-gray-100 text-gray-500'"
+                    :style="
+                      work.isCurrent ? { backgroundColor: 'var(--color-primary,#0ea5e9)' } : {}
+                    "
                   >
                     {{ work.isCurrent ? '在職中' : formatDate(work.endDate) }}
                   </span>
                 </div>
                 <p class="text-xs text-gray-400 mb-2">
-                  {{ formatDate(work.startDate) }} – {{ work.isCurrent ? '至今' : formatDate(work.endDate) }}
+                  {{ formatDate(work.startDate) }} –
+                  {{ work.isCurrent ? '至今' : formatDate(work.endDate) }}
                 </p>
-                <p v-if="work.description" class="text-sm text-gray-600 leading-relaxed">{{ work.description }}</p>
+                <p v-if="work.description" class="text-sm text-gray-600 leading-relaxed">
+                  {{ work.description }}
+                </p>
               </div>
             </div>
           </div>
@@ -68,11 +69,7 @@
           <div class="absolute left-3.5 top-0 bottom-0 w-px bg-gray-200"></div>
 
           <div class="space-y-6">
-            <div
-              v-for="edu in educations"
-              :key="edu.id"
-              class="relative pl-10"
-            >
+            <div v-for="edu in educations" :key="edu.id" class="relative pl-10">
               <!-- Dot -->
               <div
                 class="absolute left-0 top-1 w-7 h-7 rounded-full flex items-center justify-center z-10"
@@ -93,11 +90,16 @@
                       {{ [edu.degree, edu.fieldOfStudy].filter(Boolean).join(' · ') }}
                     </p>
                   </div>
-                  <span v-if="edu.startYear || edu.endYear" class="text-xs text-gray-400 flex-shrink-0">
+                  <span
+                    v-if="edu.startYear || edu.endYear"
+                    class="text-xs text-gray-400 flex-shrink-0"
+                  >
                     {{ edu.startYear }} – {{ edu.endYear ?? '至今' }}
                   </span>
                 </div>
-                <p v-if="edu.description" class="text-sm text-gray-600 leading-relaxed">{{ edu.description }}</p>
+                <p v-if="edu.description" class="text-sm text-gray-600 leading-relaxed">
+                  {{ edu.description }}
+                </p>
               </div>
             </div>
           </div>
@@ -142,6 +144,13 @@ async function load(uid: number) {
   }
 }
 
-onMounted(() => { if (userId?.value) load(userId.value) })
-watch(() => userId?.value, (uid) => { if (uid) load(uid) })
+onMounted(() => {
+  if (userId?.value) load(userId.value)
+})
+watch(
+  () => userId?.value,
+  (uid) => {
+    if (uid) load(uid)
+  },
+)
 </script>

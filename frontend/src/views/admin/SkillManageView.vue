@@ -5,14 +5,9 @@
       <div class="flex justify-between items-center">
         <div>
           <h2 class="text-2xl font-bold text-gray-900">專長管理</h2>
-          <p class="mt-1 text-sm text-gray-600">
-            管理您的技能專長、等級評估和分類組織
-          </p>
+          <p class="mt-1 text-sm text-gray-600">管理您的技能專長、等級評估和分類組織</p>
         </div>
-        <BaseButton
-          variant="primary"
-          @click="showCreateModal = true"
-        >
+        <BaseButton variant="primary" @click="showCreateModal = true">
           <PlusIcon class="w-4 h-4 mr-2" />
           新增技能
         </BaseButton>
@@ -75,7 +70,9 @@
       <div class="flex flex-col sm:flex-row gap-4">
         <div class="flex-1">
           <div class="relative">
-            <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlassIcon
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+            />
             <input
               v-model="searchQuery"
               type="text"
@@ -132,10 +129,7 @@
         <h3 class="mt-2 text-sm font-medium text-gray-900">沒有技能資料</h3>
         <p class="mt-1 text-sm text-gray-500">開始新增您的技能專長。</p>
         <div class="mt-6">
-          <BaseButton
-            variant="primary"
-            @click="showCreateModal = true"
-          >
+          <BaseButton variant="primary" @click="showCreateModal = true">
             <PlusIcon class="w-4 h-4 mr-2" />
             新增技能
           </BaseButton>
@@ -147,22 +141,34 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 技能
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 等級
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 分類
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 經驗
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 狀態
               </th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 操作
               </th>
             </tr>
@@ -172,7 +178,9 @@
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
                   <div class="flex-shrink-0 h-10 w-10">
-                    <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                    <div
+                      class="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
+                    >
                       <CpuChipIcon class="h-5 w-5 text-white" />
                     </div>
                   </div>
@@ -191,7 +199,9 @@
                         :key="i"
                         :class="[
                           'w-2 h-2 rounded-full',
-                          i <= getLevelNumber(skill.level) ? getLevelColor(skill.level) : 'bg-gray-200'
+                          i <= getLevelNumber(skill.level)
+                            ? getLevelColor(skill.level)
+                            : 'bg-gray-200',
                         ]"
                       ></div>
                     </div>
@@ -202,7 +212,9 @@
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                >
                   {{ skill.category || '未分類' }}
                 </span>
               </td>
@@ -210,22 +222,18 @@
                 {{ skill.yearsOfExperience ? `${skill.yearsOfExperience} 年` : '-' }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span :class="[
-                  'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-                  skill.isPublic
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-gray-100 text-gray-800'
-                ]">
+                <span
+                  :class="[
+                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                    skill.isPublic ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800',
+                  ]"
+                >
                   {{ skill.isPublic ? '公開' : '私人' }}
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                 <div class="flex justify-end space-x-2">
-                  <BaseButton
-                    variant="outline"
-                    size="small"
-                    @click="editSkill(skill)"
-                  >
+                  <BaseButton variant="outline" size="small" @click="editSkill(skill)">
                     <PencilIcon class="w-4 h-4" />
                   </BaseButton>
                   <BaseButton
@@ -245,42 +253,18 @@
     </div>
 
     <!-- Create/Edit Modal -->
-    <BaseModal
-      :show="showCreateModal"
-      @close="showCreateModal = false"
-      title="技能管理"
-    >
-      <SkillForm
-        :skill="editingSkill"
-        @save="handleSave"
-        @cancel="handleCancel"
-      />
+    <BaseModal :show="showCreateModal" @close="showCreateModal = false" title="技能管理">
+      <SkillForm :skill="editingSkill" @save="handleSave" @cancel="handleCancel" />
     </BaseModal>
 
     <!-- Delete Confirmation Modal -->
-    <BaseModal
-      :show="showDeleteModal"
-      @close="showDeleteModal = false"
-      title="確認刪除"
-    >
+    <BaseModal :show="showDeleteModal" @close="showDeleteModal = false" title="確認刪除">
       <div class="mt-2">
-        <p class="text-sm text-gray-500">
-          您確定要刪除這個技能嗎？此操作無法復原。
-        </p>
+        <p class="text-sm text-gray-500">您確定要刪除這個技能嗎？此操作無法復原。</p>
       </div>
       <div class="mt-5 flex justify-end space-x-3">
-        <BaseButton
-          variant="outline"
-          @click="showDeleteModal = false"
-        >
-          取消
-        </BaseButton>
-        <BaseButton
-          variant="danger"
-          @click="confirmDelete"
-        >
-          刪除
-        </BaseButton>
+        <BaseButton variant="outline" @click="showDeleteModal = false"> 取消 </BaseButton>
+        <BaseButton variant="danger" @click="confirmDelete"> 刪除 </BaseButton>
       </div>
     </BaseModal>
   </AdminLayout>
@@ -296,7 +280,7 @@ import {
   EyeIcon,
   MagnifyingGlassIcon,
   PencilIcon,
-  TrashIcon
+  TrashIcon,
 } from '@heroicons/vue/24/outline'
 import { useSkillStore } from '@/stores/skill'
 import type { Skill, SkillLevel } from '@/types/api'
@@ -324,12 +308,12 @@ const deletingSkillId = ref<number | null>(null)
 const skills = computed(() => skillStore.skills)
 
 const categories = computed(() => {
-  const categorySet = new Set(skills.value.map(skill => skill.category).filter(Boolean))
+  const categorySet = new Set(skills.value.map((skill) => skill.category).filter(Boolean))
   return Array.from(categorySet).sort()
 })
 
 const expertSkillsCount = computed(() => {
-  return skills.value.filter(skill => skill.level === 'Expert').length
+  return skills.value.filter((skill) => skill.level === 'Expert').length
 })
 
 const categoriesCount = computed(() => {
@@ -337,7 +321,7 @@ const categoriesCount = computed(() => {
 })
 
 const publicSkillsCount = computed(() => {
-  return skills.value.filter(skill => skill.isPublic).length
+  return skills.value.filter((skill) => skill.isPublic).length
 })
 
 const filteredSkills = computed(() => {
@@ -346,20 +330,20 @@ const filteredSkills = computed(() => {
   // Search filter
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(skill =>
-      skill.name.toLowerCase().includes(query) ||
-      skill.category?.toLowerCase().includes(query)
+    filtered = filtered.filter(
+      (skill) =>
+        skill.name.toLowerCase().includes(query) || skill.category?.toLowerCase().includes(query),
     )
   }
 
   // Category filter
   if (selectedCategory.value) {
-    filtered = filtered.filter(skill => skill.category === selectedCategory.value)
+    filtered = filtered.filter((skill) => skill.category === selectedCategory.value)
   }
 
   // Level filter
   if (selectedLevel.value !== '') {
-    filtered = filtered.filter(skill => skill.level === selectedLevel.value)
+    filtered = filtered.filter((skill) => skill.level === selectedLevel.value)
   }
 
   // Sort
@@ -403,30 +387,30 @@ const filteredSkills = computed(() => {
 // Methods
 function getLevelNumber(level: SkillLevel): number {
   const map: Record<string, number> = {
-    'Beginner': 1,
-    'Intermediate': 2,
-    'Advanced': 3,
-    'Expert': 4
+    Beginner: 1,
+    Intermediate: 2,
+    Advanced: 3,
+    Expert: 4,
   }
   return map[level] || 0
 }
 
 function getLevelText(level: SkillLevel): string {
   const map: Record<string, string> = {
-    'Beginner': '初學者',
-    'Intermediate': '中級',
-    'Advanced': '高級',
-    'Expert': '專家'
+    Beginner: '初學者',
+    Intermediate: '中級',
+    Advanced: '高級',
+    Expert: '專家',
   }
   return map[level] || '未知'
 }
 
 function getLevelColor(level: SkillLevel): string {
   const map: Record<string, string> = {
-    'Beginner': 'bg-gray-400',
-    'Intermediate': 'bg-blue-400',
-    'Advanced': 'bg-yellow-400',
-    'Expert': 'bg-green-400'
+    Beginner: 'bg-gray-400',
+    Intermediate: 'bg-blue-400',
+    Advanced: 'bg-yellow-400',
+    Expert: 'bg-green-400',
   }
   return map[level] || 'bg-gray-400'
 }

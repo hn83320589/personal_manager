@@ -18,7 +18,10 @@ class ProfileService {
     return httpService.post<PersonalProfile>('/profiles', profile)
   }
 
-  async updateProfile(id: number, profile: Partial<PersonalProfile>): Promise<ApiResponse<PersonalProfile>> {
+  async updateProfile(
+    id: number,
+    profile: Partial<PersonalProfile>,
+  ): Promise<ApiResponse<PersonalProfile>> {
     return httpService.put<PersonalProfile>(`/profiles/${id}`, profile)
   }
 

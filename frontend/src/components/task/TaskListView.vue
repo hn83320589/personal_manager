@@ -3,7 +3,11 @@
     <!-- Loading State -->
     <div v-if="loading" class="p-6">
       <div class="animate-pulse space-y-4">
-        <div v-for="i in 5" :key="i" class="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg">
+        <div
+          v-for="i in 5"
+          :key="i"
+          class="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg"
+        >
           <div class="w-4 h-4 bg-gray-300 rounded"></div>
           <div class="flex-1 space-y-2">
             <div class="h-4 bg-gray-300 rounded w-3/4"></div>
@@ -23,7 +27,7 @@
         :class="{
           'bg-red-50 border-l-4 border-l-red-500': isOverdue(task),
           'bg-yellow-50 border-l-4 border-l-yellow-500': isDueSoon(task) && !isOverdue(task),
-          'opacity-60': task.status === 'Completed'
+          'opacity-60': task.status === 'Completed',
         }"
       >
         <div class="flex items-center justify-between">
@@ -43,7 +47,7 @@
                 'flex items-center justify-center w-5 h-5 rounded border-2 transition-colors',
                 task.status === 'Completed'
                   ? 'bg-green-500 border-green-500 text-white'
-                  : 'border-gray-300 hover:border-green-500'
+                  : 'border-gray-300 hover:border-green-500',
               ]"
             >
               <CheckIcon v-if="task.status === 'Completed'" class="w-3 h-3" />
@@ -52,13 +56,15 @@
             <!-- Task Content -->
             <div class="flex-1">
               <div class="flex items-center space-x-3 mb-2">
-                <h3 :class="[
-                  'text-lg font-medium',
-                  task.status === 'Completed' ? 'line-through text-gray-500' : 'text-gray-900'
-                ]">
+                <h3
+                  :class="[
+                    'text-lg font-medium',
+                    task.status === 'Completed' ? 'line-through text-gray-500' : 'text-gray-900',
+                  ]"
+                >
                   {{ task.title }}
                 </h3>
-                
+
                 <!-- Priority Badge -->
                 <span :class="getPriorityStyle(task.priority)">
                   {{ getPriorityLabel(task.priority) }}
@@ -68,7 +74,6 @@
                 <span :class="getStatusStyle(task.status)">
                   {{ getStatusLabel(task.status) }}
                 </span>
-
               </div>
 
               <!-- Description -->
@@ -82,9 +87,10 @@
                   <CalendarDaysIcon class="w-4 h-4 mr-1" />
                   {{ formatDate(task.dueDate) }}
                   <span v-if="isOverdue(task)" class="ml-1 text-red-600 font-medium">(逾期)</span>
-                  <span v-else-if="isDueSoon(task)" class="ml-1 text-yellow-600 font-medium">(即將到期)</span>
+                  <span v-else-if="isDueSoon(task)" class="ml-1 text-yellow-600 font-medium"
+                    >(即將到期)</span
+                  >
                 </span>
-
 
                 <span class="flex items-center">
                   <CalendarIcon class="w-4 h-4 mr-1" />
@@ -96,7 +102,6 @@
                   完成於 {{ formatDate(task.completedAt) }}
                 </span>
               </div>
-
             </div>
           </div>
 
@@ -136,9 +141,7 @@
     <div v-else class="p-12 text-center">
       <ListBulletIcon class="mx-auto h-12 w-12 text-gray-400" />
       <h3 class="mt-2 text-sm font-medium text-gray-900">沒有找到待辦事項</h3>
-      <p class="mt-1 text-sm text-gray-500">
-        開始建立您的第一個待辦事項吧
-      </p>
+      <p class="mt-1 text-sm text-gray-500">開始建立您的第一個待辦事項吧</p>
     </div>
   </div>
 </template>
@@ -152,7 +155,7 @@ import {
   PencilIcon,
   TrashIcon,
   DocumentDuplicateIcon,
-  ListBulletIcon
+  ListBulletIcon,
 } from '@heroicons/vue/24/outline'
 import type { TodoItem } from '@/types/api'
 import BaseButton from '@/components/ui/BaseButton.vue'
@@ -165,7 +168,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  loading: false
+  loading: false,
 })
 
 // Emits
@@ -220,43 +223,42 @@ function getStatusStyle(status: string | number): string {
 
 function formatDate(dateString: string | undefined): string {
   if (!dateString) return ''
-  
+
   const date = new Date(dateString)
   const now = new Date()
   const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-  
+
   if (diffDays === 0) return '今天'
   if (diffDays === 1) return '明天'
   if (diffDays === -1) return '昨天'
-  
+
   return date.toLocaleDateString('zh-TW', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 
 function isOverdue(task: TodoItem): boolean {
   if (!task.dueDate || task.status === 'Completed') return false
-  
+
   const dueDate = new Date(task.dueDate)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  
+
   return dueDate < today
 }
 
 function isDueSoon(task: TodoItem): boolean {
   if (!task.dueDate || task.status === 'Completed') return false
-  
+
   const dueDate = new Date(task.dueDate)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  
+
   const diffDays = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-  
+
   return diffDays >= 0 && diffDays <= 2 // Due within 2 days
 }
-
 </script>
 
 <style scoped>

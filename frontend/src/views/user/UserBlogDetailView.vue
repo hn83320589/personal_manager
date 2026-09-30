@@ -6,7 +6,9 @@
       <!-- Main column -->
       <div class="flex-1 min-w-0 space-y-6">
         <div>
-          <RouterLink :to="`/@${username}/blog`" class="text-sm text-sky-600 hover:text-sky-800">← 返回部落格</RouterLink>
+          <RouterLink :to="`/@${username}/blog`" class="text-sm text-sky-600 hover:text-sky-800"
+            >← 返回部落格</RouterLink
+          >
         </div>
 
         <!-- Article Header -->
@@ -15,11 +17,19 @@
             <span
               v-if="post.category"
               class="text-xs font-medium px-2.5 py-1 rounded-full"
-              :style="{ backgroundColor: 'var(--color-primary-light,#e0f2fe)', color: 'var(--color-primary-dark,#0c4a6e)' }"
-            >{{ post.category }}</span>
+              :style="{
+                backgroundColor: 'var(--color-primary-light,#e0f2fe)',
+                color: 'var(--color-primary-dark,#0c4a6e)',
+              }"
+              >{{ post.category }}</span
+            >
           </div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight mb-4">{{ post.title }}</h1>
-          <p v-if="post.summary" class="text-gray-500 text-base leading-relaxed mb-4">{{ post.summary }}</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight mb-4">
+            {{ post.title }}
+          </h1>
+          <p v-if="post.summary" class="text-gray-500 text-base leading-relaxed mb-4">
+            {{ post.summary }}
+          </p>
           <div class="flex flex-wrap gap-4 text-sm text-gray-400 pb-5 border-b border-gray-100">
             <span v-if="post.publishedAt">{{ formatDate(post.publishedAt) }}</span>
             <span v-if="post.viewCount">{{ post.viewCount }} 次閱讀</span>
@@ -33,7 +43,8 @@
               v-for="tag in parseTags(post.tags)"
               :key="tag"
               class="text-xs px-3 py-1 rounded-full font-medium bg-sky-50 text-sky-600"
-            >#{{ tag }}</span>
+              >#{{ tag }}</span
+            >
           </div>
         </header>
 
@@ -76,10 +87,11 @@
                 item.level === 1 ? 'font-medium' : item.level === 2 ? 'pl-4' : 'pl-7',
                 activeId === item.id
                   ? 'text-[var(--color-primary,#0ea5e9)] bg-[var(--color-primary-light,#e0f2fe)]'
-                  : 'text-gray-500 hover:text-gray-800'
+                  : 'text-gray-500 hover:text-gray-800',
               ]"
               @click.prevent="scrollTo(item.id)"
-            >{{ item.text }}</a>
+              >{{ item.text }}</a
+            >
           </nav>
         </div>
       </aside>
@@ -107,7 +119,11 @@ const post = ref<BlogPost | null>(null)
 const copied = ref(false)
 const contentRef = ref<HTMLElement | null>(null)
 
-interface TocItem { id: string; text: string; level: 1 | 2 | 3 }
+interface TocItem {
+  id: string
+  text: string
+  level: 1 | 2 | 3
+}
 const tocItems = ref<TocItem[]>([])
 const activeId = ref('')
 
@@ -135,19 +151,25 @@ function buildToc() {
         }
       }
     },
-    { rootMargin: '0px 0px -60% 0px', threshold: 0 }
+    { rootMargin: '0px 0px -60% 0px', threshold: 0 },
   )
-  headings.forEach(el => observer!.observe(el))
+  headings.forEach((el) => observer!.observe(el))
 }
 
 function scrollTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
-onUnmounted(() => { observer?.disconnect() })
+onUnmounted(() => {
+  observer?.disconnect()
+})
 
 function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
+  return new Date(dateStr).toLocaleDateString('zh-TW', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
 }
 
 function estimateReadTime(content: string): number {
@@ -156,15 +178,22 @@ function estimateReadTime(content: string): number {
 
 function parseTags(tags: string[] | string): string[] {
   if (Array.isArray(tags)) return tags.filter(Boolean)
-  return tags.split(',').map(t => t.trim()).filter(Boolean)
+  return tags
+    .split(',')
+    .map((t) => t.trim())
+    .filter(Boolean)
 }
 
 async function copyLink() {
   try {
     await navigator.clipboard.writeText(window.location.href)
     copied.value = true
-    setTimeout(() => { copied.value = false }, 2000)
-  } catch { /* ignore */ }
+    setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  } catch {
+    /* ignore */
+  }
 }
 
 onMounted(async () => {

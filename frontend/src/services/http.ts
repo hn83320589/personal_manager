@@ -11,7 +11,7 @@ class HttpService {
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
       // Performance optimizations
       maxContentLength: 10 * 1024 * 1024, // 10MB
@@ -32,17 +32,17 @@ class HttpService {
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }
-        
+
         if (import.meta.env.VITE_DEBUG === 'true') {
           console.log('[HTTP Request]', config)
         }
-        
+
         return config
       },
       (error) => {
         console.error('[HTTP Request Error]', error)
         return Promise.reject(error)
-      }
+      },
     )
 
     // Response interceptor
@@ -59,8 +59,9 @@ class HttpService {
 
         if (error.response?.status === 401) {
           // Don't retry if already retried, or if this is the refresh/logout endpoint
-          const isAuthEndpoint = originalRequest?.url?.includes('/auth/refresh') ||
-                                  originalRequest?.url?.includes('/auth/logout')
+          const isAuthEndpoint =
+            originalRequest?.url?.includes('/auth/refresh') ||
+            originalRequest?.url?.includes('/auth/logout')
 
           if (!originalRequest?._isRetry && !isAuthEndpoint) {
             originalRequest._isRetry = true
@@ -82,7 +83,7 @@ class HttpService {
         }
 
         return Promise.reject(error)
-      }
+      },
     )
   }
 
@@ -94,10 +95,9 @@ class HttpService {
     const refreshToken = localStorage.getItem('refresh_token')
     if (!refreshToken) throw new Error('No refresh token')
 
-    const response = await this.client.post<ApiResponse<{ token: string; expiresAt: string; refreshToken: string }>>(
-      '/auth/refresh',
-      { refreshToken }
-    )
+    const response = await this.client.post<
+      ApiResponse<{ token: string; expiresAt: string; refreshToken: string }>
+    >('/auth/refresh', { refreshToken })
 
     const data = response.data.data
     localStorage.setItem('auth_token', data.token)
@@ -126,17 +126,17 @@ class HttpService {
   private async retryRequest<T>(
     requestFn: () => Promise<AxiosResponse<ApiResponse<T>>>,
     maxRetries = 3,
-    delay = 1000
+    delay = 1000,
   ): Promise<ApiResponse<T>> {
     let lastError: any
-    
+
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         const response = await requestFn()
         return response.data
       } catch (error) {
         lastError = error
-        
+
         // Don't retry on client errors (4xx)
         if (error instanceof Error && 'response' in error) {
           const axiosError = error as AxiosError
@@ -144,13 +144,13 @@ class HttpService {
             throw error
           }
         }
-        
+
         if (attempt < maxRetries) {
-          await new Promise(resolve => setTimeout(resolve, delay * attempt))
+          await new Promise((resolve) => setTimeout(resolve, delay * attempt))
         }
       }
     }
-    
+
     throw lastError
   }
 

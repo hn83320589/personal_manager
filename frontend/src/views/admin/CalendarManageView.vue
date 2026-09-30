@@ -5,14 +5,9 @@
       <div class="flex justify-between items-center">
         <div>
           <h2 class="text-2xl font-bold text-gray-900">行事曆管理</h2>
-          <p class="mt-1 text-sm text-gray-600">
-            管理您的行事曆事件、會議安排和重要提醒
-          </p>
+          <p class="mt-1 text-sm text-gray-600">管理您的行事曆事件、會議安排和重要提醒</p>
         </div>
-        <BaseButton
-          variant="primary"
-          @click="showCreateModal = true"
-        >
+        <BaseButton variant="primary" @click="showCreateModal = true">
           <PlusIcon class="w-4 h-4 mr-2" />
           新增事件
         </BaseButton>
@@ -82,40 +77,26 @@
               'px-3 py-2 text-sm font-medium rounded-md transition-colors',
               currentView === view.value
                 ? 'bg-white text-gray-900 shadow'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-gray-600 hover:text-gray-900',
             ]"
           >
             <component :is="view.icon" class="w-4 h-4 mr-2 inline" />
             {{ view.label }}
           </button>
         </div>
-        
+
         <!-- Date Navigation -->
         <div class="flex items-center space-x-2">
-          <BaseButton
-            variant="outline"
-            size="small"
-            @click="navigateDate(-1)"
-          >
+          <BaseButton variant="outline" size="small" @click="navigateDate(-1)">
             <ChevronLeftIcon class="w-4 h-4" />
           </BaseButton>
           <span class="text-sm font-medium text-gray-900 min-w-32 text-center">
             {{ formatCurrentPeriod() }}
           </span>
-          <BaseButton
-            variant="outline" 
-            size="small"
-            @click="navigateDate(1)"
-          >
+          <BaseButton variant="outline" size="small" @click="navigateDate(1)">
             <ChevronRightIcon class="w-4 h-4" />
           </BaseButton>
-          <BaseButton
-            variant="outline"
-            size="small"
-            @click="goToToday"
-          >
-            今天
-          </BaseButton>
+          <BaseButton variant="outline" size="small" @click="goToToday"> 今天 </BaseButton>
         </div>
       </div>
     </div>
@@ -125,7 +106,9 @@
       <div class="flex flex-col sm:flex-row gap-4">
         <div class="flex-1">
           <div class="relative">
-            <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlassIcon
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+            />
             <input
               v-model="searchQuery"
               type="text"
@@ -204,10 +187,7 @@
           <h3 class="mt-2 text-sm font-medium text-gray-900">沒有事件資料</h3>
           <p class="mt-1 text-sm text-gray-500">開始新增您的行事曆事件。</p>
           <div class="mt-6">
-            <BaseButton
-              variant="primary"
-              @click="showCreateModal = true"
-            >
+            <BaseButton variant="primary" @click="showCreateModal = true">
               <PlusIcon class="w-4 h-4 mr-2" />
               新增事件
             </BaseButton>
@@ -219,22 +199,34 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   事件
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   時間
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   類型
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   地點
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   狀態
                 </th>
-                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   操作
                 </th>
               </tr>
@@ -260,27 +252,31 @@
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                  >
                     事件
                   </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  -
-                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex flex-col space-y-1">
-                    <span :class="[
-                      'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-                      event.isPublic
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
-                    ]">
+                    <span
+                      :class="[
+                        'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                        event.isPublic
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800',
+                      ]"
+                    >
                       {{ event.isPublic ? '公開' : '私人' }}
                     </span>
-                    <span :class="[
-                      'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-                      getEventStatusStyle(event)
-                    ]">
+                    <span
+                      :class="[
+                        'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                        getEventStatusStyle(event),
+                      ]"
+                    >
                       {{ getEventStatus(event) }}
                     </span>
                   </div>
@@ -295,11 +291,7 @@
                     >
                       <EyeIcon class="w-4 h-4" />
                     </BaseButton>
-                    <BaseButton
-                      variant="outline"
-                      size="small"
-                      @click="editEvent(event)"
-                    >
+                    <BaseButton variant="outline" size="small" @click="editEvent(event)">
                       <PencilIcon class="w-4 h-4" />
                     </BaseButton>
                     <BaseButton
@@ -326,11 +318,7 @@
       title="事件管理"
       max-width="3xl"
     >
-      <CalendarEventForm
-        :event="editingEvent"
-        @save="handleSave"
-        @cancel="handleCancel"
-      />
+      <CalendarEventForm :event="editingEvent" @save="handleSave" @cancel="handleCancel" />
     </BaseModal>
 
     <!-- Event Detail Modal -->
@@ -350,29 +338,13 @@
     </BaseModal>
 
     <!-- Delete Confirmation Modal -->
-    <BaseModal
-      :show="showDeleteModal"
-      @close="showDeleteModal = false"
-      title="確認刪除"
-    >
+    <BaseModal :show="showDeleteModal" @close="showDeleteModal = false" title="確認刪除">
       <div class="mt-2">
-        <p class="text-sm text-gray-500">
-          您確定要刪除這個事件嗎？此操作無法復原。
-        </p>
+        <p class="text-sm text-gray-500">您確定要刪除這個事件嗎？此操作無法復原。</p>
       </div>
       <div class="mt-5 flex justify-end space-x-3">
-        <BaseButton
-          variant="outline"
-          @click="showDeleteModal = false"
-        >
-          取消
-        </BaseButton>
-        <BaseButton
-          variant="danger"
-          @click="confirmDelete"
-        >
-          刪除
-        </BaseButton>
+        <BaseButton variant="outline" @click="showDeleteModal = false"> 取消 </BaseButton>
+        <BaseButton variant="danger" @click="confirmDelete"> 刪除 </BaseButton>
       </div>
     </BaseModal>
   </AdminLayout>
@@ -393,7 +365,7 @@ import {
   ChevronRightIcon,
   Squares2X2Icon,
   ListBulletIcon,
-  TableCellsIcon
+  TableCellsIcon,
 } from '@heroicons/vue/24/outline'
 import { useCalendarStore } from '@/stores/calendar'
 import type { CalendarEvent } from '@/types/api'
@@ -428,10 +400,10 @@ const deletingEventId = ref<number | null>(null)
 const calendarViews = [
   { value: 'month', label: '月', icon: Squares2X2Icon },
   { value: 'week', label: '週', icon: TableCellsIcon },
-  { value: 'list', label: '列表', icon: ListBulletIcon }
+  { value: 'list', label: '列表', icon: ListBulletIcon },
 ]
 
-const eventTypes: { value: string, label: string }[] = []
+const eventTypes: { value: string; label: string }[] = []
 
 // Computed
 const events = computed(() => calendarStore.events)
@@ -440,15 +412,15 @@ const thisWeekEventsCount = computed(() => {
   const now = new Date()
   const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()))
   const endOfWeek = new Date(now.setDate(startOfWeek.getDate() + 6))
-  
-  return events.value.filter(event => {
+
+  return events.value.filter((event) => {
     const eventDate = new Date(event.startTime)
     return eventDate >= startOfWeek && eventDate <= endOfWeek
   }).length
 })
 
 const publicEventsCount = computed(() => {
-  return events.value.filter(event => event.isPublic).length
+  return events.value.filter((event) => event.isPublic).length
 })
 
 const meetingEventsCount = computed(() => {
@@ -461,9 +433,10 @@ const filteredEvents = computed(() => {
   // Search filter
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(event =>
-      event.title.toLowerCase().includes(query) ||
-      event.description?.toLowerCase().includes(query)
+    filtered = filtered.filter(
+      (event) =>
+        event.title.toLowerCase().includes(query) ||
+        event.description?.toLowerCase().includes(query),
     )
   }
 
@@ -475,26 +448,26 @@ const filteredEvents = computed(() => {
     const now = new Date()
     switch (statusFilter.value) {
       case 'upcoming':
-        filtered = filtered.filter(event => new Date(event.startTime) > now)
+        filtered = filtered.filter((event) => new Date(event.startTime) > now)
         break
       case 'ongoing':
-        filtered = filtered.filter(event => {
+        filtered = filtered.filter((event) => {
           const start = new Date(event.startTime)
           const end = event.endTime ? new Date(event.endTime) : start
           return start <= now && end >= now
         })
         break
       case 'past':
-        filtered = filtered.filter(event => {
+        filtered = filtered.filter((event) => {
           const end = event.endTime ? new Date(event.endTime) : new Date(event.startTime)
           return end < now
         })
         break
       case 'public':
-        filtered = filtered.filter(event => event.isPublic)
+        filtered = filtered.filter((event) => event.isPublic)
         break
       case 'private':
-        filtered = filtered.filter(event => !event.isPublic)
+        filtered = filtered.filter((event) => !event.isPublic)
         break
     }
   }
@@ -537,7 +510,7 @@ const filteredEvents = computed(() => {
 function formatCurrentPeriod(): string {
   const year = currentDate.value.getFullYear()
   const month = currentDate.value.getMonth() + 1
-  
+
   switch (currentView.value) {
     case 'month':
       return `${year}年 ${month}月`
@@ -554,18 +527,18 @@ function formatCurrentPeriod(): string {
 
 function navigateDate(direction: number) {
   const newDate = new Date(currentDate.value)
-  
+
   switch (currentView.value) {
     case 'month':
       newDate.setMonth(newDate.getMonth() + direction)
       break
     case 'week':
-      newDate.setDate(newDate.getDate() + (direction * 7))
+      newDate.setDate(newDate.getDate() + direction * 7)
       break
     default:
       newDate.setMonth(newDate.getMonth() + direction)
   }
-  
+
   currentDate.value = newDate
 }
 
@@ -577,7 +550,7 @@ function getEventStatus(event: CalendarEvent): string {
   const now = new Date()
   const start = new Date(event.startTime)
   const end = event.endTime ? new Date(event.endTime) : start
-  
+
   if (start > now) return '即將到來'
   if (start <= now && end >= now) return '進行中'
   return '已結束'
@@ -586,30 +559,34 @@ function getEventStatus(event: CalendarEvent): string {
 function getEventStatusStyle(event: CalendarEvent): string {
   const status = getEventStatus(event)
   switch (status) {
-    case '即將到來': return 'bg-blue-100 text-blue-800'
-    case '進行中': return 'bg-green-100 text-green-800'
-    case '已結束': return 'bg-gray-100 text-gray-800'
-    default: return 'bg-gray-100 text-gray-800'
+    case '即將到來':
+      return 'bg-blue-100 text-blue-800'
+    case '進行中':
+      return 'bg-green-100 text-green-800'
+    case '已結束':
+      return 'bg-gray-100 text-gray-800'
+    default:
+      return 'bg-gray-100 text-gray-800'
   }
 }
 
 function formatEventDate(event: CalendarEvent): string {
   const start = new Date(event.startTime)
   const end = event.endTime ? new Date(event.endTime) : null
-  
+
   const startDate = start.toLocaleDateString('zh-TW', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
-  
+
   if (end && end.toDateString() !== start.toDateString()) {
     const endDate = end.toLocaleDateString('zh-TW', {
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     })
     return `${startDate} - ${endDate}`
   }
-  
+
   return startDate
 }
 
@@ -658,7 +635,7 @@ function createEventOnDate(date: Date) {
   editingEvent.value = {
     startTime: date.toISOString(),
     endTime: '',
-    isAllDay: false
+    isAllDay: false,
   } as Partial<CalendarEvent> as CalendarEvent
   showCreateModal.value = true
 }
@@ -669,7 +646,7 @@ function createEventOnDateTime(date: Date, time: string) {
   editingEvent.value = {
     startTime: `${dateStr}T${time}:00`,
     endTime: '',
-    isAllDay: false
+    isAllDay: false,
   } as Partial<CalendarEvent> as CalendarEvent
   showCreateModal.value = true
 }

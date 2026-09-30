@@ -5,9 +5,7 @@
       <div class="flex justify-between items-center">
         <div>
           <h2 class="text-2xl font-bold text-gray-900">留言管理</h2>
-          <p class="mt-1 text-sm text-gray-600">
-            管理訪客留言、審核內容和回覆互動
-          </p>
+          <p class="mt-1 text-sm text-gray-600">管理訪客留言、審核內容和回覆互動</p>
         </div>
         <div class="flex space-x-3">
           <BaseButton
@@ -18,17 +16,11 @@
             <Squares2X2Icon class="w-4 h-4 mr-2" />
             批量操作 ({{ selectedComments.length }})
           </BaseButton>
-          <BaseButton
-            variant="outline"
-            @click="exportComments"
-          >
+          <BaseButton variant="outline" @click="exportComments">
             <ArrowDownTrayIcon class="w-4 h-4 mr-2" />
             匯出留言
           </BaseButton>
-          <BaseButton
-            variant="primary"
-            @click="showSettingsModal = true"
-          >
+          <BaseButton variant="primary" @click="showSettingsModal = true">
             <Cog6ToothIcon class="w-4 h-4 mr-2" />
             留言設定
           </BaseButton>
@@ -94,7 +86,9 @@
         <!-- Search and Filters -->
         <div class="flex flex-col sm:flex-row gap-4 flex-1">
           <div class="relative flex-1 max-w-md">
-            <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlassIcon
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+            />
             <input
               v-model="searchQuery"
               type="text"
@@ -102,7 +96,7 @@
               class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          
+
           <div class="flex gap-2">
             <select
               v-model="selectedStatus"
@@ -147,7 +141,7 @@
                 'px-3 py-1 text-sm font-medium rounded transition-colors',
                 viewMode === 'list'
                   ? 'bg-white text-gray-900 shadow'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-gray-600 hover:text-gray-900',
               ]"
             >
               <ListBulletIcon class="w-4 h-4" />
@@ -158,7 +152,7 @@
                 'px-3 py-1 text-sm font-medium rounded transition-colors',
                 viewMode === 'card'
                   ? 'bg-white text-gray-900 shadow'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-gray-600 hover:text-gray-900',
               ]"
             >
               <Squares2X2Icon class="w-4 h-4" />
@@ -182,7 +176,9 @@
               @change="toggleSelectAll"
               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-4"
             />
-            <div class="flex-1 grid grid-cols-12 gap-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <div
+              class="flex-1 grid grid-cols-12 gap-4 text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
               <div class="col-span-3">作者資訊</div>
               <div class="col-span-4">留言內容</div>
               <div class="col-span-2">狀態</div>
@@ -214,7 +210,9 @@
                 <div class="col-span-3">
                   <div class="flex items-center">
                     <div class="flex-shrink-0">
-                      <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                      <div
+                        class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center"
+                      >
                         <UserIcon class="h-5 w-5 text-gray-600" />
                       </div>
                     </div>
@@ -228,7 +226,10 @@
                 <!-- Comment Content -->
                 <div class="col-span-4">
                   <p class="text-sm text-gray-900 line-clamp-3">{{ comment.message }}</p>
-                  <div v-if="comment.adminReply" class="mt-2 pl-4 border-l-2 border-blue-500 bg-blue-50 p-2 rounded">
+                  <div
+                    v-if="comment.adminReply"
+                    class="mt-2 pl-4 border-l-2 border-blue-500 bg-blue-50 p-2 rounded"
+                  >
                     <p class="text-xs text-blue-800 font-medium">管理員回覆:</p>
                     <p class="text-sm text-blue-900">{{ comment.adminReply }}</p>
                   </div>
@@ -330,7 +331,10 @@
             <p class="text-sm text-gray-700 mb-4 line-clamp-4">{{ comment.message }}</p>
 
             <!-- Admin Reply -->
-            <div v-if="comment.adminReply" class="mb-4 pl-3 border-l-2 border-blue-500 bg-blue-50 p-2 rounded">
+            <div
+              v-if="comment.adminReply"
+              class="mb-4 pl-3 border-l-2 border-blue-500 bg-blue-50 p-2 rounded"
+            >
               <p class="text-xs text-blue-800 font-medium">管理員回覆:</p>
               <p class="text-sm text-blue-900">{{ comment.adminReply }}</p>
             </div>
@@ -357,11 +361,7 @@
                 <XMarkIcon class="w-4 h-4 mr-1" />
                 拒絕
               </BaseButton>
-              <BaseButton
-                variant="outline"
-                size="small"
-                @click="openReplyModal(comment)"
-              >
+              <BaseButton variant="outline" size="small" @click="openReplyModal(comment)">
                 <ChatBubbleLeftIcon class="w-4 h-4 mr-1" />
                 回覆
               </BaseButton>
@@ -393,7 +393,9 @@
           <div class="flex items-center mb-2">
             <UserIcon class="h-5 w-5 text-gray-600 mr-2" />
             <span class="font-medium text-gray-900">{{ replyingComment.name }}</span>
-            <span class="text-sm text-gray-500 ml-2">{{ formatDate(replyingComment.createdAt) }}</span>
+            <span class="text-sm text-gray-500 ml-2">{{
+              formatDate(replyingComment.createdAt)
+            }}</span>
           </div>
           <p class="text-sm text-gray-700">{{ replyingComment.message }}</p>
         </div>
@@ -414,17 +416,8 @@
       </div>
 
       <div class="mt-6 flex justify-end space-x-3">
-        <BaseButton
-          variant="outline"
-          @click="showReplyModal = false"
-        >
-          取消
-        </BaseButton>
-        <BaseButton
-          variant="primary"
-          @click="submitReply"
-          :disabled="!replyText.trim()"
-        >
+        <BaseButton variant="outline" @click="showReplyModal = false"> 取消 </BaseButton>
+        <BaseButton variant="primary" @click="submitReply" :disabled="!replyText.trim()">
           發送回覆
         </BaseButton>
       </div>
@@ -438,10 +431,8 @@
       max-width="md"
     >
       <div class="space-y-4">
-        <p class="text-sm text-gray-600">
-          已選擇 {{ selectedComments.length }} 則留言
-        </p>
-        
+        <p class="text-sm text-gray-600">已選擇 {{ selectedComments.length }} 則留言</p>
+
         <div class="space-y-3">
           <BaseButton
             variant="outline"
@@ -451,7 +442,7 @@
             <CheckIcon class="w-4 h-4 mr-2" />
             批量審核通過
           </BaseButton>
-          
+
           <BaseButton
             variant="outline"
             @click="batchReject"
@@ -460,7 +451,7 @@
             <XMarkIcon class="w-4 h-4 mr-2" />
             批量拒絕
           </BaseButton>
-          
+
           <BaseButton
             variant="outline"
             @click="batchMarkSpam"
@@ -469,7 +460,7 @@
             <ExclamationTriangleIcon class="w-4 h-4 mr-2" />
             標記為垃圾留言
           </BaseButton>
-          
+
           <BaseButton
             variant="outline"
             @click="batchDelete"
@@ -561,18 +552,8 @@
       </div>
 
       <div class="mt-6 flex justify-end space-x-3">
-        <BaseButton
-          variant="outline"
-          @click="showSettingsModal = false"
-        >
-          取消
-        </BaseButton>
-        <BaseButton
-          variant="primary"
-          @click="saveSettings"
-        >
-          儲存設定
-        </BaseButton>
+        <BaseButton variant="outline" @click="showSettingsModal = false"> 取消 </BaseButton>
+        <BaseButton variant="primary" @click="saveSettings"> 儲存設定 </BaseButton>
       </div>
     </BaseModal>
   </AdminLayout>
@@ -594,7 +575,7 @@ import {
   UserIcon,
   CheckIcon,
   XMarkIcon,
-  TrashIcon
+  TrashIcon,
 } from '@heroicons/vue/24/outline'
 import { useCommentStore } from '@/stores/comment'
 import type { GuestBookEntry } from '@/types/api'
@@ -626,7 +607,7 @@ const settings = ref({
   requireRegistration: false,
   spamFilter: true,
   emailNotification: true,
-  notificationEmail: 'admin@example.com'
+  notificationEmail: 'admin@example.com',
 })
 
 // Computed
@@ -635,7 +616,7 @@ const comments = computed(() => commentStore.entries)
 const totalComments = computed(() => comments.value.length)
 
 const approvedComments = computed(() => {
-  return comments.value.filter(comment => comment.isApproved).length
+  return comments.value.filter((comment) => comment.isApproved).length
 })
 
 const approvedRate = computed(() => {
@@ -643,7 +624,7 @@ const approvedRate = computed(() => {
 })
 
 const pendingComments = computed(() => {
-  return comments.value.filter(comment => !comment.isApproved).length
+  return comments.value.filter((comment) => !comment.isApproved).length
 })
 
 const reportedComments = computed(() => {
@@ -651,12 +632,17 @@ const reportedComments = computed(() => {
 })
 
 const allSelected = computed(() => {
-  return filteredAndSortedComments.value.length > 0 && 
-         filteredAndSortedComments.value.every(comment => selectedComments.value.includes(comment.id))
+  return (
+    filteredAndSortedComments.value.length > 0 &&
+    filteredAndSortedComments.value.every((comment) => selectedComments.value.includes(comment.id))
+  )
 })
 
 const someSelected = computed(() => {
-  return selectedComments.value.length > 0 && selectedComments.value.length < filteredAndSortedComments.value.length
+  return (
+    selectedComments.value.length > 0 &&
+    selectedComments.value.length < filteredAndSortedComments.value.length
+  )
 })
 
 const filteredAndSortedComments = computed(() => {
@@ -665,19 +651,20 @@ const filteredAndSortedComments = computed(() => {
   // Search filter
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(comment =>
-      comment.message.toLowerCase().includes(query) ||
-      comment.name.toLowerCase().includes(query) ||
-      comment.email.toLowerCase().includes(query)
+    filtered = filtered.filter(
+      (comment) =>
+        comment.message.toLowerCase().includes(query) ||
+        comment.name.toLowerCase().includes(query) ||
+        comment.email.toLowerCase().includes(query),
     )
   }
 
   // Status filter
   if (selectedStatus.value) {
     if (selectedStatus.value === 'approved') {
-      filtered = filtered.filter(comment => comment.isApproved)
+      filtered = filtered.filter((comment) => comment.isApproved)
     } else if (selectedStatus.value === 'pending') {
-      filtered = filtered.filter(comment => !comment.isApproved)
+      filtered = filtered.filter((comment) => !comment.isApproved)
     }
   }
 
@@ -685,7 +672,7 @@ const filteredAndSortedComments = computed(() => {
   if (selectedTimeRange.value) {
     const now = new Date()
     const startDate = new Date()
-    
+
     switch (selectedTimeRange.value) {
       case 'today':
         startDate.setHours(0, 0, 0, 0)
@@ -700,8 +687,8 @@ const filteredAndSortedComments = computed(() => {
         startDate.setMonth(now.getMonth() - 3)
         break
     }
-    
-    filtered = filtered.filter(comment => new Date(comment.createdAt) >= startDate)
+
+    filtered = filtered.filter((comment) => new Date(comment.createdAt) >= startDate)
   }
 
   // Sort
@@ -733,16 +720,19 @@ function toggleSelectAll() {
   if (allSelected.value) {
     selectedComments.value = []
   } else {
-    selectedComments.value = filteredAndSortedComments.value.map(comment => comment.id)
+    selectedComments.value = filteredAndSortedComments.value.map((comment) => comment.id)
   }
 }
 
 function getStatusBadgeClass(status: string): string {
   const classMap = {
-    pending: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800',
-    approved: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800',
-    rejected: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800',
-    spam: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800'
+    pending:
+      'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800',
+    approved:
+      'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800',
+    rejected:
+      'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800',
+    spam: 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800',
   }
   return classMap[status as keyof typeof classMap] || classMap.pending
 }
@@ -753,7 +743,7 @@ function formatDate(dateString: string): string {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   })
 }
 
@@ -761,16 +751,16 @@ function formatTimeAgo(dateString: string): string {
   const now = new Date()
   const date = new Date(dateString)
   const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60))
-  
+
   if (diffInHours < 1) return '剛剛'
   if (diffInHours < 24) return `${diffInHours} 小時前`
-  
+
   const diffInDays = Math.floor(diffInHours / 24)
   if (diffInDays < 7) return `${diffInDays} 天前`
-  
+
   const diffInWeeks = Math.floor(diffInDays / 7)
   if (diffInWeeks < 4) return `${diffInWeeks} 週前`
-  
+
   return formatDate(dateString)
 }
 
@@ -811,7 +801,7 @@ async function submitReply() {
 
   try {
     await commentStore.updateEntry(replyingComment.value.id, {
-      adminReply: replyText.value.trim()
+      adminReply: replyText.value.trim(),
     })
     showReplyModal.value = false
     replyingComment.value = null
@@ -824,9 +814,7 @@ async function submitReply() {
 async function batchApprove() {
   try {
     await Promise.all(
-      selectedComments.value.map(id =>
-        commentStore.updateEntry(id, { isApproved: true })
-      )
+      selectedComments.value.map((id) => commentStore.updateEntry(id, { isApproved: true })),
     )
     selectedComments.value = []
     showBatchModal.value = false
@@ -838,9 +826,7 @@ async function batchApprove() {
 async function batchReject() {
   try {
     await Promise.all(
-      selectedComments.value.map(id =>
-        commentStore.updateEntry(id, { isApproved: false })
-      )
+      selectedComments.value.map((id) => commentStore.updateEntry(id, { isApproved: false })),
     )
     selectedComments.value = []
     showBatchModal.value = false
@@ -852,9 +838,7 @@ async function batchReject() {
 async function batchMarkSpam() {
   try {
     await Promise.all(
-      selectedComments.value.map(id =>
-        commentStore.updateEntry(id, { isApproved: false })
-      )
+      selectedComments.value.map((id) => commentStore.updateEntry(id, { isApproved: false })),
     )
     selectedComments.value = []
     showBatchModal.value = false
@@ -866,9 +850,7 @@ async function batchMarkSpam() {
 async function batchDelete() {
   if (confirm(`確定要刪除選中的 ${selectedComments.value.length} 則留言嗎？此操作無法復原。`)) {
     try {
-      await Promise.all(
-        selectedComments.value.map(id => commentStore.deleteEntry(id))
-      )
+      await Promise.all(selectedComments.value.map((id) => commentStore.deleteEntry(id)))
       selectedComments.value = []
       showBatchModal.value = false
     } catch (error) {
@@ -878,13 +860,13 @@ async function batchDelete() {
 }
 
 function exportComments() {
-  const exportData = filteredAndSortedComments.value.map(comment => ({
+  const exportData = filteredAndSortedComments.value.map((comment) => ({
     name: comment.name,
     email: comment.email,
     message: comment.message,
     isApproved: comment.isApproved,
     adminReply: comment.adminReply,
-    createdAt: comment.createdAt
+    createdAt: comment.createdAt,
   }))
 
   const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' })
@@ -909,7 +891,9 @@ onMounted(async () => {
   if (saved) {
     try {
       Object.assign(settings.value, JSON.parse(saved))
-    } catch { /* ignore parse errors */ }
+    } catch {
+      /* ignore parse errors */
+    }
   }
   await commentStore.fetchEntries()
 })

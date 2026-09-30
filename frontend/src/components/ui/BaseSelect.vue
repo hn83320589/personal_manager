@@ -4,7 +4,7 @@
       {{ label }}
       <span v-if="required" class="text-red-500 ml-1">*</span>
     </label>
-    
+
     <div class="relative">
       <select
         :id="selectId"
@@ -17,7 +17,7 @@
         @focus="handleFocus"
       >
         <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
-        
+
         <template v-for="(option, index) in normalizedOptions" :key="index">
           <optgroup v-if="'options' in option" :label="option.label">
             <option
@@ -29,23 +29,19 @@
               {{ groupOption.label }}
             </option>
           </optgroup>
-          
-          <option
-            v-else
-            :value="option.value"
-            :disabled="option.disabled"
-          >
+
+          <option v-else :value="option.value" :disabled="option.disabled">
             {{ option.label }}
           </option>
         </template>
       </select>
-      
+
       <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
         <ChevronDownIcon v-if="!hasError" class="h-5 w-5 text-gray-400" />
         <ExclamationCircleIcon v-else class="h-5 w-5 text-red-500" />
       </div>
     </div>
-    
+
     <p v-if="hasError" class="mt-1 text-sm text-red-600">{{ errorMessage }}</p>
     <p v-else-if="helpText" class="mt-1 text-sm text-gray-500">{{ helpText }}</p>
   </div>
@@ -66,7 +62,6 @@ export interface SelectOptionGroup {
   options: SelectOption[]
   isGroup: true
 }
-
 
 interface Props {
   modelValue: string | number
@@ -96,7 +91,7 @@ const hasError = computed(() => !!props.error)
 const errorMessage = computed(() => props.error)
 
 const normalizedOptions = computed(() => {
-  return props.options.map(option => {
+  return props.options.map((option) => {
     if (typeof option === 'string') {
       return { label: option, value: option, isGroup: false as const }
     }
@@ -108,26 +103,27 @@ const normalizedOptions = computed(() => {
 })
 
 const selectClasses = computed(() => {
-  const baseClasses = 'block w-full px-3 py-2 pr-10 border rounded-lg text-sm bg-white transition-colors duration-200 focus:outline-none focus:ring-2 appearance-none'
-  
+  const baseClasses =
+    'block w-full px-3 py-2 pr-10 border rounded-lg text-sm bg-white transition-colors duration-200 focus:outline-none focus:ring-2 appearance-none'
+
   const stateClasses = hasError.value
     ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
     : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500'
-    
+
   const disabledClasses = props.disabled
     ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
     : 'text-gray-900 cursor-pointer'
-  
+
   return [baseClasses, stateClasses, disabledClasses].join(' ')
 })
 
 function handleChange(event: Event) {
   const target = event.target as HTMLSelectElement
   const value = target.value
-  
+
   // Try to convert to number if the original option value was a number
   const normalizedValue = isNaN(Number(value)) ? value : Number(value)
-  
+
   emit('update:modelValue', normalizedValue)
   emit('change', event)
 }

@@ -21,11 +21,10 @@
             <span
               :class="[
                 'ml-1.5 py-0.5 px-2 rounded-full text-xs',
-                activeFilter === tab.key
-                  ? 'bg-sky-100 text-sky-700'
-                  : 'bg-gray-100 text-gray-500',
+                activeFilter === tab.key ? 'bg-sky-100 text-sky-700' : 'bg-gray-100 text-gray-500',
               ]"
-            >{{ tab.count }}</span>
+              >{{ tab.count }}</span
+            >
           </button>
         </nav>
       </div>
@@ -45,7 +44,10 @@
             >
               <div class="flex items-center justify-between mb-2">
                 <span class="font-medium text-gray-900 text-sm">{{ skill.name }}</span>
-                <span :class="levelBadgeClass(skill.level)" class="text-xs px-2 py-0.5 rounded-full font-medium">
+                <span
+                  :class="levelBadgeClass(skill.level)"
+                  class="text-xs px-2 py-0.5 rounded-full font-medium"
+                >
                   {{ levelLabel(skill.level) }}
                 </span>
               </div>
@@ -93,20 +95,31 @@
                 <svg class="w-20 h-20 -rotate-90" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10" stroke="#e5e7eb" stroke-width="2" fill="none" />
                   <circle
-                    cx="12" cy="12" r="10"
+                    cx="12"
+                    cy="12"
+                    r="10"
                     :class="levelColorClass(skill.level)"
-                    stroke-width="2" fill="none"
+                    stroke-width="2"
+                    fill="none"
                     :stroke-dasharray="`${(levelNumber(skill.level) / 4) * 62.83} 62.83`"
                     class="transition-all duration-500"
                   />
                 </svg>
                 <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="text-xs font-semibold text-gray-700">{{ Math.round((levelNumber(skill.level) / 4) * 100) }}%</span>
+                  <span class="text-xs font-semibold text-gray-700"
+                    >{{ Math.round((levelNumber(skill.level) / 4) * 100) }}%</span
+                  >
                 </div>
               </div>
             </div>
-            <span :class="levelBadgeClass(skill.level)" class="text-xs px-2.5 py-0.5 rounded-full font-medium">{{ levelLabel(skill.level) }}</span>
-            <p v-if="skill.yearsOfExperience > 0" class="text-xs text-gray-500 mt-2">{{ skill.yearsOfExperience }} 年經驗</p>
+            <span
+              :class="levelBadgeClass(skill.level)"
+              class="text-xs px-2.5 py-0.5 rounded-full font-medium"
+              >{{ levelLabel(skill.level) }}</span
+            >
+            <p v-if="skill.yearsOfExperience > 0" class="text-xs text-gray-500 mt-2">
+              {{ skill.yearsOfExperience }} 年經驗
+            </p>
           </div>
         </div>
       </template>
@@ -116,7 +129,9 @@
         <h2 class="text-base font-semibold text-gray-900 mb-4">技能總覽</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div>
-            <div class="text-2xl font-bold" :style="{ color: 'var(--color-primary, #0ea5e9)' }">{{ skills.length }}</div>
+            <div class="text-2xl font-bold" :style="{ color: 'var(--color-primary, #0ea5e9)' }">
+              {{ skills.length }}
+            </div>
             <div class="text-xs text-gray-500 mt-1">總技能數</div>
           </div>
           <div>
@@ -124,7 +139,9 @@
             <div class="text-xs text-gray-500 mt-1">專家級</div>
           </div>
           <div>
-            <div class="text-2xl font-bold text-green-600">{{ Object.keys(groupedSkills).length }}</div>
+            <div class="text-2xl font-bold text-green-600">
+              {{ Object.keys(groupedSkills).length }}
+            </div>
             <div class="text-xs text-gray-500 mt-1">分類數</div>
           </div>
           <div>
@@ -158,7 +175,7 @@ const groupedSkills = computed(() =>
     if (!acc[cat]) acc[cat] = []
     acc[cat].push(s)
     return acc
-  }, {})
+  }, {}),
 )
 
 const byLevel = computed(() =>
@@ -166,7 +183,7 @@ const byLevel = computed(() =>
     if (!acc[s.level]) acc[s.level] = []
     acc[s.level].push(s)
     return acc
-  }, {})
+  }, {}),
 )
 
 const filterTabs = computed(() => [
@@ -178,30 +195,66 @@ const filterTabs = computed(() => [
 ])
 
 const filteredSkills = computed(() =>
-  activeFilter.value === 'all' ? skills.value : (byLevel.value[activeFilter.value] ?? [])
+  activeFilter.value === 'all' ? skills.value : (byLevel.value[activeFilter.value] ?? []),
 )
 
-const expertCount = computed(() => (byLevel.value['Expert']?.length ?? 0))
+const expertCount = computed(() => byLevel.value['Expert']?.length ?? 0)
 const avgYears = computed(() => {
-  const withExp = skills.value.filter(s => s.yearsOfExperience > 0)
+  const withExp = skills.value.filter((s) => s.yearsOfExperience > 0)
   if (!withExp.length) return 0
   return Math.round(withExp.reduce((s, sk) => s + sk.yearsOfExperience, 0) / withExp.length)
 })
 
-function levelNumber(level: SkillLevel) { return { Beginner: 1, Intermediate: 2, Advanced: 3, Expert: 4 }[level] ?? 2 }
-function levelPercent(level: SkillLevel) { return levelNumber(level) * 25 }
-function levelLabel(level: SkillLevel) { return { Beginner: '初學', Intermediate: '中級', Advanced: '進階', Expert: '專家' }[level] ?? level }
+function levelNumber(level: SkillLevel) {
+  return { Beginner: 1, Intermediate: 2, Advanced: 3, Expert: 4 }[level] ?? 2
+}
+function levelPercent(level: SkillLevel) {
+  return levelNumber(level) * 25
+}
+function levelLabel(level: SkillLevel) {
+  return (
+    { Beginner: '初學', Intermediate: '中級', Advanced: '進階', Expert: '專家' }[level] ?? level
+  )
+}
 function levelBadgeClass(level: SkillLevel) {
-  return { Beginner: 'bg-gray-100 text-gray-700', Intermediate: 'bg-blue-100 text-blue-700', Advanced: 'bg-green-100 text-green-700', Expert: 'bg-purple-100 text-purple-700' }[level] ?? 'bg-gray-100 text-gray-700'
+  return (
+    {
+      Beginner: 'bg-gray-100 text-gray-700',
+      Intermediate: 'bg-blue-100 text-blue-700',
+      Advanced: 'bg-green-100 text-green-700',
+      Expert: 'bg-purple-100 text-purple-700',
+    }[level] ?? 'bg-gray-100 text-gray-700'
+  )
 }
 function levelBarClass(level: SkillLevel) {
-  return { Beginner: 'bg-gray-400', Intermediate: 'bg-blue-500', Advanced: 'bg-green-500', Expert: 'bg-purple-500' }[level] ?? 'bg-gray-400'
+  return (
+    {
+      Beginner: 'bg-gray-400',
+      Intermediate: 'bg-blue-500',
+      Advanced: 'bg-green-500',
+      Expert: 'bg-purple-500',
+    }[level] ?? 'bg-gray-400'
+  )
 }
 function levelDotClass(level: SkillLevel) {
-  return { Beginner: 'bg-gray-400', Intermediate: 'bg-blue-500', Advanced: 'bg-green-500', Expert: 'bg-purple-500' }[level] ?? 'bg-gray-400'
+  return (
+    {
+      Beginner: 'bg-gray-400',
+      Intermediate: 'bg-blue-500',
+      Advanced: 'bg-green-500',
+      Expert: 'bg-purple-500',
+    }[level] ?? 'bg-gray-400'
+  )
 }
 function levelColorClass(level: SkillLevel) {
-  return { Beginner: 'text-gray-400', Intermediate: 'text-blue-500', Advanced: 'text-green-500', Expert: 'text-purple-500' }[level] ?? 'text-gray-400'
+  return (
+    {
+      Beginner: 'text-gray-400',
+      Intermediate: 'text-blue-500',
+      Advanced: 'text-green-500',
+      Expert: 'text-purple-500',
+    }[level] ?? 'text-gray-400'
+  )
 }
 
 async function load(uid: number) {
@@ -216,6 +269,13 @@ async function load(uid: number) {
   }
 }
 
-onMounted(() => { if (userId?.value) load(userId.value) })
-watch(() => userId?.value, (uid) => { if (uid) load(uid) })
+onMounted(() => {
+  if (userId?.value) load(userId.value)
+})
+watch(
+  () => userId?.value,
+  (uid) => {
+    if (uid) load(uid)
+  },
+)
 </script>

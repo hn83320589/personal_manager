@@ -27,11 +27,7 @@ test.describe('使用者認證', () => {
   })
 
   test('受保護路由 — 未登入重導向', async ({ page }) => {
-    const protectedRoutes = [
-      '/admin/dashboard',
-      '/admin/profile',
-      '/admin/blog',
-    ]
+    const protectedRoutes = ['/admin/dashboard', '/admin/profile', '/admin/blog']
     for (const route of protectedRoutes) {
       await page.goto(route)
       await expect(page).toHaveURL(/\/login/)

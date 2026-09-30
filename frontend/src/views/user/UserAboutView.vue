@@ -4,10 +4,20 @@
 
     <template v-else-if="profile">
       <!-- Summary / Bio -->
-      <div v-if="profile.summary || profile.description" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div
+        v-if="profile.summary || profile.description"
+        class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm"
+      >
         <h2 class="text-lg font-semibold text-gray-900 mb-3">個人簡介</h2>
-        <p v-if="profile.summary" class="text-gray-700 mb-3 leading-relaxed">{{ profile.summary }}</p>
-        <p v-if="profile.description" class="text-gray-600 text-sm whitespace-pre-wrap leading-relaxed">{{ profile.description }}</p>
+        <p v-if="profile.summary" class="text-gray-700 mb-3 leading-relaxed">
+          {{ profile.summary }}
+        </p>
+        <p
+          v-if="profile.description"
+          class="text-gray-600 text-sm whitespace-pre-wrap leading-relaxed"
+        >
+          {{ profile.description }}
+        </p>
         <a
           v-if="profile.website"
           :href="profile.website"
@@ -21,15 +31,17 @@
       </div>
 
       <!-- Expert Skills -->
-      <div v-if="expertSkills.length > 0" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div
+        v-if="expertSkills.length > 0"
+        class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm"
+      >
         <h2 class="text-lg font-semibold text-gray-900 mb-4">核心專長</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-          <div
-            v-for="skill in expertSkills"
-            :key="skill.id"
-            class="flex items-center gap-2"
-          >
-            <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" :style="{ backgroundColor: 'var(--color-primary, #0ea5e9)' }"></div>
+          <div v-for="skill in expertSkills" :key="skill.id" class="flex items-center gap-2">
+            <div
+              class="w-2.5 h-2.5 rounded-full flex-shrink-0"
+              :style="{ backgroundColor: 'var(--color-primary, #0ea5e9)' }"
+            ></div>
             <span class="text-sm text-gray-700 font-medium">{{ skill.name }}</span>
           </div>
         </div>
@@ -40,8 +52,12 @@
         <h2 class="text-lg font-semibold text-gray-900 mb-4">目前職位</h2>
         <div class="space-y-1">
           <h3 class="font-semibold text-gray-900">{{ currentPosition.position }}</h3>
-          <p class="text-sm font-medium" :style="{ color: 'var(--color-primary, #0ea5e9)' }">{{ currentPosition.company }}</p>
-          <p v-if="currentPosition.description" class="text-sm text-gray-600 mt-2 leading-relaxed">{{ currentPosition.description }}</p>
+          <p class="text-sm font-medium" :style="{ color: 'var(--color-primary, #0ea5e9)' }">
+            {{ currentPosition.company }}
+          </p>
+          <p v-if="currentPosition.description" class="text-sm text-gray-600 mt-2 leading-relaxed">
+            {{ currentPosition.description }}
+          </p>
         </div>
       </div>
 
@@ -50,17 +66,25 @@
         <h2 class="text-lg font-semibold text-gray-900 mb-4">學歷</h2>
         <div class="space-y-1">
           <h3 class="font-semibold text-gray-900">
-            {{ latestEducation.degree }}<span v-if="latestEducation.fieldOfStudy"> - {{ latestEducation.fieldOfStudy }}</span>
+            {{ latestEducation.degree
+            }}<span v-if="latestEducation.fieldOfStudy"> - {{ latestEducation.fieldOfStudy }}</span>
           </h3>
-          <p class="text-sm font-medium" :style="{ color: 'var(--color-primary, #0ea5e9)' }">{{ latestEducation.school }}</p>
+          <p class="text-sm font-medium" :style="{ color: 'var(--color-primary, #0ea5e9)' }">
+            {{ latestEducation.school }}
+          </p>
           <p class="text-sm text-gray-500">
-            {{ latestEducation.startYear }}<span v-if="latestEducation.endYear"> - {{ latestEducation.endYear }}</span><span v-else> - 至今</span>
+            {{ latestEducation.startYear
+            }}<span v-if="latestEducation.endYear"> - {{ latestEducation.endYear }}</span
+            ><span v-else> - 至今</span>
           </p>
         </div>
       </div>
 
       <!-- Contact Methods -->
-      <div v-if="contacts.length > 0" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div
+        v-if="contacts.length > 0"
+        class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm"
+      >
         <h2 class="text-lg font-semibold text-gray-900 mb-4">聯絡我</h2>
 
         <!-- Direct contacts (Email / Phone / all non-social) -->
@@ -76,14 +100,20 @@
             <div
               class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
               :style="{ backgroundColor: typeColor(contact.type) }"
-            >{{ (contact.label || contact.type).charAt(0).toUpperCase() }}</div>
+            >
+              {{ (contact.label || contact.type).charAt(0).toUpperCase() }}
+            </div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-semibold text-gray-900 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors">
+              <p
+                class="text-sm font-semibold text-gray-900 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors"
+              >
                 {{ contact.label || contact.type }}
               </p>
               <p class="text-xs text-gray-500 truncate">{{ contact.value }}</p>
             </div>
-            <ArrowTopRightOnSquareIcon class="h-4 w-4 text-gray-300 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors flex-shrink-0" />
+            <ArrowTopRightOnSquareIcon
+              class="h-4 w-4 text-gray-300 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors flex-shrink-0"
+            />
           </a>
         </div>
 
@@ -100,8 +130,12 @@
             <div
               class="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
               :style="{ backgroundColor: typeColor(contact.type) }"
-            >{{ (contact.label || contact.type).charAt(0).toUpperCase() }}</div>
-            <span class="text-sm font-medium text-gray-700 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors truncate">
+            >
+              {{ (contact.label || contact.type).charAt(0).toUpperCase() }}
+            </div>
+            <span
+              class="text-sm font-medium text-gray-700 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors truncate"
+            >
               {{ contact.label || contact.type }}
             </span>
           </a>
@@ -132,16 +166,16 @@ const workExperiences = ref<WorkExperience[]>([])
 const educations = ref<Education[]>([])
 
 const expertSkills = computed(() =>
-  skills.value.filter(s => s.level === 'Expert' || s.level === 'Advanced').slice(0, 6)
+  skills.value.filter((s) => s.level === 'Expert' || s.level === 'Advanced').slice(0, 6),
 )
-const currentPosition = computed(() =>
-  workExperiences.value.find(w => w.isCurrent) ?? workExperiences.value[0] ?? null
+const currentPosition = computed(
+  () => workExperiences.value.find((w) => w.isCurrent) ?? workExperiences.value[0] ?? null,
 )
 const latestEducation = computed(() => educations.value[0] ?? null)
 
 const socialTypes = new Set(['LinkedIn', 'GitHub', 'Facebook', 'Twitter', 'Instagram', 'Discord'])
-const directContacts = computed(() => contacts.value.filter(c => !socialTypes.has(c.type)))
-const socialContacts = computed(() => contacts.value.filter(c => socialTypes.has(c.type)))
+const directContacts = computed(() => contacts.value.filter((c) => !socialTypes.has(c.type)))
+const socialContacts = computed(() => contacts.value.filter((c) => socialTypes.has(c.type)))
 
 const typeColorMap: Record<string, string> = {
   Email: '#0ea5e9',
@@ -186,6 +220,13 @@ async function load(uid: number) {
   }
 }
 
-onMounted(() => { if (userId?.value) load(userId.value) })
-watch(() => userId?.value, (uid) => { if (uid) load(uid) })
+onMounted(() => {
+  if (userId?.value) load(userId.value)
+})
+watch(
+  () => userId?.value,
+  (uid) => {
+    if (uid) load(uid)
+  },
+)
 </script>

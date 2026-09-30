@@ -4,7 +4,10 @@
 
     <div v-else-if="project" class="space-y-6">
       <div>
-        <RouterLink :to="`/@${username}/portfolio`" class="inline-flex items-center gap-1 text-sm text-sky-600 hover:text-sky-800">
+        <RouterLink
+          :to="`/@${username}/portfolio`"
+          class="inline-flex items-center gap-1 text-sm text-sky-600 hover:text-sky-800"
+        >
           <ArrowLeftIcon class="h-4 w-4" />返回作品集
         </RouterLink>
       </div>
@@ -26,14 +29,20 @@
                   <span
                     v-if="project.isFeatured"
                     class="text-xs bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full font-medium flex-shrink-0"
-                  >⭐ 精選</span>
+                    >⭐ 精選</span
+                  >
                 </div>
                 <span v-if="project.createdAt" class="text-sm text-gray-400 mt-1 block">
                   {{ formatDate(project.createdAt) }}
                 </span>
               </div>
 
-              <p v-if="project.description" class="text-gray-700 whitespace-pre-wrap leading-relaxed">{{ project.description }}</p>
+              <p
+                v-if="project.description"
+                class="text-gray-700 whitespace-pre-wrap leading-relaxed"
+              >
+                {{ project.description }}
+              </p>
 
               <!-- Technologies -->
               <div v-if="technologies.length > 0">
@@ -43,8 +52,12 @@
                     v-for="tech in technologies"
                     :key="tech"
                     class="text-sm px-3 py-1 rounded-full font-medium"
-                    :style="{ backgroundColor: 'var(--color-primary-light,#e0f2fe)', color: 'var(--color-primary-dark,#0c4a6e)' }"
-                  >{{ tech }}</span>
+                    :style="{
+                      backgroundColor: 'var(--color-primary-light,#e0f2fe)',
+                      color: 'var(--color-primary-dark,#0c4a6e)',
+                    }"
+                    >{{ tech }}</span
+                  >
                 </div>
               </div>
 
@@ -83,8 +96,14 @@
                 <div class="text-sm">
                   <span class="text-gray-500">可見性</span>
                   <p class="mt-0.5">
-                    <span :class="project.isPublic ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'"
-                      class="inline-block text-xs px-2 py-0.5 rounded-full font-medium">
+                    <span
+                      :class="
+                        project.isPublic
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-gray-100 text-gray-600'
+                      "
+                      class="inline-block text-xs px-2 py-0.5 rounded-full font-medium"
+                    >
                       {{ project.isPublic ? '公開' : '私人' }}
                     </span>
                   </p>
@@ -127,7 +146,9 @@
                     >
                       <ArrowDownTrayIcon class="h-4 w-4 flex-shrink-0" />
                       <span class="truncate">{{ att.fileName }}</span>
-                      <span class="text-gray-400 text-xs flex-shrink-0">{{ formatFileSize(att.fileSize) }}</span>
+                      <span class="text-gray-400 text-xs flex-shrink-0">{{
+                        formatFileSize(att.fileSize)
+                      }}</span>
                     </a>
                   </div>
                 </div>
@@ -147,9 +168,20 @@
             :to="`/@${username}/portfolio/${rel.id}`"
             class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 group"
           >
-            <img v-if="rel.imageUrl" :src="rel.imageUrl" :alt="rel.title" class="w-full h-28 object-cover rounded-lg mb-3" />
-            <h3 class="font-medium text-gray-900 group-hover:text-sky-600 transition-colors text-sm">{{ rel.title }}</h3>
-            <p v-if="rel.description" class="text-xs text-gray-500 mt-1 line-clamp-2">{{ rel.description }}</p>
+            <img
+              v-if="rel.imageUrl"
+              :src="rel.imageUrl"
+              :alt="rel.title"
+              class="w-full h-28 object-cover rounded-lg mb-3"
+            />
+            <h3
+              class="font-medium text-gray-900 group-hover:text-sky-600 transition-colors text-sm"
+            >
+              {{ rel.title }}
+            </h3>
+            <p v-if="rel.description" class="text-xs text-gray-500 mt-1 line-clamp-2">
+              {{ rel.description }}
+            </p>
           </RouterLink>
         </div>
       </section>
@@ -163,7 +195,12 @@
 import { ref, computed, inject, onMounted } from 'vue'
 import type { ComputedRef } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { ArrowLeftIcon, GlobeAltIcon, CodeBracketIcon, ArrowDownTrayIcon } from '@heroicons/vue/24/outline'
+import {
+  ArrowLeftIcon,
+  GlobeAltIcon,
+  CodeBracketIcon,
+  ArrowDownTrayIcon,
+} from '@heroicons/vue/24/outline'
 import httpService from '@/services/http'
 import portfolioAttachmentService from '@/services/portfolioAttachmentService'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
@@ -185,12 +222,16 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)}MB`
 }
 
-const technologies = computed(() =>
-  project.value?.technologies?.split(',').map(t => t.trim()).filter(Boolean) ?? []
+const technologies = computed(
+  () =>
+    project.value?.technologies
+      ?.split(',')
+      .map((t) => t.trim())
+      .filter(Boolean) ?? [],
 )
 
 const relatedProjects = computed(() =>
-  allPortfolios.value.filter(p => p.id !== project.value?.id).slice(0, 3)
+  allPortfolios.value.filter((p) => p.id !== project.value?.id).slice(0, 3),
 )
 
 function formatDate(dateStr: string): string {
@@ -202,7 +243,9 @@ onMounted(async () => {
   try {
     const [projectRes, portfoliosRes, attachmentsRes] = await Promise.all([
       httpService.get<Portfolio>(`/portfolios/${id}`),
-      userId?.value ? httpService.get<Portfolio[]>(`/portfolios/user/${userId.value}/public`) : Promise.resolve({ success: false, data: [], message: '', errors: [] }),
+      userId?.value
+        ? httpService.get<Portfolio[]>(`/portfolios/user/${userId.value}/public`)
+        : Promise.resolve({ success: false, data: [], message: '', errors: [] }),
       portfolioAttachmentService.getByPortfolio(Number(id)),
     ])
     if (projectRes.success) project.value = projectRes.data

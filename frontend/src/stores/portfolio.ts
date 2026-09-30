@@ -78,7 +78,7 @@ export const usePortfolioStore = defineStore('portfolio', () => {
     try {
       const response = await portfolioService.updatePortfolio(id, data)
       if (response.success && response.data) {
-        const index = portfolios.value.findIndex(p => p.id === id)
+        const index = portfolios.value.findIndex((p) => p.id === id)
         if (index !== -1) {
           portfolios.value[index] = response.data
         }
@@ -106,7 +106,7 @@ export const usePortfolioStore = defineStore('portfolio', () => {
     try {
       const response = await portfolioService.deletePortfolio(id)
       if (response.success) {
-        portfolios.value = portfolios.value.filter(p => p.id !== id)
+        portfolios.value = portfolios.value.filter((p) => p.id !== id)
         if (currentPortfolio.value?.id === id) {
           currentPortfolio.value = null
         }

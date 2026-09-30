@@ -63,9 +63,7 @@
               :disabled="isLoading"
             />
 
-            <p v-if="passwordMismatch" class="text-sm text-red-600 -mt-2">
-              兩次密碼輸入不一致
-            </p>
+            <p v-if="passwordMismatch" class="text-sm text-red-600 -mt-2">兩次密碼輸入不一致</p>
 
             <BaseButton
               type="submit"
@@ -102,14 +100,14 @@ const success = ref(false)
 const errorMsg = ref('')
 
 const passwordMismatch = computed(
-  () => confirmPassword.value.length > 0 && newPassword.value !== confirmPassword.value
+  () => confirmPassword.value.length > 0 && newPassword.value !== confirmPassword.value,
 )
 
 const isFormValid = computed(
   () =>
     newPassword.value.length >= 6 &&
     confirmPassword.value.length > 0 &&
-    newPassword.value === confirmPassword.value
+    newPassword.value === confirmPassword.value,
 )
 
 async function handleSubmit() {

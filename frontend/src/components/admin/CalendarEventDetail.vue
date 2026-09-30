@@ -10,35 +10,35 @@
         <div>
           <h3 class="text-lg font-semibold text-gray-900">{{ event.title }}</h3>
           <div class="flex items-center space-x-2 mt-1">
-            <span :class="[
-              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-              'bg-gray-100 text-gray-800'
-            ]">
+            <span
+              :class="[
+                'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                'bg-gray-100 text-gray-800',
+              ]"
+            >
               一般
             </span>
-            <span :class="[
-              'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-              event.isPublic
-                ? 'bg-green-100 text-green-800'
-                : 'bg-gray-100 text-gray-800'
-            ]">
+            <span
+              :class="[
+                'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                event.isPublic ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800',
+              ]"
+            >
               {{ event.isPublic ? '公開' : '私人' }}
             </span>
-            <span :class="[
-              'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-              getEventStatusStyle(event)
-            ]">
+            <span
+              :class="[
+                'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                getEventStatusStyle(event),
+              ]"
+            >
               {{ getEventStatus(event) }}
             </span>
           </div>
         </div>
       </div>
       <div class="flex space-x-2">
-        <BaseButton
-          variant="outline"
-          size="small"
-          @click="$emit('edit', event)"
-        >
+        <BaseButton variant="outline" size="small" @click="$emit('edit', event)">
           <PencilIcon class="w-4 h-4 mr-2" />
           編輯
         </BaseButton>
@@ -181,11 +181,7 @@
               <div class="text-xs text-gray-500">{{ formatEventDate(relatedEvent) }}</div>
             </div>
           </div>
-          <BaseButton
-            variant="outline"
-            size="small"
-            @click="viewRelatedEvent(relatedEvent)"
-          >
+          <BaseButton variant="outline" size="small" @click="viewRelatedEvent(relatedEvent)">
             查看
           </BaseButton>
         </div>
@@ -194,18 +190,8 @@
 
     <!-- Action Buttons -->
     <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-      <BaseButton
-        variant="outline"
-        @click="$emit('close')"
-      >
-        關閉
-      </BaseButton>
-      <BaseButton
-        variant="primary"
-        @click="$emit('edit', event)"
-      >
-        編輯事件
-      </BaseButton>
+      <BaseButton variant="outline" @click="$emit('close')"> 關閉 </BaseButton>
+      <BaseButton variant="primary" @click="$emit('edit', event)"> 編輯事件 </BaseButton>
     </div>
   </div>
 </template>
@@ -222,7 +208,7 @@ import {
   ClipboardIcon,
   CalendarDaysIcon,
   CloudArrowUpIcon,
-  BellIcon
+  BellIcon,
 } from '@heroicons/vue/24/outline'
 import type { CalendarEvent } from '@/types/api'
 import BaseButton from '@/components/ui/BaseButton.vue'
@@ -263,10 +249,14 @@ function getEventStatus(event: CalendarEvent): string {
 function getEventStatusStyle(event: CalendarEvent): string {
   const status = getEventStatus(event)
   switch (status) {
-    case '即將到來': return 'bg-blue-100 text-blue-800'
-    case '進行中': return 'bg-green-100 text-green-800'
-    case '已結束': return 'bg-gray-100 text-gray-800'
-    default: return 'bg-gray-100 text-gray-800'
+    case '即將到來':
+      return 'bg-blue-100 text-blue-800'
+    case '進行中':
+      return 'bg-green-100 text-green-800'
+    case '已結束':
+      return 'bg-gray-100 text-gray-800'
+    default:
+      return 'bg-gray-100 text-gray-800'
   }
 }
 
@@ -278,7 +268,7 @@ function formatEventDate(event: CalendarEvent): string {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    weekday: 'long'
+    weekday: 'long',
   })
 
   if (end && end.toDateString() !== start.toDateString()) {
@@ -286,7 +276,7 @@ function formatEventDate(event: CalendarEvent): string {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      weekday: 'long'
+      weekday: 'long',
     })
     return `${startDateStr} 至 ${endDateStr}`
   }
@@ -315,7 +305,7 @@ function formatDateTime(dateString: string): string {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   })
 }
 
@@ -368,7 +358,10 @@ function exportToCalendar() {
     : new Date(startDate.getTime() + 60 * 60 * 1000) // Default 1 hour
 
   const formatICSDate = (date: Date) => {
-    return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+    return date
+      .toISOString()
+      .replace(/[-:]/g, '')
+      .replace(/\.\d{3}/, '')
   }
 
   const icsContent = `BEGIN:VCALENDAR

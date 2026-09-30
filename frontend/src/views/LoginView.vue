@@ -1,25 +1,18 @@
 <template>
-  <div
-    class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8"
-  >
+  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <!-- Logo/Header -->
       <div class="text-center">
         <h1 class="text-3xl font-bold text-gray-900">Personal Manager</h1>
         <h2 class="mt-6 text-2xl font-semibold text-gray-900">登入您的帳號</h2>
-        <p class="mt-2 text-sm text-gray-600">
-          存取您的個人儀表板並管理您的內容
-        </p>
+        <p class="mt-2 text-sm text-gray-600">存取您的個人儀表板並管理您的內容</p>
       </div>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
         <!-- Error Message -->
-        <div
-          v-if="error"
-          class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4"
-        >
+        <div v-if="error" class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
           <div class="flex">
             <ExclamationTriangleIcon class="h-5 w-5 text-red-400" />
             <div class="ml-3">
@@ -59,9 +52,7 @@
                 class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                 :disabled="isLoading"
               />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                記住我
-              </label>
+              <label for="remember-me" class="ml-2 block text-sm text-gray-900"> 記住我 </label>
             </div>
 
             <div class="text-sm">
@@ -170,18 +161,12 @@
       <div class="mt-6 text-center text-sm text-gray-600">
         <p>
           還沒有帳號？
-          <router-link
-            to="/register"
-            class="font-medium text-primary-600 hover:text-primary-500"
-          >
+          <router-link to="/register" class="font-medium text-primary-600 hover:text-primary-500">
             註冊
           </router-link>
         </p>
         <p class="mt-2">
-          <router-link
-            to="/"
-            class="font-medium text-primary-600 hover:text-primary-500"
-          >
+          <router-link to="/" class="font-medium text-primary-600 hover:text-primary-500">
             ← 返回首頁
           </router-link>
         </p>
@@ -191,102 +176,102 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
-import { useAuthStore } from "@/stores/auth";
-import BaseButton from "@/components/ui/BaseButton.vue";
-import BaseInput from "@/components/ui/BaseInput.vue";
-import BaseForm from "@/components/ui/BaseForm.vue";
+import { ref, computed, reactive, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
+import { useAuthStore } from '@/stores/auth'
+import BaseButton from '@/components/ui/BaseButton.vue'
+import BaseInput from '@/components/ui/BaseInput.vue'
+import BaseForm from '@/components/ui/BaseForm.vue'
 
 // Router
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 
 // Stores
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 
 // State
 const form = reactive({
-  username: "",
-  password: "",
+  username: '',
+  password: '',
   rememberMe: false,
-});
+})
 
-const isLoading = ref(false);
+const isLoading = ref(false)
 
 // Computed
-const error = computed(() => authStore.error);
+const error = computed(() => authStore.error)
 const isFormValid = computed(() => {
-  return form.username.trim() && form.password.trim();
-});
+  return form.username.trim() && form.password.trim()
+})
 
 // Methods
 async function handleLogin() {
-  if (!isFormValid.value || isLoading.value) return;
+  if (!isFormValid.value || isLoading.value) return
 
-  isLoading.value = true;
-  authStore.clearError();
+  isLoading.value = true
+  authStore.clearError()
 
   try {
     const success = await authStore.login({
       username: form.username.trim(),
       password: form.password.trim(),
-    });
+    })
 
     if (success) {
       // Redirect to intended page or dashboard
-      const redirectTo = (route.query.redirect as string) || "/admin/dashboard";
-      router.push(redirectTo);
+      const redirectTo = (route.query.redirect as string) || '/admin/dashboard'
+      router.push(redirectTo)
     }
   } catch (error) {
-    console.error("Login error:", error);
+    console.error('Login error:', error)
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
 }
 
-async function handleSocialLogin(provider: "google" | "github") {
+async function handleSocialLogin(provider: 'google' | 'github') {
   try {
     // In a real app, this would redirect to OAuth provider
-    console.log(`Social login with ${provider}`);
+    console.log(`Social login with ${provider}`)
 
     // For demo purposes, we'll simulate a successful login
-    if (provider === "google") {
+    if (provider === 'google') {
       // Simulate Google OAuth success
-      alert("Google OAuth would be implemented here");
+      alert('Google OAuth would be implemented here')
     } else {
       // Simulate GitHub OAuth success
-      alert("GitHub OAuth would be implemented here");
+      alert('GitHub OAuth would be implemented here')
     }
   } catch (error) {
-    console.error(`${provider} login error:`, error);
+    console.error(`${provider} login error:`, error)
   }
 }
 
 function fillDemoCredentials() {
-  form.username = "admin";
-  form.password = "demo123";
+  form.username = 'admin'
+  form.password = 'demo123'
 }
 
 // Lifecycle
 onMounted(() => {
   // Clear any existing errors when component mounts
-  authStore.clearError();
+  authStore.clearError()
 
   // Check if already authenticated
   if (authStore.isAuthenticated) {
-    const redirectTo = (route.query.redirect as string) || "/admin/dashboard";
-    router.push(redirectTo);
+    const redirectTo = (route.query.redirect as string) || '/admin/dashboard'
+    router.push(redirectTo)
   }
-});
+})
 </script>
 
 <style scoped>
 /* Custom styles for the login page */
 code {
   font-family:
-    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, "Cascadia Code",
-    "Roboto Mono", Consolas, "Courier New", monospace;
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, 'Cascadia Code', 'Roboto Mono',
+    Consolas, 'Courier New', monospace;
 }
 </style>

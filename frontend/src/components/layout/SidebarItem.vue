@@ -1,10 +1,5 @@
 <template>
-  <router-link
-    v-if="item.route"
-    :to="item.route"
-    :class="itemClasses"
-    @click="handleClick"
-  >
+  <router-link v-if="item.route" :to="item.route" :class="itemClasses" @click="handleClick">
     <component
       :is="item.icon"
       v-if="item.icon"
@@ -20,11 +15,7 @@
     </span>
   </router-link>
 
-  <button
-    v-else
-    :class="itemClasses"
-    @click="handleClick"
-  >
+  <button v-else :class="itemClasses" @click="handleClick">
     <component
       :is="item.icon"
       v-if="item.icon"
@@ -70,12 +61,13 @@ const isActive = computed(() => {
 })
 
 const itemClasses = computed(() => {
-  const baseClasses = 'flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200'
+  const baseClasses =
+    'flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200'
   const stateClasses = isActive.value
     ? 'bg-primary-100 text-primary-700 border-r-2 border-primary-700'
     : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
   const layoutClasses = props.collapsed ? 'justify-center' : 'space-x-3'
-  
+
   return [baseClasses, stateClasses, layoutClasses].join(' ')
 })
 

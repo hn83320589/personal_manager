@@ -5,10 +5,16 @@
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <h1 class="text-xl font-bold text-sky-600">Personal Manager</h1>
         <div v-if="authStore.isAuthenticated" class="flex items-center gap-3">
-          <RouterLink to="/admin/dashboard" class="text-sm text-gray-600 hover:text-sky-600">後台管理</RouterLink>
-          <button @click="authStore.logout()" class="text-sm text-gray-400 hover:text-red-500">登出</button>
+          <RouterLink to="/admin/dashboard" class="text-sm text-gray-600 hover:text-sky-600"
+            >後台管理</RouterLink
+          >
+          <button @click="authStore.logout()" class="text-sm text-gray-400 hover:text-red-500">
+            登出
+          </button>
         </div>
-        <RouterLink v-else to="/login" class="text-sm font-medium text-sky-600 hover:text-sky-800">登入</RouterLink>
+        <RouterLink v-else to="/login" class="text-sm font-medium text-sky-600 hover:text-sky-800"
+          >登入</RouterLink
+        >
       </div>
     </header>
 
@@ -106,10 +112,11 @@ const isLoading = computed(() => directoryStore.isLoading)
 const filteredProfiles = computed(() => {
   const q = searchQuery.value.toLowerCase().trim()
   if (!q) return directoryStore.profiles
-  return directoryStore.profiles.filter(p =>
-    p.fullName.toLowerCase().includes(q) ||
-    p.username.toLowerCase().includes(q) ||
-    p.title?.toLowerCase().includes(q)
+  return directoryStore.profiles.filter(
+    (p) =>
+      p.fullName.toLowerCase().includes(q) ||
+      p.username.toLowerCase().includes(q) ||
+      p.title?.toLowerCase().includes(q),
   )
 })
 
@@ -126,7 +133,14 @@ function themeColorHex(color: string): string {
 }
 
 function getInitials(name: string): string {
-  return name.split(/\s+/).map(w => w[0] ?? '').slice(0, 2).join('').toUpperCase() || 'U'
+  return (
+    name
+      .split(/\s+/)
+      .map((w) => w[0] ?? '')
+      .slice(0, 2)
+      .join('')
+      .toUpperCase() || 'U'
+  )
 }
 
 onMounted(() => directoryStore.fetchDirectory())

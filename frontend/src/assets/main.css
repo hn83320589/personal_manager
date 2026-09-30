@@ -10,7 +10,9 @@
   }
 
   /* Ensure all raw inputs/selects/textareas have visible text on white background */
-  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="range"]):not([type="color"]),
+  input:not([type='checkbox']):not([type='radio']):not([type='submit']):not([type='button']):not(
+      [type='range']
+    ):not([type='color']),
   select,
   textarea {
     @apply bg-white text-gray-900;

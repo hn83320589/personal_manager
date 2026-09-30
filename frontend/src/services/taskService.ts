@@ -45,10 +45,15 @@ class TaskService {
   }
 
   async getWorkTasksByProject(userId: number, project: string): Promise<ApiResponse<WorkTask[]>> {
-    return httpService.get<WorkTask[]>(`/worktasks/user/${userId}/project/${encodeURIComponent(project)}`)
+    return httpService.get<WorkTask[]>(
+      `/worktasks/user/${userId}/project/${encodeURIComponent(project)}`,
+    )
   }
 
-  async getWorkTasksByStatus(userId: number, status: WorkTaskStatus): Promise<ApiResponse<WorkTask[]>> {
+  async getWorkTasksByStatus(
+    userId: number,
+    status: WorkTaskStatus,
+  ): Promise<ApiResponse<WorkTask[]>> {
     return httpService.get<WorkTask[]>(`/worktasks/user/${userId}/status/${status}`)
   }
 

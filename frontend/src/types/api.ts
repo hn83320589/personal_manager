@@ -187,7 +187,8 @@ export interface TodoItem {
 }
 
 // ===== WorkTask =====
-export type WorkTaskStatus = 'Pending' | 'Planning' | 'InProgress' | 'Testing' | 'Completed' | 'OnHold' | 'Cancelled'
+export type WorkTaskStatus =
+  'Pending' | 'Planning' | 'InProgress' | 'Testing' | 'Completed' | 'OnHold' | 'Cancelled'
 export type WorkTaskPriority = 'Low' | 'Medium' | 'High' | 'Urgent'
 
 export interface WorkTask {
@@ -279,7 +280,16 @@ export interface CreatePortfolioAttachmentDto {
 }
 
 // ===== ContactMethod =====
-export type ContactType = 'Email' | 'Phone' | 'LinkedIn' | 'GitHub' | 'Facebook' | 'Twitter' | 'Instagram' | 'Discord' | 'Other'
+export type ContactType =
+  | 'Email'
+  | 'Phone'
+  | 'LinkedIn'
+  | 'GitHub'
+  | 'Facebook'
+  | 'Twitter'
+  | 'Instagram'
+  | 'Discord'
+  | 'Other'
 
 export interface ContactMethod {
   id: number

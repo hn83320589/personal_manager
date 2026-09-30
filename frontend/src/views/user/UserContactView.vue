@@ -4,7 +4,10 @@
 
     <template v-else-if="contacts.length > 0">
       <!-- Direct contacts -->
-      <div v-if="directContacts.length > 0" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div
+        v-if="directContacts.length > 0"
+        class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm"
+      >
         <h2 class="text-lg font-semibold text-gray-900 mb-4">直接聯絡</h2>
         <div class="space-y-3">
           <a
@@ -18,20 +21,29 @@
             <div
               class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
               :style="{ backgroundColor: typeColor(contact.type) }"
-            >{{ (contact.label || contact.type).charAt(0).toUpperCase() }}</div>
+            >
+              {{ (contact.label || contact.type).charAt(0).toUpperCase() }}
+            </div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-semibold text-gray-900 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors">
+              <p
+                class="text-sm font-semibold text-gray-900 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors"
+              >
                 {{ contact.label || contact.type }}
               </p>
               <p class="text-xs text-gray-500 truncate">{{ contact.value }}</p>
             </div>
-            <ArrowTopRightOnSquareIcon class="h-4 w-4 text-gray-300 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors flex-shrink-0" />
+            <ArrowTopRightOnSquareIcon
+              class="h-4 w-4 text-gray-300 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors flex-shrink-0"
+            />
           </a>
         </div>
       </div>
 
       <!-- Social links -->
-      <div v-if="socialContacts.length > 0" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div
+        v-if="socialContacts.length > 0"
+        class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm"
+      >
         <h2 class="text-lg font-semibold text-gray-900 mb-4">社群媒體</h2>
         <div class="grid grid-cols-2 gap-3">
           <a
@@ -45,8 +57,12 @@
             <div
               class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
               :style="{ backgroundColor: typeColor(contact.type) }"
-            >{{ (contact.label || contact.type).charAt(0).toUpperCase() }}</div>
-            <span class="text-sm font-medium text-gray-700 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors truncate">
+            >
+              {{ (contact.label || contact.type).charAt(0).toUpperCase() }}
+            </div>
+            <span
+              class="text-sm font-medium text-gray-700 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors truncate"
+            >
               {{ contact.label || contact.type }}
             </span>
           </a>
@@ -72,8 +88,8 @@ const isLoading = ref(true)
 const contacts = ref<ContactMethod[]>([])
 
 const socialTypes = new Set(['LinkedIn', 'GitHub', 'Facebook', 'Twitter', 'Instagram', 'Discord'])
-const directContacts = computed(() => contacts.value.filter(c => !socialTypes.has(c.type)))
-const socialContacts = computed(() => contacts.value.filter(c => socialTypes.has(c.type)))
+const directContacts = computed(() => contacts.value.filter((c) => !socialTypes.has(c.type)))
+const socialContacts = computed(() => contacts.value.filter((c) => socialTypes.has(c.type)))
 
 const typeColorMap: Record<string, string> = {
   Email: '#0ea5e9',
@@ -108,6 +124,13 @@ async function load(uid: number) {
   }
 }
 
-onMounted(() => { if (userId?.value) load(userId.value) })
-watch(() => userId?.value, (uid) => { if (uid) load(uid) })
+onMounted(() => {
+  if (userId?.value) load(userId.value)
+})
+watch(
+  () => userId?.value,
+  (uid) => {
+    if (uid) load(uid)
+  },
+)
 </script>

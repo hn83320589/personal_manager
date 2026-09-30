@@ -7,6 +7,7 @@ This file provides guidance to Claude Code when working with the frontend codeba
 ## 給 AI 的指示
 
 每次任務完成時：
+
 1. 在主專案的 `docs/TASKS.md` 勾選對應項目的 checkbox
 2. 有新的技術債時，加入主專案 `docs/TASKS.md` 的「技術債」區塊
 3. 做了未預期的架構決策時，記錄到主專案的 `docs/system-specification.md` §12 架構決策紀錄（ADR），附上原因
@@ -17,6 +18,7 @@ This file provides guidance to Claude Code when working with the frontend codeba
 ## Constraints（不可以動的東西）
 
 通用限制（所有專案適用）：
+
 - 未告知不得引入新的 library
 - 不得修改未被要求的現有功能
 - 不得動資料庫 schema，除非任務明確要求
@@ -26,6 +28,7 @@ This file provides guidance to Claude Code when working with the frontend codeba
 ## 學習現有程式碼的方式
 
 在開始任何新功能前：
+
 - 找 3 個類似的現有功能或元件作為參考
 - 確認常用的 pattern 和 utility
 - 使用專案已有的 library，不自行發明
@@ -62,6 +65,7 @@ npm run type-check
 ### 環境變數
 
 開發環境：`.env.development`（已存在，**不提交至 git**）
+
 ```
 VITE_API_BASE_URL=http://localhost:5037/api
 VITE_APP_TITLE=Personal Manager
@@ -77,17 +81,17 @@ VITE_APP_TITLE=Personal Manager
 
 ### 技術棧
 
-| 項目 | 工具/版本 |
-|------|-----------|
-| 框架 | Vue 3.5 Composition API + `<script setup>` |
-| 語言 | TypeScript（嚴格模式） |
-| 路由 | Vue Router 4 |
-| 狀態管理 | Pinia + pinia-plugin-persistedstate v4 |
-| HTTP | Axios（含攔截器） |
-| 樣式 | Tailwind CSS 3 |
-| 圖示 | Heroicons v2 |
-| 建置 | Vite 7 |
-| 測試 | Vitest（單元）+ Playwright（E2E） |
+| 項目     | 工具/版本                                  |
+| -------- | ------------------------------------------ |
+| 框架     | Vue 3.5 Composition API + `<script setup>` |
+| 語言     | TypeScript（嚴格模式）                     |
+| 路由     | Vue Router 4                               |
+| 狀態管理 | Pinia + pinia-plugin-persistedstate v4     |
+| HTTP     | Axios（含攔截器）                          |
+| 樣式     | Tailwind CSS 3                             |
+| 圖示     | Heroicons v2                               |
+| 建置     | Vite 7                                     |
+| 測試     | Vitest（單元）+ Playwright（E2E）          |
 
 ### 資料流
 
@@ -108,6 +112,7 @@ View（.vue）
 ### API 回應格式
 
 後端統一回傳 camelCase JSON：
+
 ```typescript
 interface ApiResponse<T> {
   success: boolean
@@ -120,11 +125,16 @@ interface ApiResponse<T> {
 ### Store 持久化
 
 目前沒有 store 使用持久化（時間記錄已改由 `/api/timeentries` 儲存）。若需要持久化，`pinia-plugin-persistedstate` v4 的 composition store 語法為三參數形式：
+
 ```typescript
-export const useExampleStore = defineStore('example', () => {
-  // ...
-  return { draft }
-}, { persist: { pick: ['draft'] } })  // 只持久化指定欄位
+export const useExampleStore = defineStore(
+  'example',
+  () => {
+    // ...
+    return { draft }
+  },
+  { persist: { pick: ['draft'] } },
+) // 只持久化指定欄位
 ```
 
 ---
@@ -240,38 +250,38 @@ PersonalManagerFrontend/
 
 ### 公開路由（不需登入）
 
-| 路徑 | View | 說明 |
-|------|------|------|
-| `/` | HomeView | 用戶目錄（格狀卡片） |
-| `/login` | LoginView | 登入 |
-| `/@:username` | UserAboutView | 個人頁面（UserLayout 包覆） |
-| `/@:username/experience` | UserExperienceView | 學經歷 |
-| `/@:username/skills` | UserSkillView | 技能 |
-| `/@:username/portfolio` | UserPortfolioView | 作品集 |
-| `/@:username/portfolio/:id` | UserProjectDetailView | 作品詳情 |
-| `/@:username/blog` | UserBlogListView | 部落格列表 |
-| `/@:username/blog/:slug` | UserBlogDetailView | 文章詳情 |
-| `/@:username/calendar` | UserCalendarView | 公開行事曆 |
-| `/@:username/guestbook` | UserGuestbookView | 留言板 |
-| `/@:username/contact` | UserContactView | 聯絡我 |
+| 路徑                        | View                  | 說明                        |
+| --------------------------- | --------------------- | --------------------------- |
+| `/`                         | HomeView              | 用戶目錄（格狀卡片）        |
+| `/login`                    | LoginView             | 登入                        |
+| `/@:username`               | UserAboutView         | 個人頁面（UserLayout 包覆） |
+| `/@:username/experience`    | UserExperienceView    | 學經歷                      |
+| `/@:username/skills`        | UserSkillView         | 技能                        |
+| `/@:username/portfolio`     | UserPortfolioView     | 作品集                      |
+| `/@:username/portfolio/:id` | UserProjectDetailView | 作品詳情                    |
+| `/@:username/blog`          | UserBlogListView      | 部落格列表                  |
+| `/@:username/blog/:slug`    | UserBlogDetailView    | 文章詳情                    |
+| `/@:username/calendar`      | UserCalendarView      | 公開行事曆                  |
+| `/@:username/guestbook`     | UserGuestbookView     | 留言板                      |
+| `/@:username/contact`       | UserContactView       | 聯絡我                      |
 
 ### 管理後台路由（需要登入，路由守衛保護）
 
-| 路徑 | View |
-|------|------|
-| `/admin/dashboard` | DashboardView |
-| `/admin/profile` | ProfileManageView |
-| `/admin/experience` | ExperienceManageView |
-| `/admin/skills` | SkillManageView |
-| `/admin/projects` | ProjectManageView |
-| `/admin/calendar` | CalendarManageView |
-| `/admin/work-tracking` | WorkTrackingView |
-| `/admin/tasks` | TaskManageView |
-| `/admin/blog` | BlogManageView |
-| `/admin/blog/new` | BlogEditorView |
-| `/admin/blog/:id/edit` | BlogEditorView |
-| `/admin/comments` | CommentManageView |
-| `/admin/contacts` | ContactManageView |
+| 路徑                   | View                 |
+| ---------------------- | -------------------- |
+| `/admin/dashboard`     | DashboardView        |
+| `/admin/profile`       | ProfileManageView    |
+| `/admin/experience`    | ExperienceManageView |
+| `/admin/skills`        | SkillManageView      |
+| `/admin/projects`      | ProjectManageView    |
+| `/admin/calendar`      | CalendarManageView   |
+| `/admin/work-tracking` | WorkTrackingView     |
+| `/admin/tasks`         | TaskManageView       |
+| `/admin/blog`          | BlogManageView       |
+| `/admin/blog/new`      | BlogEditorView       |
+| `/admin/blog/:id/edit` | BlogEditorView       |
+| `/admin/comments`      | CommentManageView    |
+| `/admin/contacts`      | ContactManageView    |
 
 ---
 
@@ -300,7 +310,8 @@ export const skillService = {
   getAll: () => httpService.get<Skill[]>('/skills'),
   getById: (id: number) => httpService.get<Skill>(`/skills/${id}`),
   create: (dto: CreateSkillDto) => httpService.post<Skill>('/skills', dto),
-  update: (id: number, dto: Partial<CreateSkillDto>) => httpService.put<Skill>(`/skills/${id}`, dto),
+  update: (id: number, dto: Partial<CreateSkillDto>) =>
+    httpService.put<Skill>(`/skills/${id}`, dto),
   delete: (id: number) => httpService.delete<void>(`/skills/${id}`),
 }
 ```
@@ -308,9 +319,13 @@ export const skillService = {
 ### UserLayout 與 provide/inject
 
 `UserLayout.vue` 透過 `provide('userId', ...)` 傳遞 userId 給子頁面，子頁面用 `inject<ComputedRef<number | null>>('userId')` 取得：
+
 ```typescript
 // UserLayout.vue
-provide('userId', computed(() => publicUser.value?.id ?? null))  // ComputedRef<number | null>
+provide(
+  'userId',
+  computed(() => publicUser.value?.id ?? null),
+) // ComputedRef<number | null>
 
 // UserAboutView.vue
 const userId = inject<ComputedRef<number | null>>('userId')
@@ -341,6 +356,7 @@ const userId = inject<ComputedRef<number | null>>('userId')
 ## 最新異動記錄
 
 ### 2026/03/16（密碼重設功能）
+
 - **密碼重設功能實作完成**：
   - `src/services/authService.ts`：新增 `forgotPassword(email)` (`POST /auth/forgot-password`)、`resetPassword(token, newPassword)` (`POST /auth/reset-password`)
   - 新增 `src/views/ForgotPasswordView.vue`：Email 輸入表單 → 呼叫 `authService.forgotPassword` → 顯示確認畫面（永遠成功，防枚舉）
@@ -349,6 +365,7 @@ const userId = inject<ComputedRef<number | null>>('userId')
   - `src/views/LoginView.vue`：「忘記密碼？」從 `<a href="#">` 改為 `<router-link to="/forgot-password">`
 
 ### 2026/03/16（DB Schema 正規化前端對應）
+
 - **三項 DB Schema 正規化前端同步**：
   - **CalendarEvent.recurrenceRule**：
     - `src/types/api.ts`：`CalendarEvent` 新增 `recurrenceRule: string`
@@ -368,6 +385,7 @@ const userId = inject<ComputedRef<number | null>>('userId')
   - `src/stores/__tests__/blog.spec.ts`：mock post `tags: ''` → `tags: []`
 
 ### 2026/03/16（TOC + 測試）
+
 - **文章目錄（TOC）自動生成**：
   - `UserBlogDetailView.vue` template：`lg:flex` 雙欄佈局，右側 `w-52` sticky TOC sidebar（lg+ 顯示）
   - `UserBlogDetailView.vue` script：新增 `contentRef`、`TocItem` interface、`tocItems`/`activeId` refs；`buildToc()` 解析 h1~h3 並指定 ID；`scrollTo(id)` 平滑捲動；`IntersectionObserver` 追蹤 activeId；`onUnmounted` 清除 observer；`nextTick` 後呼叫 `buildToc`
@@ -383,12 +401,14 @@ const userId = inject<ComputedRef<number | null>>('userId')
   - `e2e/vue.spec.ts`：首頁載入驗證
 
 ### 2026/03/16（SEO）
+
 - **SEO / Open Graph 標籤**：
   - 新增 `src/composables/useSeo.ts`：`setPageSeo(meta: SeoMeta)` utility + `stripHtml()` helper（無需外部 library）；操作 `document.title`、`og:title`/`og:description`/`og:image`/`og:type`/`og:url`、Twitter Card meta
   - `src/components/layout/UserLayout.vue`：loadUser 後呼叫 `applyUserSeo()`（fullName、summary、profileImageUrl）；新增 `watch(route.path, applyUserSeo)` — 在用戶頁面內部導覽時重置 SEO（避免文章頁 SEO 殘留）
   - `src/views/user/UserBlogDetailView.vue`：post 載入後呼叫 `setPageSeo({ title, description, ogType: 'article' })`；description 優先用 `post.summary`，否則用 `stripHtml(content).slice(0, 160)`
 
 ### 2026/03/16（分頁 + 搜尋）
+
 - **分頁 + 部落格搜尋**：
   - `src/types/api.ts` 新增 `PagedResult<T>` 介面
   - `UserBlogListView.vue`：
@@ -402,6 +422,7 @@ const userId = inject<ComputedRef<number | null>>('userId')
     - 新增 `goToPage()`；留言數顯示 `totalCount`（server 回傳）
 
 ### 2026/03/16
+
 - **Refresh Token 機制（TD-04）**：
   - `src/types/api.ts`：`AuthResponse` 加 `refreshToken`/`refreshTokenExpiresAt`
   - `src/services/authService.ts`：login/register 時存 `refresh_token` 到 localStorage；`logout()` 呼叫 `POST /auth/logout` 撤銷伺服器端 token；新增 `getRefreshToken()`；`clearAuthData()` 補清 `refresh_token`
@@ -416,6 +437,7 @@ const userId = inject<ComputedRef<number | null>>('userId')
   - `DashboardView.vue`：修正 `/portfolios` → `/portfolios/user/${uid}`；`/guestbookentries` → `/guestbookentries/all`（修正作品集計數顯示所有用戶資料的 bug、留言待審核計數顯示錯誤的 bug）
 
 ### 2026/03/12
+
 - **檔案管理系統**：
   - 新增 `src/services/fileUploadService.ts`、`src/services/portfolioAttachmentService.ts`
   - `src/types/api.ts` 新增 `FileUploadType`、`FileUpload`、`PortfolioAttachment`、`CreatePortfolioAttachmentDto`
@@ -437,6 +459,7 @@ const userId = inject<ComputedRef<number | null>>('userId')
   - `src/views/user/UserPortfolioView.vue` 新增附件數量徽章
 
 ### 2026/03/11
+
 - **多使用者架構大改寫**：
   - `src/types/api.ts` 新增 `PublicUser`、`ProfileDirectory`；`PersonalProfile` 加 `themeColor`；`GuestBookEntry` 加 `targetUserId`；`AuthResponse` 新增 `userId`
   - `src/services/userDirectoryService.ts` — 新增，呼叫 `/profiles/directory`、`/users/public/{username}` 等端點
@@ -472,6 +495,7 @@ const userId = inject<ComputedRef<number | null>>('userId')
   - `loadPost()` 新增 API fallback：若 store 無資料則呼叫 `blogStore.fetchPostById(id)` 補載
 
 ### 2026/03/11
+
 - **聯絡我公開頁面補全**：
   - `src/views/user/UserContactView.vue` — 新增，直接聯絡（Email/Phone）+ 社群媒體兩區塊，使用 `inject('userId')` 模式
   - `src/router/index.ts` — 新增 `/@:username/contact` 路由（`user-contact`）
@@ -484,6 +508,7 @@ const userId = inject<ComputedRef<number | null>>('userId')
   - 移除 `editorMode` ref
 
 ### 2026/02/22
+
 - **API base URL 確認**：後端 port 為 `5037`（`.env.development` 已更新）
 - **欄位對齊驗證**：`src/types/api.ts` 中所有介面與後端 DTO 欄位確認一致（camelCase）
 - **前後端整合測試通過**：登入、技能、個人資料、部落格等核心 API 均正常回應

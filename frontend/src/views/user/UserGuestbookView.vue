@@ -35,7 +35,11 @@
             class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary,#0ea5e9)] focus:border-[var(--color-primary,#0ea5e9)] resize-none"
           ></textarea>
         </div>
-        <div v-if="submitStatus" :class="submitStatus.success ? 'text-green-600' : 'text-red-500'" class="text-sm">
+        <div
+          v-if="submitStatus"
+          :class="submitStatus.success ? 'text-green-600' : 'text-red-500'"
+          class="text-sm"
+        >
           {{ submitStatus.message }}
         </div>
         <div class="flex items-center justify-between">
@@ -45,7 +49,9 @@
             :disabled="isSubmitting"
             class="px-5 py-2 rounded-lg text-white text-sm font-medium transition-opacity hover:opacity-90 disabled:opacity-50"
             :style="{ backgroundColor: 'var(--color-primary, #0ea5e9)' }"
-          >{{ isSubmitting ? '送出中...' : '送出留言' }}</button>
+          >
+            {{ isSubmitting ? '送出中...' : '送出留言' }}
+          </button>
         </div>
       </form>
     </div>
@@ -53,7 +59,9 @@
     <!-- Comments List -->
     <div>
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-semibold text-gray-900">留言 <span class="text-gray-400 font-normal text-sm">({{ totalCount }})</span></h2>
+        <h2 class="text-lg font-semibold text-gray-900">
+          留言 <span class="text-gray-400 font-normal text-sm">({{ totalCount }})</span>
+        </h2>
       </div>
 
       <LoadingSpinner v-if="isLoading" size="medium" text="載入中..." />
@@ -69,7 +77,9 @@
             <div
               class="w-11 h-11 rounded-full flex items-center justify-center text-white text-base font-semibold flex-shrink-0"
               :style="{ background: avatarGradient(entry.name) }"
-            >{{ getInitials(entry.name) }}</div>
+            >
+              {{ getInitials(entry.name) }}
+            </div>
 
             <!-- Content -->
             <div class="flex-1 min-w-0">
@@ -80,16 +90,34 @@
               <p class="text-gray-700 text-sm whitespace-pre-wrap">{{ entry.message }}</p>
 
               <!-- Admin Reply -->
-              <div v-if="entry.adminReply" class="mt-3 pl-4 border-l-2" :style="{ borderColor: 'var(--color-primary,#0ea5e9)' }">
-                <div class="rounded-lg p-3" :style="{ backgroundColor: 'var(--color-primary-light,#e0f2fe)' }">
+              <div
+                v-if="entry.adminReply"
+                class="mt-3 pl-4 border-l-2"
+                :style="{ borderColor: 'var(--color-primary,#0ea5e9)' }"
+              >
+                <div
+                  class="rounded-lg p-3"
+                  :style="{ backgroundColor: 'var(--color-primary-light,#e0f2fe)' }"
+                >
                   <div class="flex items-center gap-2 mb-1">
                     <div
                       class="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-semibold"
                       :style="{ backgroundColor: 'var(--color-primary,#0ea5e9)' }"
-                    >A</div>
-                    <span class="text-xs font-semibold" :style="{ color: 'var(--color-primary-dark,#0c4a6e)' }">管理員回覆</span>
+                    >
+                      A
+                    </div>
+                    <span
+                      class="text-xs font-semibold"
+                      :style="{ color: 'var(--color-primary-dark,#0c4a6e)' }"
+                      >管理員回覆</span
+                    >
                   </div>
-                  <p class="text-sm whitespace-pre-wrap" :style="{ color: 'var(--color-primary-dark,#0c4a6e)' }">{{ entry.adminReply }}</p>
+                  <p
+                    class="text-sm whitespace-pre-wrap"
+                    :style="{ color: 'var(--color-primary-dark,#0c4a6e)' }"
+                  >
+                    {{ entry.adminReply }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -105,13 +133,17 @@
           :disabled="currentPage === 1"
           @click="goToPage(currentPage - 1)"
           class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        >上一頁</button>
+        >
+          上一頁
+        </button>
         <span class="text-sm text-gray-500">{{ currentPage }} / {{ totalPages }}</span>
         <button
           :disabled="currentPage === totalPages"
           @click="goToPage(currentPage + 1)"
           class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        >下一頁</button>
+        >
+          下一頁
+        </button>
       </div>
     </div>
   </div>
@@ -155,7 +187,14 @@ function avatarGradient(name: string): string {
 }
 
 function getInitials(name: string): string {
-  return name.split(/\s+/).map(w => w[0] ?? '').slice(0, 2).join('').toUpperCase() || '?'
+  return (
+    name
+      .split(/\s+/)
+      .map((w) => w[0] ?? '')
+      .slice(0, 2)
+      .join('')
+      .toUpperCase() || '?'
+  )
 }
 
 function formatDate(dateStr: string): string {
@@ -172,10 +211,13 @@ function formatDate(dateStr: string): string {
 async function load(uid: number) {
   isLoading.value = true
   try {
-    const res = await httpService.get<PagedResult<GuestBookEntry>>(`/guestbookentries/user/${uid}/paged`, {
-      page: currentPage.value,
-      pageSize: perPage,
-    })
+    const res = await httpService.get<PagedResult<GuestBookEntry>>(
+      `/guestbookentries/user/${uid}/paged`,
+      {
+        page: currentPage.value,
+        pageSize: perPage,
+      },
+    )
     if (res.success && res.data) {
       entries.value = res.data.items
       totalCount.value = res.data.totalCount
@@ -219,6 +261,13 @@ async function handleSubmit() {
   }
 }
 
-onMounted(() => { if (userId?.value) load(userId.value) })
-watch(() => userId?.value, (uid) => { if (uid) load(uid) })
+onMounted(() => {
+  if (userId?.value) load(userId.value)
+})
+watch(
+  () => userId?.value,
+  (uid) => {
+    if (uid) load(uid)
+  },
+)
 </script>

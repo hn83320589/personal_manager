@@ -2,9 +2,7 @@
   <aside :class="sidebarClasses">
     <div class="flex flex-col h-full">
       <!-- Sidebar Header -->
-      <div
-        class="flex items-center justify-between p-4 border-b border-gray-200"
-      >
+      <div class="flex items-center justify-between p-4 border-b border-gray-200">
         <h2 class="text-lg font-semibold text-gray-800">{{ title }}</h2>
         <button
           v-if="collapsible"
@@ -39,12 +37,7 @@
           </div>
 
           <!-- Regular Item -->
-          <SidebarItem
-            v-else
-            :item="item"
-            :collapsed="collapsed"
-            @click="handleItemClick"
-          />
+          <SidebarItem v-else :item="item" :collapsed="collapsed" @click="handleItemClick" />
         </div>
       </nav>
 
@@ -57,62 +50,62 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
-import SidebarItem from "./SidebarItem.vue";
+import { computed, ref } from 'vue'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
+import SidebarItem from './SidebarItem.vue'
 
 export interface MenuItem {
-  name: string;
-  type?: "item" | "group";
-  icon?: any;
-  route?: string;
-  badge?: string | number;
-  active?: boolean;
-  children?: MenuItem[];
-  onClick?: () => void;
+  name: string
+  type?: 'item' | 'group'
+  icon?: any
+  route?: string
+  badge?: string | number
+  active?: boolean
+  children?: MenuItem[]
+  onClick?: () => void
 }
 
 interface Props {
-  title?: string;
-  menuItems: MenuItem[];
-  collapsible?: boolean;
-  defaultCollapsed?: boolean;
-  width?: string;
-  position?: "left" | "right";
+  title?: string
+  menuItems: MenuItem[]
+  collapsible?: boolean
+  defaultCollapsed?: boolean
+  width?: string
+  position?: 'left' | 'right'
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  title: "選單",
+  title: '選單',
   collapsible: true,
   defaultCollapsed: false,
-  width: "256px", // w-64
-  position: "left",
-});
+  width: '256px', // w-64
+  position: 'left',
+})
 
 const emit = defineEmits<{
-  itemClick: [item: MenuItem];
-  toggleCollapse: [collapsed: boolean];
-}>();
+  itemClick: [item: MenuItem]
+  toggleCollapse: [collapsed: boolean]
+}>()
 
-const collapsed = ref(props.defaultCollapsed);
+const collapsed = ref(props.defaultCollapsed)
 
 const sidebarClasses = computed(() => {
-  const baseClasses = "bg-white border-gray-200 transition-all duration-300";
-  const positionClasses = props.position === "left" ? "border-r" : "border-l";
-  const widthClasses = collapsed.value ? "w-16" : `w-64`;
+  const baseClasses = 'bg-white border-gray-200 transition-all duration-300'
+  const positionClasses = props.position === 'left' ? 'border-r' : 'border-l'
+  const widthClasses = collapsed.value ? 'w-16' : `w-64`
 
-  return [baseClasses, positionClasses, widthClasses].join(" ");
-});
+  return [baseClasses, positionClasses, widthClasses].join(' ')
+})
 
 function toggleSidebar() {
-  collapsed.value = !collapsed.value;
-  emit("toggleCollapse", collapsed.value);
+  collapsed.value = !collapsed.value
+  emit('toggleCollapse', collapsed.value)
 }
 
 function handleItemClick(item: MenuItem) {
   if (item.onClick) {
-    item.onClick();
+    item.onClick()
   }
-  emit("itemClick", item);
+  emit('itemClick', item)
 }
 </script>

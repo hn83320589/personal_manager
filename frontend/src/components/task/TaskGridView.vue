@@ -26,7 +26,7 @@
         :class="{
           'border-l-4 border-l-red-500': isOverdue(task),
           'border-l-4 border-l-yellow-500': isDueSoon(task) && !isOverdue(task),
-          'opacity-70': task.status === 'Completed'
+          'opacity-70': task.status === 'Completed',
         }"
       >
         <!-- Card Header -->
@@ -53,7 +53,7 @@
               'flex items-center justify-center w-6 h-6 rounded border-2 transition-colors',
               task.status === 'Completed'
                 ? 'bg-green-500 border-green-500 text-white'
-                : 'border-gray-300 hover:border-green-500'
+                : 'border-gray-300 hover:border-green-500',
             ]"
           >
             <CheckIcon v-if="task.status === 'Completed'" class="w-4 h-4" />
@@ -62,10 +62,12 @@
 
         <!-- Task Content -->
         <div class="space-y-3">
-          <h3 :class="[
-            'text-lg font-semibold line-clamp-2',
-            task.status === 'Completed' ? 'line-through text-gray-500' : 'text-gray-900'
-          ]">
+          <h3
+            :class="[
+              'text-lg font-semibold line-clamp-2',
+              task.status === 'Completed' ? 'line-through text-gray-500' : 'text-gray-900',
+            ]"
+          >
             {{ task.title }}
           </h3>
 
@@ -79,10 +81,16 @@
           <div v-if="task.dueDate" class="flex items-center text-sm text-gray-500">
             <CalendarDaysIcon class="w-4 h-4 mr-1" />
             {{ formatDate(task.dueDate) }}
-            <span v-if="isOverdue(task)" class="ml-2 px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">
+            <span
+              v-if="isOverdue(task)"
+              class="ml-2 px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full"
+            >
               逾期
             </span>
-            <span v-else-if="isDueSoon(task)" class="ml-2 px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">
+            <span
+              v-else-if="isDueSoon(task)"
+              class="ml-2 px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full"
+            >
               即將到期
             </span>
           </div>
@@ -129,9 +137,7 @@
     <div v-else class="text-center py-12">
       <Squares2X2Icon class="mx-auto h-12 w-12 text-gray-400" />
       <h3 class="mt-2 text-sm font-medium text-gray-900">沒有找到待辦事項</h3>
-      <p class="mt-1 text-sm text-gray-500">
-        開始建立您的第一個待辦事項吧
-      </p>
+      <p class="mt-1 text-sm text-gray-500">開始建立您的第一個待辦事項吧</p>
     </div>
   </div>
 </template>
@@ -143,7 +149,7 @@ import {
   PencilIcon,
   TrashIcon,
   DocumentDuplicateIcon,
-  Squares2X2Icon
+  Squares2X2Icon,
 } from '@heroicons/vue/24/outline'
 import type { TodoItem } from '@/types/api'
 import BaseButton from '@/components/ui/BaseButton.vue'
@@ -156,7 +162,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  loading: false
+  loading: false,
 })
 
 // Emits
@@ -207,43 +213,42 @@ function getStatusStyle(status: string): string {
 
 function formatDate(dateString: string | undefined): string {
   if (!dateString) return ''
-  
+
   const date = new Date(dateString)
   const now = new Date()
   const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-  
+
   if (diffDays === 0) return '今天'
   if (diffDays === 1) return '明天'
   if (diffDays === -1) return '昨天'
-  
+
   return date.toLocaleDateString('zh-TW', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 
 function isOverdue(task: TodoItem): boolean {
   if (!task.dueDate || task.status === 'Completed') return false
-  
+
   const dueDate = new Date(task.dueDate)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  
+
   return dueDate < today
 }
 
 function isDueSoon(task: TodoItem): boolean {
   if (!task.dueDate || task.status === 'Completed') return false
-  
+
   const dueDate = new Date(task.dueDate)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  
+
   const diffDays = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-  
+
   return diffDays >= 0 && diffDays <= 2 // Due within 2 days
 }
-
 </script>
 
 <style scoped>

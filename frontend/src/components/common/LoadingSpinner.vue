@@ -1,7 +1,9 @@
 <template>
   <div class="flex items-center justify-center" :class="containerClass">
     <div class="animate-spin rounded-full border-4 border-gray-200" :class="spinnerClass">
-      <div class="h-full w-full rounded-full border-4 border-primary-500 border-r-transparent"></div>
+      <div
+        class="h-full w-full rounded-full border-4 border-primary-500 border-r-transparent"
+      ></div>
     </div>
     <span v-if="text" class="ml-3 text-gray-600">{{ text }}</span>
   </div>

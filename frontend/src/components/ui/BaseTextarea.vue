@@ -4,7 +4,7 @@
       {{ label }}
       <span v-if="required" class="text-red-500 ml-1">*</span>
     </label>
-    
+
     <div class="relative">
       <textarea
         :id="textareaId"
@@ -20,18 +20,21 @@
         @blur="handleBlur"
         @focus="handleFocus"
       />
-      
+
       <div v-if="hasError" class="absolute top-3 right-3 pointer-events-none">
         <ExclamationCircleIcon class="h-5 w-5 text-red-500" />
       </div>
     </div>
-    
-    <div v-if="showCharacterCount || hasError || helpText" class="mt-1 flex justify-between items-start">
+
+    <div
+      v-if="showCharacterCount || hasError || helpText"
+      class="mt-1 flex justify-between items-start"
+    >
       <div class="flex-1">
         <p v-if="hasError" class="text-sm text-red-600">{{ errorMessage }}</p>
         <p v-else-if="helpText" class="text-sm text-gray-500">{{ helpText }}</p>
       </div>
-      
+
       <div v-if="showCharacterCount && maxLength" class="text-xs text-gray-400 ml-2">
         {{ characterCount }}/{{ maxLength }}
       </div>
@@ -64,7 +67,7 @@ const props = withDefaults(defineProps<Props>(), {
   readonly: false,
   rows: 4,
   showCharacterCount: false,
-  resize: 'vertical'
+  resize: 'vertical',
 })
 
 const emit = defineEmits<{
@@ -79,33 +82,32 @@ const errorMessage = computed(() => props.error)
 const characterCount = computed(() => props.modelValue.length)
 
 const textareaClasses = computed(() => {
-  const baseClasses = 'block w-full px-3 py-2 border rounded-lg text-sm placeholder-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2'
-  
+  const baseClasses =
+    'block w-full px-3 py-2 border rounded-lg text-sm placeholder-gray-400 transition-colors duration-200 focus:outline-none focus:ring-2'
+
   const stateClasses = hasError.value
     ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
     : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500'
-    
+
   const disabledClasses = props.disabled
     ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
     : 'bg-white text-gray-900'
-    
-  const readonlyClasses = props.readonly
-    ? 'bg-gray-50 cursor-default'
-    : ''
-    
+
+  const readonlyClasses = props.readonly ? 'bg-gray-50 cursor-default' : ''
+
   const resizeClasses = {
     none: 'resize-none',
     vertical: 'resize-y',
     horizontal: 'resize-x',
-    both: 'resize'
+    both: 'resize',
   }
-  
+
   return [
     baseClasses,
     stateClasses,
     disabledClasses,
     readonlyClasses,
-    resizeClasses[props.resize]
+    resizeClasses[props.resize],
   ].join(' ')
 })
 

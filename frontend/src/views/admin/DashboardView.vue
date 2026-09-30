@@ -84,7 +84,9 @@
             class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
             @click="router.push(`/admin/blog`)"
           >
-            <div class="flex-shrink-0 w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+            <div
+              class="flex-shrink-0 w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center"
+            >
               <DocumentTextIcon class="w-5 h-5 text-blue-500" />
             </div>
             <div class="flex-1 min-w-0">
@@ -94,14 +96,20 @@
             <span
               class="text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0"
               :class="statusClass(post.status)"
-            >{{ statusLabel(post.status) }}</span>
+              >{{ statusLabel(post.status) }}</span
+            >
           </div>
         </div>
 
         <p v-else class="text-sm text-gray-400 py-4 text-center">尚無文章</p>
 
         <template #footer>
-          <BaseButton variant="outline" size="small" class="w-full" @click="router.push('/admin/blog')">
+          <BaseButton
+            variant="outline"
+            size="small"
+            class="w-full"
+            @click="router.push('/admin/blog')"
+          >
             查看所有文章
           </BaseButton>
         </template>
@@ -151,11 +159,15 @@
           </div>
           <div>
             <h4 class="text-sm font-medium text-gray-500">帳號建立日期</h4>
-            <p class="text-lg font-semibold text-gray-900">{{ formatDate(authStore.user?.createdAt) }}</p>
+            <p class="text-lg font-semibold text-gray-900">
+              {{ formatDate(authStore.user?.createdAt) }}
+            </p>
           </div>
           <div>
             <h4 class="text-sm font-medium text-gray-500">帳號狀態</h4>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+            >
               已啟用
             </span>
           </div>
@@ -176,7 +188,7 @@ import {
   PlusIcon,
   FolderPlusIcon,
   CalendarDaysIcon,
-  CogIcon
+  CogIcon,
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
 import httpService from '@/services/http'
@@ -223,7 +235,11 @@ function relativeTime(dateStr?: string): string {
 
 function formatDate(dateStr?: string): string {
   if (!dateStr) return '—'
-  return new Date(dateStr).toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
+  return new Date(dateStr).toLocaleDateString('zh-TW', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
 }
 
 onMounted(async () => {
@@ -251,11 +267,13 @@ onMounted(async () => {
     }
 
     if (commentsRes.success) {
-      stats.value.pendingComments = (commentsRes.data || []).filter(c => !c.isApproved).length
+      stats.value.pendingComments = (commentsRes.data || []).filter((c) => !c.isApproved).length
     }
 
     if (todosRes.success) {
-      stats.value.pendingTodos = (todosRes.data || []).filter(t => t.status !== 'Completed').length
+      stats.value.pendingTodos = (todosRes.data || []).filter(
+        (t) => t.status !== 'Completed',
+      ).length
     }
   } catch {
     // ignore

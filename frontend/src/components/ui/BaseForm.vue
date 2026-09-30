@@ -1,19 +1,14 @@
 <template>
   <form :class="formClasses" @submit="handleSubmit">
     <slot />
-    
+
     <div v-if="showActions" :class="actionsClasses">
       <slot name="actions" :submit="handleSubmit" :reset="handleReset">
         <div class="flex justify-end space-x-3">
-          <BaseButton
-            v-if="showResetButton"
-            type="button"
-            variant="secondary"
-            @click="handleReset"
-          >
+          <BaseButton v-if="showResetButton" type="button" variant="secondary" @click="handleReset">
             {{ resetText }}
           </BaseButton>
-          
+
           <BaseButton
             type="submit"
             :variant="submitVariant"
@@ -53,7 +48,7 @@ const props = withDefaults(defineProps<Props>(), {
   submitVariant: 'primary',
   loading: false,
   disabled: false,
-  spacing: 'normal'
+  spacing: 'normal',
 })
 
 const emit = defineEmits<{
@@ -63,24 +58,20 @@ const emit = defineEmits<{
 
 const formClasses = computed(() => {
   const baseClasses = 'w-full'
-  
+
   const layoutClasses = {
     vertical: 'space-y-4',
     horizontal: 'grid grid-cols-1 md:grid-cols-2 gap-4',
-    inline: 'flex flex-wrap items-end gap-4'
+    inline: 'flex flex-wrap items-end gap-4',
   }
-  
+
   const spacingClasses = {
     compact: props.layout === 'vertical' ? 'space-y-2' : 'gap-2',
     normal: props.layout === 'vertical' ? 'space-y-4' : 'gap-4',
-    relaxed: props.layout === 'vertical' ? 'space-y-6' : 'gap-6'
+    relaxed: props.layout === 'vertical' ? 'space-y-6' : 'gap-6',
   }
-  
-  return [
-    baseClasses,
-    layoutClasses[props.layout],
-    spacingClasses[props.spacing]
-  ].join(' ')
+
+  return [baseClasses, layoutClasses[props.layout], spacingClasses[props.spacing]].join(' ')
 })
 
 const actionsClasses = computed(() => {

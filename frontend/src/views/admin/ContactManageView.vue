@@ -47,7 +47,9 @@
           <div>
             <div class="flex items-center space-x-2">
               <span class="font-medium text-gray-900">{{ contact.label || contact.type }}</span>
-              <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{{ contact.type }}</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{{
+                contact.type
+              }}</span>
               <span
                 v-if="!contact.isPublic"
                 class="text-xs px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700"
@@ -62,7 +64,12 @@
           <BaseButton variant="outline" size="small" @click="openEdit(contact)">
             <PencilIcon class="w-4 h-4" />
           </BaseButton>
-          <BaseButton variant="outline" size="small" class="text-red-600 hover:text-red-700" @click="confirmDelete(contact)">
+          <BaseButton
+            variant="outline"
+            size="small"
+            class="text-red-600 hover:text-red-700"
+            @click="confirmDelete(contact)"
+          >
             <TrashIcon class="w-4 h-4" />
           </BaseButton>
         </div>
@@ -85,19 +92,36 @@
         </div>
         <div>
           <label class="form-label">顯示名稱</label>
-          <input v-model="form.label" type="text" class="form-input mt-1" placeholder="例：個人 Email、LinkedIn 主頁" />
+          <input
+            v-model="form.label"
+            type="text"
+            class="form-input mt-1"
+            placeholder="例：個人 Email、LinkedIn 主頁"
+          />
         </div>
         <div>
           <label class="form-label">值 <span class="text-red-500">*</span></label>
-          <input v-model="form.value" type="text" class="form-input mt-1" :placeholder="valuePlaceholder" />
-          <p class="mt-1 text-xs text-gray-500">Email 請填完整地址，電話請含國碼，社群請填完整 URL</p>
+          <input
+            v-model="form.value"
+            type="text"
+            class="form-input mt-1"
+            :placeholder="valuePlaceholder"
+          />
+          <p class="mt-1 text-xs text-gray-500">
+            Email 請填完整地址，電話請含國碼，社群請填完整 URL
+          </p>
         </div>
         <div>
           <label class="form-label">排序</label>
           <input v-model.number="form.sortOrder" type="number" class="form-input mt-1" min="0" />
         </div>
         <div class="flex items-center">
-          <input id="isPublic" v-model="form.isPublic" type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+          <input
+            id="isPublic"
+            v-model="form.isPublic"
+            type="checkbox"
+            class="h-4 w-4 text-blue-600 border-gray-300 rounded"
+          />
           <label for="isPublic" class="ml-2 text-sm text-gray-700">公開顯示</label>
         </div>
       </div>
@@ -110,13 +134,20 @@
     </BaseModal>
 
     <!-- Delete Confirm Modal -->
-    <BaseModal :show="showDeleteModal" @close="showDeleteModal = false" title="確認刪除" max-width="sm">
+    <BaseModal
+      :show="showDeleteModal"
+      @close="showDeleteModal = false"
+      title="確認刪除"
+      max-width="sm"
+    >
       <p class="text-sm text-gray-600">
         確定要刪除「{{ deletingContact?.label || deletingContact?.type }}」嗎？此操作無法復原。
       </p>
       <div class="mt-6 flex justify-end space-x-3">
         <BaseButton variant="outline" @click="showDeleteModal = false">取消</BaseButton>
-        <BaseButton variant="primary" class="bg-red-600 hover:bg-red-700" @click="deleteContact">刪除</BaseButton>
+        <BaseButton variant="primary" class="bg-red-600 hover:bg-red-700" @click="deleteContact"
+          >刪除</BaseButton
+        >
       </div>
     </BaseModal>
   </AdminLayout>
@@ -142,7 +173,17 @@ const showDeleteModal = ref(false)
 const editingContact = ref<ContactMethod | null>(null)
 const deletingContact = ref<ContactMethod | null>(null)
 
-const contactTypes: ContactType[] = ['Email', 'Phone', 'LinkedIn', 'GitHub', 'Facebook', 'Twitter', 'Instagram', 'Discord', 'Other']
+const contactTypes: ContactType[] = [
+  'Email',
+  'Phone',
+  'LinkedIn',
+  'GitHub',
+  'Facebook',
+  'Twitter',
+  'Instagram',
+  'Discord',
+  'Other',
+]
 
 const form = ref({
   type: 'Email' as ContactType,
@@ -154,14 +195,18 @@ const form = ref({
 })
 
 const typeColorMap: Record<string, string> = {
-  Email: '#ea4335', Phone: '#34a853', LinkedIn: '#0077b5', GitHub: '#333',
-  Facebook: '#1877f2', Twitter: '#1da1f2', Instagram: '#e1306c',
-  Discord: '#5865f2', Other: '#6b7280',
+  Email: '#ea4335',
+  Phone: '#34a853',
+  LinkedIn: '#0077b5',
+  GitHub: '#333',
+  Facebook: '#1877f2',
+  Twitter: '#1da1f2',
+  Instagram: '#e1306c',
+  Discord: '#5865f2',
+  Other: '#6b7280',
 }
 
-const sortedContacts = computed(() =>
-  [...contacts.value].sort((a, b) => a.sortOrder - b.sortOrder)
-)
+const sortedContacts = computed(() => [...contacts.value].sort((a, b) => a.sortOrder - b.sortOrder))
 
 const isFormValid = computed(() => form.value.value.trim().length > 0)
 
@@ -197,7 +242,14 @@ async function fetchContacts() {
 
 function openCreate() {
   editingContact.value = null
-  form.value = { type: 'Email', label: '', value: '', icon: '', isPublic: true, sortOrder: contacts.value.length }
+  form.value = {
+    type: 'Email',
+    label: '',
+    value: '',
+    icon: '',
+    isPublic: true,
+    sortOrder: contacts.value.length,
+  }
   showModal.value = true
 }
 
@@ -225,7 +277,7 @@ async function submit() {
   if (editingContact.value) {
     const res = await contactMethodService.update(editingContact.value.id, form.value)
     if (res.success) {
-      const idx = contacts.value.findIndex(c => c.id === editingContact.value!.id)
+      const idx = contacts.value.findIndex((c) => c.id === editingContact.value!.id)
       if (idx !== -1) contacts.value[idx] = res.data
     }
   } else {
@@ -244,7 +296,7 @@ async function deleteContact() {
   if (!deletingContact.value) return
   const res = await contactMethodService.delete(deletingContact.value.id)
   if (res.success) {
-    contacts.value = contacts.value.filter(c => c.id !== deletingContact.value!.id)
+    contacts.value = contacts.value.filter((c) => c.id !== deletingContact.value!.id)
   }
   showDeleteModal.value = false
   deletingContact.value = null

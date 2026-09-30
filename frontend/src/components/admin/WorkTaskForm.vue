@@ -19,9 +19,7 @@
 
       <!-- Description -->
       <div class="md:col-span-2">
-        <label for="description" class="block text-sm font-medium text-gray-700">
-          任務描述
-        </label>
+        <label for="description" class="block text-sm font-medium text-gray-700"> 任務描述 </label>
         <BaseTextarea
           id="description"
           v-model="formData.description"
@@ -66,9 +64,7 @@
 
       <!-- Project -->
       <div>
-        <label for="project" class="block text-sm font-medium text-gray-700">
-          關聯專案
-        </label>
+        <label for="project" class="block text-sm font-medium text-gray-700"> 關聯專案 </label>
         <select
           id="project"
           v-model="formData.projectId"
@@ -81,9 +77,7 @@
 
       <!-- Tags -->
       <div>
-        <label for="tags" class="block text-sm font-medium text-gray-700">
-          標籤
-        </label>
+        <label for="tags" class="block text-sm font-medium text-gray-700"> 標籤 </label>
         <BaseInput
           id="tags"
           v-model="formData.tags"
@@ -99,15 +93,8 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Due Date -->
       <div>
-        <label for="dueDate" class="block text-sm font-medium text-gray-700">
-          到期日期
-        </label>
-        <BaseInput
-          id="dueDate"
-          v-model="formData.dueDate"
-          type="date"
-          class="mt-1"
-        />
+        <label for="dueDate" class="block text-sm font-medium text-gray-700"> 到期日期 </label>
+        <BaseInput id="dueDate" v-model="formData.dueDate" type="date" class="mt-1" />
       </div>
 
       <!-- Estimated Hours -->
@@ -139,7 +126,7 @@
           step="0.5"
           placeholder="0"
           class="mt-1"
-          :disabled="!task" 
+          :disabled="!task"
         />
         <p v-if="!task" class="mt-1 text-xs text-gray-500">新任務建立後可編輯</p>
       </div>
@@ -154,40 +141,25 @@
           <span class="text-sm font-medium">{{ progressPercentage }}%</span>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-3">
-          <div 
+          <div
             class="bg-blue-600 h-3 rounded-full transition-all duration-300"
             :style="{ width: `${progressPercentage}%` }"
           ></div>
         </div>
         <div class="mt-2 grid grid-cols-2 gap-4 text-sm">
-          <div class="text-gray-600">
-            預估: {{ formData.estimatedHours || 0 }} 小時
-          </div>
-          <div class="text-gray-600">
-            實際: {{ formData.actualHours || 0 }} 小時
-          </div>
+          <div class="text-gray-600">預估: {{ formData.estimatedHours || 0 }} 小時</div>
+          <div class="text-gray-600">實際: {{ formData.actualHours || 0 }} 小時</div>
         </div>
       </div>
     </div>
 
     <!-- Form Actions -->
     <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-      <BaseButton
-        type="button"
-        variant="outline"
-        @click="$emit('cancel')"
-      >
-        取消
-      </BaseButton>
-      <BaseButton
-        type="submit"
-        variant="primary"
-        :disabled="!isFormValid"
-      >
+      <BaseButton type="button" variant="outline" @click="$emit('cancel')"> 取消 </BaseButton>
+      <BaseButton type="submit" variant="primary" :disabled="!isFormValid">
         {{ task ? '更新任務' : '建立任務' }}
       </BaseButton>
     </div>
-
   </form>
 </template>
 
@@ -206,7 +178,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  projects: () => []
+  projects: () => [],
 })
 
 // Emits
@@ -224,7 +196,7 @@ const formData = ref({
   estimatedHours: 0,
   actualHours: 0,
   projectId: null as number | null,
-  tags: ''
+  tags: '',
 })
 
 // Constants
@@ -235,29 +207,31 @@ const taskStatuses = [
   { value: 'Testing', label: '測試中' },
   { value: 'Completed', label: '已完成' },
   { value: 'OnHold', label: '暫停' },
-  { value: 'Cancelled', label: '已取消' }
+  { value: 'Cancelled', label: '已取消' },
 ]
 
 const taskPriorities = [
   { value: 'Low', label: '低' },
   { value: 'Medium', label: '中' },
   { value: 'High', label: '高' },
-  { value: 'Urgent', label: '緊急' }
+  { value: 'Urgent', label: '緊急' },
 ]
 
 // Computed
 const isFormValid = computed(() => {
-  return formData.value.title.trim().length > 0 &&
-         formData.value.status !== null &&
-         formData.value.priority !== null
+  return (
+    formData.value.title.trim().length > 0 &&
+    formData.value.status !== null &&
+    formData.value.priority !== null
+  )
 })
 
 const progressPercentage = computed(() => {
   const estimated = formData.value.estimatedHours || 0
   const actual = formData.value.actualHours || 0
-  
+
   if (estimated === 0) return 0
-  
+
   return Math.min(Math.round((actual / estimated) * 100), 100)
 })
 
@@ -274,7 +248,7 @@ function handleSubmit() {
     estimatedHours: formData.value.estimatedHours || undefined,
     actualHours: formData.value.actualHours || undefined,
     projectId: formData.value.projectId ?? undefined,
-    tags: formData.value.tags?.trim() || undefined
+    tags: formData.value.tags?.trim() || undefined,
   }
 
   emit('save', submitData)
@@ -290,28 +264,32 @@ function resetForm() {
     estimatedHours: 0,
     actualHours: 0,
     projectId: null,
-    tags: ''
+    tags: '',
   }
 }
 
 // Watch for task changes
-watch(() => props.task, (newTask) => {
-  if (newTask) {
-    formData.value = {
-      title: newTask.title || '',
-      description: newTask.description || '',
-      status: newTask.status || 'Pending',
-      priority: newTask.priority || 'Medium',
-      dueDate: newTask.dueDate || '',
-      estimatedHours: newTask.estimatedHours || 0,
-      actualHours: newTask.actualHours || 0,
-      projectId: newTask.projectId ?? null,
-      tags: newTask.tags || ''
+watch(
+  () => props.task,
+  (newTask) => {
+    if (newTask) {
+      formData.value = {
+        title: newTask.title || '',
+        description: newTask.description || '',
+        status: newTask.status || 'Pending',
+        priority: newTask.priority || 'Medium',
+        dueDate: newTask.dueDate || '',
+        estimatedHours: newTask.estimatedHours || 0,
+        actualHours: newTask.actualHours || 0,
+        projectId: newTask.projectId ?? null,
+        tags: newTask.tags || '',
+      }
+    } else {
+      resetForm()
     }
-  } else {
-    resetForm()
-  }
-}, { immediate: true })
+  },
+  { immediate: true },
+)
 </script>
 
 <style scoped>

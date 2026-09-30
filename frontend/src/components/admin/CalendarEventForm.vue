@@ -17,9 +17,7 @@
 
     <!-- Description -->
     <div>
-      <label for="description" class="block text-sm font-medium text-gray-700">
-        事件描述
-      </label>
+      <label for="description" class="block text-sm font-medium text-gray-700"> 事件描述 </label>
       <BaseTextarea
         id="description"
         v-model="formData.description"
@@ -34,7 +32,7 @@
       <!-- Start Date and Time -->
       <div class="space-y-4">
         <h3 class="text-sm font-medium text-gray-700">開始時間</h3>
-        
+
         <div>
           <label for="startDate" class="block text-sm font-medium text-gray-700">
             開始日期 <span class="text-red-500">*</span>
@@ -65,11 +63,9 @@
       <!-- End Date and Time -->
       <div class="space-y-4">
         <h3 class="text-sm font-medium text-gray-700">結束時間</h3>
-        
+
         <div>
-          <label for="endDate" class="block text-sm font-medium text-gray-700">
-            結束日期
-          </label>
+          <label for="endDate" class="block text-sm font-medium text-gray-700"> 結束日期 </label>
           <input
             id="endDate"
             v-model="formData.endDate"
@@ -77,15 +73,11 @@
             :min="formData.startDate"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
-          <p class="mt-1 text-xs text-gray-500">
-            留空表示單日事件
-          </p>
+          <p class="mt-1 text-xs text-gray-500">留空表示單日事件</p>
         </div>
 
         <div v-if="!formData.isAllDay && formData.endDate">
-          <label for="endTime" class="block text-sm font-medium text-gray-700">
-            結束時間
-          </label>
+          <label for="endTime" class="block text-sm font-medium text-gray-700"> 結束時間 </label>
           <input
             id="endTime"
             v-model="formData.endTime"
@@ -104,16 +96,12 @@
         type="checkbox"
         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
       />
-      <label for="isAllDay" class="ml-2 block text-sm text-gray-700">
-        全天事件
-      </label>
+      <label for="isAllDay" class="ml-2 block text-sm text-gray-700"> 全天事件 </label>
     </div>
 
     <!-- Event Color -->
     <div>
-      <label class="block text-sm font-medium text-gray-700">
-        事件顏色
-      </label>
+      <label class="block text-sm font-medium text-gray-700"> 事件顏色 </label>
       <div class="mt-2 flex flex-wrap gap-3">
         <div
           v-for="color in eventColors"
@@ -123,12 +111,12 @@
             'w-8 h-8 rounded-full cursor-pointer border-2 transition-all',
             formData.color === color.value
               ? 'border-gray-900 scale-110'
-              : 'border-gray-300 hover:border-gray-500'
+              : 'border-gray-300 hover:border-gray-500',
           ]"
           :style="{ backgroundColor: color.value }"
           :title="color.name"
         ></div>
-        
+
         <!-- Custom Color Input -->
         <div class="relative">
           <input
@@ -139,16 +127,12 @@
           />
         </div>
       </div>
-      <p class="mt-1 text-xs text-gray-500">
-        選擇事件在行事曆中的顯示顏色
-      </p>
+      <p class="mt-1 text-xs text-gray-500">選擇事件在行事曆中的顯示顏色</p>
     </div>
 
     <!-- Recurrence (Future feature) -->
     <div>
-      <label class="block text-sm font-medium text-gray-700">
-        重複設定
-      </label>
+      <label class="block text-sm font-medium text-gray-700"> 重複設定 </label>
       <select
         v-model="formData.recurrenceRule"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -163,9 +147,7 @@
 
     <!-- Reminders -->
     <div>
-      <label class="block text-sm font-medium text-gray-700">
-        提醒設定
-      </label>
+      <label class="block text-sm font-medium text-gray-700"> 提醒設定 </label>
       <div class="mt-2 space-y-2">
         <div
           v-for="(reminder, index) in formData.reminders"
@@ -200,13 +182,7 @@
             <TrashIcon class="w-4 h-4" />
           </BaseButton>
         </div>
-        <BaseButton
-          type="button"
-          variant="outline"
-          size="small"
-          @click="addReminder"
-          class="mt-2"
-        >
+        <BaseButton type="button" variant="outline" size="small" @click="addReminder" class="mt-2">
           <PlusIcon class="w-4 h-4 mr-2" />
           新增提醒
         </BaseButton>
@@ -216,7 +192,7 @@
     <!-- Visibility Settings -->
     <div class="space-y-4 pt-4 border-t border-gray-200">
       <h3 class="text-sm font-medium text-gray-700">顯示設定</h3>
-      
+
       <div class="flex items-center justify-between">
         <div>
           <label class="text-sm font-medium text-gray-700">公開顯示</label>
@@ -233,18 +209,8 @@
 
     <!-- Form Actions -->
     <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-      <BaseButton
-        type="button"
-        variant="outline"
-        @click="$emit('cancel')"
-      >
-        取消
-      </BaseButton>
-      <BaseButton
-        type="submit"
-        variant="primary"
-        :loading="loading"
-      >
+      <BaseButton type="button" variant="outline" @click="$emit('cancel')"> 取消 </BaseButton>
+      <BaseButton type="submit" variant="primary" :loading="loading">
         {{ event ? '更新事件' : '建立事件' }}
       </BaseButton>
     </div>
@@ -265,7 +231,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  event: null
+  event: null,
 })
 
 // Emits
@@ -287,8 +253,8 @@ const formData = ref({
   isAllDay: false,
   color: '#3B82F6',
   recurrenceRule: '',
-  reminders: [] as Array<{ value: number, type: string }>,
-  isPublic: false
+  reminders: [] as Array<{ value: number; type: string }>,
+  isPublic: false,
 })
 
 // Constants
@@ -301,35 +267,44 @@ const eventColors = [
   { name: '粉色', value: '#EC4899' },
   { name: '橙色', value: '#F97316' },
   { name: '青色', value: '#06B6D4' },
-  { name: '灰色', value: '#6B7280' }
+  { name: '灰色', value: '#6B7280' },
 ]
 
 // Watchers
-watch(() => formData.value.isAllDay, (newValue) => {
-  if (newValue) {
-    formData.value.startTime = ''
-    formData.value.endTime = ''
-  } else if (!formData.value.startTime) {
-    formData.value.startTime = '09:00'
-  }
-})
+watch(
+  () => formData.value.isAllDay,
+  (newValue) => {
+    if (newValue) {
+      formData.value.startTime = ''
+      formData.value.endTime = ''
+    } else if (!formData.value.startTime) {
+      formData.value.startTime = '09:00'
+    }
+  },
+)
 
-watch(() => formData.value.startDate, (newValue) => {
-  if (newValue && !formData.value.endDate) {
-    formData.value.endDate = newValue
-  }
-})
+watch(
+  () => formData.value.startDate,
+  (newValue) => {
+    if (newValue && !formData.value.endDate) {
+      formData.value.endDate = newValue
+    }
+  },
+)
 
-watch(() => formData.value.endDate, (newValue) => {
-  if (!newValue) {
-    formData.value.endTime = ''
-  } else if (!formData.value.endTime && !formData.value.isAllDay && formData.value.startTime) {
-    // Set default end time 1 hour after start time
-    const [hours, minutes] = formData.value.startTime.split(':')
-    const endHour = (parseInt(hours) + 1).toString().padStart(2, '0')
-    formData.value.endTime = `${endHour}:${minutes}`
-  }
-})
+watch(
+  () => formData.value.endDate,
+  (newValue) => {
+    if (!newValue) {
+      formData.value.endTime = ''
+    } else if (!formData.value.endTime && !formData.value.isAllDay && formData.value.startTime) {
+      // Set default end time 1 hour after start time
+      const [hours, minutes] = formData.value.startTime.split(':')
+      const endHour = (parseInt(hours) + 1).toString().padStart(2, '0')
+      formData.value.endTime = `${endHour}:${minutes}`
+    }
+  },
+)
 
 // Methods
 function addReminder() {
@@ -342,29 +317,29 @@ function removeReminder(index: number) {
 
 async function handleSubmit() {
   loading.value = true
-  
+
   try {
     const submitData = { ...formData.value }
-    
+
     // Handle all-day events
     if (submitData.isAllDay) {
       submitData.startTime = '00:00'
       submitData.endTime = '23:59'
     }
-    
+
     // Ensure end date is set for single-day events
     if (!submitData.endDate) {
       submitData.endDate = submitData.startDate
     }
-    
+
     // Combine date and time into ISO strings for API
     const startTimeISO = submitData.isAllDay
       ? `${submitData.startDate}T00:00:00`
       : `${submitData.startDate}T${submitData.startTime}:00`
     const endTimeISO = submitData.endDate
-      ? (submitData.isAllDay
-          ? `${submitData.endDate}T23:59:00`
-          : `${submitData.endDate}T${submitData.endTime || '23:59'}:00`)
+      ? submitData.isAllDay
+        ? `${submitData.endDate}T23:59:00`
+        : `${submitData.endDate}T${submitData.endTime || '23:59'}:00`
       : undefined
 
     // Prepare final data for API
@@ -376,9 +351,9 @@ async function handleSubmit() {
       isAllDay: submitData.isAllDay,
       color: submitData.color,
       recurrenceRule: submitData.recurrenceRule || '',
-      isPublic: submitData.isPublic
+      isPublic: submitData.isPublic,
     }
-    
+
     emit('save', finalData)
   } catch (error) {
     console.error('Submit error:', error)
@@ -424,7 +399,7 @@ function initializeForm() {
       color: '#3B82F6',
       recurrenceRule: '',
       reminders: [],
-      isPublic: false
+      isPublic: false,
     }
   }
 }
@@ -435,7 +410,11 @@ onMounted(() => {
 })
 
 // Watch for event changes
-watch(() => props.event, () => {
-  initializeForm()
-}, { immediate: true })
+watch(
+  () => props.event,
+  () => {
+    initializeForm()
+  },
+  { immediate: true },
+)
 </script>

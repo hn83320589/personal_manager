@@ -6,7 +6,7 @@ export const fileUploadService = {
 
   upload: (formData: FormData) => httpService.uploadFile<FileUpload>('/fileuploads', formData),
 
-  delete: (id: number) => httpService.delete<void>(`/fileuploads/${id}`)
+  delete: (id: number) => httpService.delete<void>(`/fileuploads/${id}`),
 }
 
 export default fileUploadService

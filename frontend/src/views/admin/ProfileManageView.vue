@@ -57,21 +57,22 @@
                   @click="profileForm.themeColor = opt.key"
                   :title="opt.label"
                   class="w-9 h-9 rounded-full border-4 transition-all"
-                  :style="{ backgroundColor: opt.color, borderColor: profileForm.themeColor === opt.key ? opt.color : 'transparent', outline: profileForm.themeColor === opt.key ? '2px solid ' + opt.color : 'none', outlineOffset: '2px' }"
+                  :style="{
+                    backgroundColor: opt.color,
+                    borderColor: profileForm.themeColor === opt.key ? opt.color : 'transparent',
+                    outline: profileForm.themeColor === opt.key ? '2px solid ' + opt.color : 'none',
+                    outlineOffset: '2px',
+                  }"
                 ></button>
               </div>
-              <p class="text-xs text-gray-500">目前：{{ themeOptions.find(t => t.key === profileForm.themeColor)?.label }}</p>
+              <p class="text-xs text-gray-500">
+                目前：{{ themeOptions.find((t) => t.key === profileForm.themeColor)?.label }}
+              </p>
             </div>
 
             <div class="flex justify-end space-x-4 pt-6">
-              <BaseButton variant="outline" type="button" @click="resetForm">
-                重置
-              </BaseButton>
-              <BaseButton
-                type="submit"
-                :loading="isSaving"
-                :disabled="!isFormValid"
-              >
+              <BaseButton variant="outline" type="button" @click="resetForm"> 重置 </BaseButton>
+              <BaseButton type="submit" :loading="isSaving" :disabled="!isFormValid">
                 儲存變更
               </BaseButton>
             </div>
@@ -86,13 +87,21 @@
             <div class="text-center">
               <div
                 class="mx-auto h-24 w-24 rounded-full flex items-center justify-center text-white text-3xl font-semibold"
-                :style="{ backgroundColor: themeOptions.find(t => t.key === profileForm.themeColor)?.color ?? '#0ea5e9' }"
+                :style="{
+                  backgroundColor:
+                    themeOptions.find((t) => t.key === profileForm.themeColor)?.color ?? '#0ea5e9',
+                }"
               >
                 {{ getInitials(authStore.user?.fullName ?? '', '') }}
               </div>
-              <h3 class="mt-3 text-lg font-semibold text-gray-900">{{ authStore.user?.fullName || authStore.user?.username }}</h3>
+              <h3 class="mt-3 text-lg font-semibold text-gray-900">
+                {{ authStore.user?.fullName || authStore.user?.username }}
+              </h3>
               <p v-if="profileForm.title" class="text-gray-600 text-sm">{{ profileForm.title }}</p>
-              <p v-if="profileForm.location" class="text-xs text-gray-500 mt-1 flex items-center justify-center gap-1">
+              <p
+                v-if="profileForm.location"
+                class="text-xs text-gray-500 mt-1 flex items-center justify-center gap-1"
+              >
                 <MapPinIcon class="w-3.5 h-3.5" />
                 {{ profileForm.location }}
               </p>
@@ -104,7 +113,11 @@
 
             <div v-if="profileForm.website" class="flex items-center gap-1 text-sm">
               <GlobeAltIcon class="w-4 h-4 text-gray-400" />
-              <a :href="profileForm.website" target="_blank" class="text-primary-600 hover:underline truncate">
+              <a
+                :href="profileForm.website"
+                target="_blank"
+                class="text-primary-600 hover:underline truncate"
+              >
                 {{ profileForm.website }}
               </a>
             </div>
@@ -117,10 +130,7 @@
 
 <script setup lang="ts">
 import { ref, computed, reactive, onMounted } from 'vue'
-import {
-  MapPinIcon,
-  GlobeAltIcon
-} from '@heroicons/vue/24/outline'
+import { MapPinIcon, GlobeAltIcon } from '@heroicons/vue/24/outline'
 import { useProfileStore } from '@/stores/profile'
 import { useAuthStore } from '@/stores/auth'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
@@ -161,7 +171,6 @@ const themeOptions: { key: ThemeName; label: string; color: string }[] = [
 
 // Computed
 const isFormValid = computed(() => profileForm.title.trim() !== '')
-
 
 // Methods
 function getInitials(firstName: string, lastName: string): string {

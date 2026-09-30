@@ -24,7 +24,9 @@ test.describe('留言板', () => {
     await messageInput.fill('這是一則 E2E 自動測試留言')
 
     // 送出表單
-    const submitBtn = page.locator('button[type="submit"], button:has-text("送出"), button:has-text("留言")').first()
+    const submitBtn = page
+      .locator('button[type="submit"], button:has-text("送出"), button:has-text("留言")')
+      .first()
     await submitBtn.click()
 
     // 成功後應顯示某種回饋（成功訊息或表單清空）

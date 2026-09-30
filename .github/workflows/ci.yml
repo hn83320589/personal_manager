@@ -45,6 +45,8 @@ jobs:
       - run: npm ci
       - name: Lint
         run: npm run lint
+      - name: Format
+        run: npm run format:check
       - name: Unit test
         run: npx vitest run
       - name: Type-check + build

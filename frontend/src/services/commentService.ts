@@ -21,11 +21,19 @@ class CommentService {
     return httpService.get<GuestBookEntry>(`/guestbookentries/${id}`)
   }
 
-  async createGuestBookEntry(entry: { targetUserId?: number; name: string; email?: string; message: string }): Promise<ApiResponse<GuestBookEntry>> {
+  async createGuestBookEntry(entry: {
+    targetUserId?: number
+    name: string
+    email?: string
+    message: string
+  }): Promise<ApiResponse<GuestBookEntry>> {
     return httpService.post<GuestBookEntry>('/guestbookentries', entry)
   }
 
-  async updateGuestBookEntry(id: number, entry: { isApproved?: boolean; adminReply?: string }): Promise<ApiResponse<GuestBookEntry>> {
+  async updateGuestBookEntry(
+    id: number,
+    entry: { isApproved?: boolean; adminReply?: string },
+  ): Promise<ApiResponse<GuestBookEntry>> {
     return httpService.put<GuestBookEntry>(`/guestbookentries/${id}`, entry)
   }
 

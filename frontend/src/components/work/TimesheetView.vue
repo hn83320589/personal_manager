@@ -9,19 +9,11 @@
         </p>
       </div>
       <div class="flex items-center space-x-2">
-        <BaseButton
-          variant="outline"
-          size="small"
-          @click="exportTimesheet"
-        >
+        <BaseButton variant="outline" size="small" @click="exportTimesheet">
           <DocumentArrowDownIcon class="w-4 h-4 mr-2" />
           匯出
         </BaseButton>
-        <BaseButton
-          variant="primary"
-          size="small"
-          @click="addTimeEntry"
-        >
+        <BaseButton variant="primary" size="small" @click="addTimeEntry">
           <PlusIcon class="w-4 h-4 mr-2" />
           新增記錄
         </BaseButton>
@@ -32,7 +24,7 @@
       <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       <p class="mt-2 text-sm text-gray-500">載入中...</p>
     </div>
-    
+
     <div v-else-if="timeEntries.length === 0" class="text-center py-8">
       <ClockIcon class="mx-auto h-12 w-12 text-gray-400" />
       <h3 class="mt-2 text-sm font-medium text-gray-900">沒有時間記錄</h3>
@@ -51,7 +43,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="bg-white border border-gray-200 rounded-lg p-4">
           <div class="flex items-center">
             <CalendarDaysIcon class="w-8 h-8 text-green-600" />
@@ -61,17 +53,19 @@
             </div>
           </div>
         </div>
-        
+
         <div class="bg-white border border-gray-200 rounded-lg p-4">
           <div class="flex items-center">
             <ChartBarIcon class="w-8 h-8 text-purple-600" />
             <div class="ml-3">
               <p class="text-sm text-gray-500">日均時數</p>
-              <p class="text-xl font-semibold text-gray-900">{{ averageHoursPerDay.toFixed(1) }}h</p>
+              <p class="text-xl font-semibold text-gray-900">
+                {{ averageHoursPerDay.toFixed(1) }}h
+              </p>
             </div>
           </div>
         </div>
-        
+
         <div class="bg-white border border-gray-200 rounded-lg p-4">
           <div class="flex items-center">
             <CurrencyDollarIcon class="w-8 h-8 text-yellow-600" />
@@ -88,22 +82,34 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 日期
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 任務/專案
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 時間
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 時長
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 描述
               </th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 操作
               </th>
             </tr>
@@ -118,9 +124,7 @@
                       <span class="text-sm font-medium text-gray-900">
                         {{ formatDisplayDate(date) }}
                       </span>
-                      <span class="text-xs text-gray-500">
-                        ({{ getWeekday(date) }})
-                      </span>
+                      <span class="text-xs text-gray-500"> ({{ getWeekday(date) }}) </span>
                     </div>
                     <div class="text-sm font-medium text-blue-600">
                       總計: {{ getDailyTotal(entries).toFixed(1) }}h
@@ -128,7 +132,7 @@
                   </div>
                 </td>
               </tr>
-              
+
               <!-- Time Entries for this date -->
               <tr v-for="entry in entries" :key="entry.id" class="hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -137,7 +141,9 @@
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div>
                     <div class="text-sm font-medium text-gray-900">{{ entry.task }}</div>
-                    <div v-if="entry.project" class="text-sm text-gray-500">{{ entry.project }}</div>
+                    <div v-if="entry.project" class="text-sm text-gray-500">
+                      {{ entry.project }}
+                    </div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -147,7 +153,9 @@
                   <div v-else class="text-gray-400">--:-- - --:--</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                  <span
+                    class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800"
+                  >
                     {{ formatDuration(entry.duration) }}
                   </span>
                 </td>
@@ -158,11 +166,7 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div class="flex justify-end space-x-2">
-                    <BaseButton
-                      variant="outline"
-                      size="small"
-                      @click="$emit('edit-entry', entry)"
-                    >
+                    <BaseButton variant="outline" size="small" @click="$emit('edit-entry', entry)">
                       <PencilIcon class="w-4 h-4" />
                     </BaseButton>
                     <BaseButton
@@ -190,7 +194,7 @@
               'px-3 py-2 text-sm font-medium rounded-md transition-colors',
               viewMode === 'daily'
                 ? 'bg-white text-gray-900 shadow'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-gray-600 hover:text-gray-900',
             ]"
           >
             每日檢視
@@ -201,7 +205,7 @@
               'px-3 py-2 text-sm font-medium rounded-md transition-colors',
               viewMode === 'weekly'
                 ? 'bg-white text-gray-900 shadow'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-gray-600 hover:text-gray-900',
             ]"
           >
             週檢視
@@ -222,7 +226,7 @@ import {
   CurrencyDollarIcon,
   DocumentArrowDownIcon,
   PencilIcon,
-  TrashIcon
+  TrashIcon,
 } from '@heroicons/vue/24/outline'
 import BaseButton from '@/components/ui/BaseButton.vue'
 
@@ -265,28 +269,28 @@ const hourlyRate = 50 // Example hourly rate
 // Computed
 const groupedEntries = computed(() => {
   const grouped: Record<string, TimeEntry[]> = {}
-  
-  props.timeEntries.forEach(entry => {
+
+  props.timeEntries.forEach((entry) => {
     if (!grouped[entry.date]) {
       grouped[entry.date] = []
     }
     grouped[entry.date].push(entry)
   })
-  
+
   // Sort entries within each date
-  Object.keys(grouped).forEach(date => {
+  Object.keys(grouped).forEach((date) => {
     grouped[date].sort((a, b) => {
       const timeA = a.startTime || '00:00'
       const timeB = b.startTime || '00:00'
       return timeA.localeCompare(timeB)
     })
   })
-  
+
   return grouped
 })
 
 const totalHours = computed(() => {
-  return props.timeEntries.reduce((sum, entry) => sum + (entry.duration / 60), 0)
+  return props.timeEntries.reduce((sum, entry) => sum + entry.duration / 60, 0)
 })
 
 const workingDays = computed(() => {
@@ -305,41 +309,41 @@ const estimatedEarnings = computed(() => {
 function formatDateRange(start: string, end: string): string {
   const startDate = new Date(start)
   const endDate = new Date(end)
-  
+
   if (start === end) {
     return startDate.toLocaleDateString('zh-TW', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     })
   }
-  
+
   return `${startDate.toLocaleDateString('zh-TW', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })} - ${endDate.toLocaleDateString('zh-TW', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })}`
 }
 
 function formatDisplayDate(date: string): string {
   return new Date(date).toLocaleDateString('zh-TW', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 
 function getWeekday(date: string): string {
   return new Date(date).toLocaleDateString('zh-TW', {
-    weekday: 'short'
+    weekday: 'short',
   })
 }
 
 function formatDuration(minutes: number): string {
   const hours = Math.floor(minutes / 60)
   const mins = minutes % 60
-  
+
   if (hours === 0) {
     return `${mins}m`
   } else if (mins === 0) {
@@ -350,7 +354,7 @@ function formatDuration(minutes: number): string {
 }
 
 function getDailyTotal(entries: TimeEntry[]): number {
-  return entries.reduce((sum, entry) => sum + (entry.duration / 60), 0)
+  return entries.reduce((sum, entry) => sum + entry.duration / 60, 0)
 }
 
 function addTimeEntry() {
@@ -366,8 +370,8 @@ function exportTimesheet() {
 function generateCSV(): string {
   const headers = ['日期', '任務', '專案', '開始時間', '結束時間', '時長(分鐘)', '描述']
   const rows = [headers.join(',')]
-  
-  props.timeEntries.forEach(entry => {
+
+  props.timeEntries.forEach((entry) => {
     const row = [
       entry.date,
       `"${entry.task}"`,
@@ -375,18 +379,18 @@ function generateCSV(): string {
       entry.startTime || '',
       entry.endTime || '',
       entry.duration.toString(),
-      `"${entry.description || ''}"`
+      `"${entry.description || ''}"`,
     ]
     rows.push(row.join(','))
   })
-  
+
   return rows.join('\n')
 }
 
 function downloadCSV(csv: string, filename: string) {
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
   const link = document.createElement('a')
-  
+
   if (link.download !== undefined) {
     const url = URL.createObjectURL(blob)
     link.setAttribute('href', url)

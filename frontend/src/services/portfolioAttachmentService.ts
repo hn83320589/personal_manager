@@ -8,7 +8,7 @@ export const portfolioAttachmentService = {
   create: (dto: CreatePortfolioAttachmentDto) =>
     httpService.post<PortfolioAttachment>('/portfolioattachments', dto),
 
-  delete: (id: number) => httpService.delete<void>(`/portfolioattachments/${id}`)
+  delete: (id: number) => httpService.delete<void>(`/portfolioattachments/${id}`),
 }
 
 export default portfolioAttachmentService

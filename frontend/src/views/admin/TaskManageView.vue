@@ -5,9 +5,7 @@
       <div class="flex justify-between items-center">
         <div>
           <h2 class="text-2xl font-bold text-gray-900">待辦事項管理</h2>
-          <p class="mt-1 text-sm text-gray-600">
-            管理個人待辦事項，設定優先級和追蹤完成狀態
-          </p>
+          <p class="mt-1 text-sm text-gray-600">管理個人待辦事項，設定優先級和追蹤完成狀態</p>
         </div>
         <div class="flex space-x-3">
           <BaseButton
@@ -18,10 +16,7 @@
             <Squares2X2Icon class="w-4 h-4 mr-2" />
             批量操作 ({{ selectedTasks.length }})
           </BaseButton>
-          <BaseButton
-            variant="primary"
-            @click="showCreateModal = true"
-          >
+          <BaseButton variant="primary" @click="showCreateModal = true">
             <PlusIcon class="w-4 h-4 mr-2" />
             新增待辦事項
           </BaseButton>
@@ -87,7 +82,9 @@
         <!-- Search and Filters -->
         <div class="flex flex-col sm:flex-row gap-4 flex-1">
           <div class="relative flex-1 max-w-md">
-            <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlassIcon
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+            />
             <input
               v-model="searchQuery"
               type="text"
@@ -95,7 +92,7 @@
               class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          
+
           <div class="flex gap-2">
             <select
               v-model="selectedStatus"
@@ -116,7 +113,6 @@
               <option value="Medium">中</option>
               <option value="High">高</option>
             </select>
-
           </div>
         </div>
 
@@ -143,7 +139,7 @@
                 'px-3 py-1 text-sm font-medium rounded transition-colors',
                 viewMode === 'list'
                   ? 'bg-white text-gray-900 shadow'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-gray-600 hover:text-gray-900',
               ]"
             >
               <ListBulletIcon class="w-4 h-4" />
@@ -154,7 +150,7 @@
                 'px-3 py-1 text-sm font-medium rounded transition-colors',
                 viewMode === 'grid'
                   ? 'bg-white text-gray-900 shadow'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-gray-600 hover:text-gray-900',
               ]"
             >
               <Squares2X2Icon class="w-4 h-4" />
@@ -165,7 +161,7 @@
                 'px-3 py-1 text-sm font-medium rounded transition-colors',
                 viewMode === 'kanban'
                   ? 'bg-white text-gray-900 shadow'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-gray-600 hover:text-gray-900',
               ]"
             >
               <RectangleStackIcon class="w-4 h-4" />
@@ -225,11 +221,7 @@
       title="待辦事項管理"
       max-width="3xl"
     >
-      <TaskForm
-        :task="editingTask"
-        @save="handleSave"
-        @cancel="handleCancel"
-      />
+      <TaskForm :task="editingTask" @save="handleSave" @cancel="handleCancel" />
     </BaseModal>
 
     <!-- Batch Operations Modal -->
@@ -240,10 +232,8 @@
       max-width="md"
     >
       <div class="space-y-4">
-        <p class="text-sm text-gray-600">
-          已選擇 {{ selectedTasks.length }} 個待辦事項
-        </p>
-        
+        <p class="text-sm text-gray-600">已選擇 {{ selectedTasks.length }} 個待辦事項</p>
+
         <div class="space-y-3">
           <BaseButton
             variant="outline"
@@ -253,7 +243,7 @@
             <CheckCircleIcon class="w-4 h-4 mr-2" />
             標記為已完成
           </BaseButton>
-          
+
           <BaseButton
             variant="outline"
             @click="batchUpdatePriority('High')"
@@ -262,7 +252,7 @@
             <ExclamationTriangleIcon class="w-4 h-4 mr-2" />
             設為高優先級
           </BaseButton>
-          
+
           <BaseButton
             variant="outline"
             @click="batchDelete"
@@ -276,29 +266,17 @@
     </BaseModal>
 
     <!-- Delete Confirmation Modal -->
-    <BaseModal
-      :show="showDeleteModal"
-      @close="showDeleteModal = false"
-      title="確認刪除"
-    >
+    <BaseModal :show="showDeleteModal" @close="showDeleteModal = false" title="確認刪除">
       <div class="mt-2">
         <p class="text-sm text-gray-500">
-          您確定要刪除這{{ deleteType === 'single' ? '個' : `${selectedTasks.length}個` }}待辦事項嗎？此操作無法復原。
+          您確定要刪除這{{
+            deleteType === 'single' ? '個' : `${selectedTasks.length}個`
+          }}待辦事項嗎？此操作無法復原。
         </p>
       </div>
       <div class="mt-5 flex justify-end space-x-3">
-        <BaseButton
-          variant="outline"
-          @click="showDeleteModal = false"
-        >
-          取消
-        </BaseButton>
-        <BaseButton
-          variant="danger"
-          @click="confirmDelete"
-        >
-          刪除
-        </BaseButton>
+        <BaseButton variant="outline" @click="showDeleteModal = false"> 取消 </BaseButton>
+        <BaseButton variant="danger" @click="confirmDelete"> 刪除 </BaseButton>
       </div>
     </BaseModal>
   </AdminLayout>
@@ -315,7 +293,7 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   ClockIcon,
-  TrashIcon
+  TrashIcon,
 } from '@heroicons/vue/24/outline'
 import { useTaskStore } from '@/stores/task'
 import type { TodoItem, TodoStatus } from '@/types/api'
@@ -352,7 +330,7 @@ const tasks = computed(() => taskStore.todoItems)
 const totalTasks = computed(() => tasks.value.length)
 
 const completedTasks = computed(() => {
-  return tasks.value.filter(task => task.status === 'Completed' as TodoStatus).length
+  return tasks.value.filter((task) => task.status === ('Completed' as TodoStatus)).length
 })
 
 const completionRate = computed(() => {
@@ -361,16 +339,15 @@ const completionRate = computed(() => {
 
 const overdueTasks = computed(() => {
   const today = new Date()
-  return tasks.value.filter(task => 
-    task.dueDate && new Date(task.dueDate) < today && task.status !== 'Completed' as TodoStatus
+  return tasks.value.filter(
+    (task) =>
+      task.dueDate && new Date(task.dueDate) < today && task.status !== ('Completed' as TodoStatus),
   ).length
 })
 
 const todayTasks = computed(() => {
   const today = new Date().toISOString().split('T')[0]
-  return tasks.value.filter(task => 
-    task.dueDate && task.dueDate.split('T')[0] === today
-  ).length
+  return tasks.value.filter((task) => task.dueDate && task.dueDate.split('T')[0] === today).length
 })
 
 const filteredAndSortedTasks = computed(() => {
@@ -379,22 +356,21 @@ const filteredAndSortedTasks = computed(() => {
   // Search filter
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(task =>
-      task.title.toLowerCase().includes(query) ||
-      task.description?.toLowerCase().includes(query)
+    filtered = filtered.filter(
+      (task) =>
+        task.title.toLowerCase().includes(query) || task.description?.toLowerCase().includes(query),
     )
   }
 
   // Status filter
   if (selectedStatus.value) {
-    filtered = filtered.filter(task => task.status === selectedStatus.value)
+    filtered = filtered.filter((task) => task.status === selectedStatus.value)
   }
 
   // Priority filter
   if (selectedPriority.value) {
-    filtered = filtered.filter(task => task.priority === selectedPriority.value)
+    filtered = filtered.filter((task) => task.priority === selectedPriority.value)
   }
-
 
   // Sort
   return filtered.sort((a, b) => {
@@ -428,10 +404,13 @@ function toggleTaskSelection(taskId: number) {
 }
 
 async function toggleTaskComplete(task: TodoItem) {
-  const newStatus = task.status === 'Completed' as TodoStatus ? 'Pending' as TodoStatus : 'Completed' as TodoStatus
+  const newStatus =
+    task.status === ('Completed' as TodoStatus)
+      ? ('Pending' as TodoStatus)
+      : ('Completed' as TodoStatus)
   await taskStore.updateTodo(task.id, {
     status: newStatus,
-    completedAt: newStatus === 'Completed' as TodoStatus ? new Date().toISOString() : undefined
+    completedAt: newStatus === ('Completed' as TodoStatus) ? new Date().toISOString() : undefined,
   })
 }
 
@@ -452,7 +431,7 @@ function duplicateTask(task: TodoItem) {
     id: 0,
     title: `${task.title} (複製)`,
     status: 'Pending' as TodoStatus,
-    completedAt: undefined
+    completedAt: undefined,
   }
   editingTask.value = duplicated
   showCreateModal.value = true
@@ -460,9 +439,9 @@ function duplicateTask(task: TodoItem) {
 
 function moveTask(taskId: number, newStatus: string) {
   const statusMap: Record<string, TodoStatus> = {
-    'pending': 'Pending',
-    'inprogress': 'InProgress',
-    'completed': 'Completed',
+    pending: 'Pending',
+    inprogress: 'InProgress',
+    completed: 'Completed',
   }
 
   const status = statusMap[newStatus.toLowerCase()] || 'Pending'
@@ -490,12 +469,12 @@ function handleCancel() {
 async function batchUpdateStatus(status: string) {
   try {
     await Promise.all(
-      selectedTasks.value.map(taskId =>
+      selectedTasks.value.map((taskId) =>
         taskStore.updateTodo(taskId, {
           status: status as any,
-          completedAt: status === 'Completed' ? new Date().toISOString() : undefined
-        })
-      )
+          completedAt: status === 'Completed' ? new Date().toISOString() : undefined,
+        }),
+      ),
     )
     selectedTasks.value = []
     showBatchModal.value = false
@@ -507,9 +486,9 @@ async function batchUpdateStatus(status: string) {
 async function batchUpdatePriority(priority: string) {
   try {
     await Promise.all(
-      selectedTasks.value.map(taskId =>
-        taskStore.updateTodo(taskId, { priority: priority as any })
-      )
+      selectedTasks.value.map((taskId) =>
+        taskStore.updateTodo(taskId, { priority: priority as any }),
+      ),
     )
     selectedTasks.value = []
     showBatchModal.value = false
@@ -520,7 +499,7 @@ async function batchUpdatePriority(priority: string) {
 
 function batchDelete() {
   if (selectedTasks.value.length === 0) return
-  
+
   deleteType.value = 'batch'
   showBatchModal.value = false
   showDeleteModal.value = true
@@ -532,9 +511,7 @@ async function confirmDelete() {
       await taskStore.deleteTodo(deletingId.value)
       deletingId.value = null
     } else if (deleteType.value === 'batch') {
-      await Promise.all(
-        selectedTasks.value.map(taskId => taskStore.deleteTodo(taskId))
-      )
+      await Promise.all(selectedTasks.value.map((taskId) => taskStore.deleteTodo(taskId)))
       selectedTasks.value = []
     }
     showDeleteModal.value = false

@@ -21,13 +21,14 @@
         @click="emit('dateClick', cell.date)"
       >
         <!-- Day number -->
-        <div class="flex items-center justify-center w-6 h-6 mb-1 rounded-full text-sm"
+        <div
+          class="flex items-center justify-center w-6 h-6 mb-1 rounded-full text-sm"
           :class="[
             cell.isToday
               ? 'bg-[var(--color-primary,#0ea5e9)] text-white font-semibold'
               : cell.isCurrentMonth
                 ? 'text-gray-900'
-                : 'text-gray-400'
+                : 'text-gray-400',
           ]"
         >
           {{ cell.day }}
@@ -39,16 +40,16 @@
             v-for="event in cell.events.slice(0, 3)"
             :key="event.id"
             class="truncate text-xs px-1 py-0.5 rounded cursor-pointer hover:opacity-80 transition-opacity"
-            :style="{ backgroundColor: event.color || 'var(--color-primary,#0ea5e9)', color: '#fff' }"
+            :style="{
+              backgroundColor: event.color || 'var(--color-primary,#0ea5e9)',
+              color: '#fff',
+            }"
             :title="event.title"
             @click.stop="emit('eventClick', event)"
           >
             {{ event.isAllDay ? '' : formatTime(event.startTime) + ' ' }}{{ event.title }}
           </div>
-          <div
-            v-if="cell.events.length > 3"
-            class="text-xs text-gray-500 px-1"
-          >
+          <div v-if="cell.events.length > 3" class="text-xs text-gray-500 px-1">
             +{{ cell.events.length - 3 }} 更多
           </div>
         </div>
@@ -92,7 +93,7 @@ const calendarCells = computed(() => {
     const isCurrentMonth = date.getMonth() === month
     const isToday = date.getTime() === today.getTime()
 
-    const dayEvents = props.events.filter(e => {
+    const dayEvents = props.events.filter((e) => {
       const start = new Date(e.startTime)
       start.setHours(0, 0, 0, 0)
       return start.getTime() === date.getTime()

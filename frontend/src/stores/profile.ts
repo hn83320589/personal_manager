@@ -117,7 +117,7 @@ export const useProfileStore = defineStore('profile', () => {
     try {
       const response = await profileService.updateProfile(id, profileData)
       if (response.success && response.data) {
-        const index = profiles.value.findIndex(p => p.id === id)
+        const index = profiles.value.findIndex((p) => p.id === id)
         if (index !== -1) {
           profiles.value[index] = response.data
         }
@@ -145,7 +145,7 @@ export const useProfileStore = defineStore('profile', () => {
     try {
       const response = await profileService.deleteProfile(id)
       if (response.success) {
-        profiles.value = profiles.value.filter(p => p.id !== id)
+        profiles.value = profiles.value.filter((p) => p.id !== id)
         if (currentProfile.value && currentProfile.value.id === id) {
           currentProfile.value = null
         }

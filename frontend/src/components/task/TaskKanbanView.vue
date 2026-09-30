@@ -7,11 +7,7 @@
 
     <div v-else class="flex space-x-6 overflow-x-auto pb-4">
       <!-- Status Columns -->
-      <div
-        v-for="status in kanbanColumns"
-        :key="status.value"
-        class="flex-shrink-0 w-80"
-      >
+      <div v-for="status in kanbanColumns" :key="status.value" class="flex-shrink-0 w-80">
         <!-- Column Header -->
         <div class="bg-gray-50 border border-gray-200 rounded-t-lg p-4">
           <div class="flex items-center justify-between">
@@ -26,7 +22,9 @@
         </div>
 
         <!-- Column Content -->
-        <div class="bg-white border-l border-r border-b border-gray-200 rounded-b-lg min-h-96 p-4 space-y-3">
+        <div
+          class="bg-white border-l border-r border-b border-gray-200 rounded-b-lg min-h-96 p-4 space-y-3"
+        >
           <!-- Tasks -->
           <div
             v-for="task in getTasksForStatus(status.value)"
@@ -34,7 +32,7 @@
             class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
             :class="{
               'border-l-4 border-l-red-500': isOverdue(task),
-              'border-l-4 border-l-yellow-500': isDueSoon(task) && !isOverdue(task)
+              'border-l-4 border-l-yellow-500': isDueSoon(task) && !isOverdue(task),
             }"
             @click="$emit('editTask', task)"
           >
@@ -50,7 +48,7 @@
                     'flex items-center justify-center w-5 h-5 rounded border-2 transition-colors',
                     task.status === 'Completed'
                       ? 'bg-green-500 border-green-500 text-white'
-                      : 'border-gray-300 hover:border-green-500'
+                      : 'border-gray-300 hover:border-green-500',
                   ]"
                 >
                   <CheckIcon v-if="task.status === 'Completed'" class="w-3 h-3" />
@@ -77,9 +75,10 @@
                 <CalendarDaysIcon class="w-3 h-3 mr-1" />
                 {{ formatDate(task.dueDate) }}
                 <span v-if="isOverdue(task)" class="ml-1 text-red-600 font-medium">(逾期)</span>
-                <span v-else-if="isDueSoon(task)" class="ml-1 text-yellow-600 font-medium">(即將到期)</span>
+                <span v-else-if="isDueSoon(task)" class="ml-1 text-yellow-600 font-medium"
+                  >(即將到期)</span
+                >
               </div>
-
 
               <!-- Actions -->
               <div class="flex items-center justify-between pt-2 border-t border-gray-100">
@@ -101,7 +100,7 @@
                     <ArrowRightIcon class="w-3 h-3" />
                   </button>
                 </div>
-                
+
                 <div class="flex items-center space-x-1">
                   <button
                     @click.stop="$emit('editTask', task)"
@@ -123,7 +122,10 @@
           </div>
 
           <!-- Empty State for Column -->
-          <div v-if="getTasksForStatus(status.value).length === 0" class="text-center py-8 text-gray-400">
+          <div
+            v-if="getTasksForStatus(status.value).length === 0"
+            class="text-center py-8 text-gray-400"
+          >
             <RectangleStackIcon class="mx-auto h-8 w-8 mb-2" />
             <p class="text-sm">沒有 {{ status.label }} 的任務</p>
           </div>
@@ -135,9 +137,7 @@
     <div v-if="!loading && tasks.length === 0" class="text-center py-12">
       <RectangleStackIcon class="mx-auto h-12 w-12 text-gray-400" />
       <h3 class="mt-2 text-sm font-medium text-gray-900">沒有找到待辦事項</h3>
-      <p class="mt-1 text-sm text-gray-500">
-        開始建立您的第一個待辦事項吧
-      </p>
+      <p class="mt-1 text-sm text-gray-500">開始建立您的第一個待辦事項吧</p>
     </div>
   </div>
 </template>
@@ -150,7 +150,7 @@ import {
   TrashIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
-  RectangleStackIcon
+  RectangleStackIcon,
 } from '@heroicons/vue/24/outline'
 import type { TodoItem } from '@/types/api'
 
@@ -161,7 +161,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  loading: false
+  loading: false,
 })
 
 // Emits
@@ -177,23 +177,23 @@ const kanbanColumns = [
   {
     value: 'Pending',
     label: '待處理',
-    colorClass: 'bg-gray-400'
+    colorClass: 'bg-gray-400',
   },
   {
     value: 'InProgress',
     label: '進行中',
-    colorClass: 'bg-blue-500'
+    colorClass: 'bg-blue-500',
   },
   {
     value: 'Completed',
     label: '已完成',
-    colorClass: 'bg-green-500'
-  }
+    colorClass: 'bg-green-500',
+  },
 ]
 
 // Methods
 function getTasksForStatus(status: string): TodoItem[] {
-  return props.tasks.filter(task => task.status === status)
+  return props.tasks.filter((task) => task.status === status)
 }
 
 function moveTaskTo(task: TodoItem, newStatus: string) {
@@ -202,9 +202,9 @@ function moveTaskTo(task: TodoItem, newStatus: string) {
 
 function getNextStatus(currentStatus: string): string {
   const statusFlow: Record<string, string> = {
-    'Pending': 'InProgress',
-    'InProgress': 'Completed',
-    'Completed': 'Completed',
+    Pending: 'InProgress',
+    InProgress: 'Completed',
+    Completed: 'Completed',
   }
   return statusFlow[currentStatus] || 'Pending'
 }
@@ -230,43 +230,42 @@ function getPriorityStyle(priority: string): string {
 
 function formatDate(dateString: string | undefined): string {
   if (!dateString) return ''
-  
+
   const date = new Date(dateString)
   const now = new Date()
   const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-  
+
   if (diffDays === 0) return '今天'
   if (diffDays === 1) return '明天'
   if (diffDays === -1) return '昨天'
-  
+
   return date.toLocaleDateString('zh-TW', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 
 function isOverdue(task: TodoItem): boolean {
   if (!task.dueDate || task.status === 'Completed') return false
-  
+
   const dueDate = new Date(task.dueDate)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  
+
   return dueDate < today
 }
 
 function isDueSoon(task: TodoItem): boolean {
   if (!task.dueDate || task.status === 'Completed') return false
-  
+
   const dueDate = new Date(task.dueDate)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  
+
   const diffDays = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-  
+
   return diffDays >= 0 && diffDays <= 2
 }
-
 </script>
 
 <style scoped>

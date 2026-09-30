@@ -18,7 +18,11 @@ class CalendarService {
     return httpService.get<CalendarEvent[]>(`/calendarevents/user/${userId}/public`)
   }
 
-  async getCalendarEventsByDateRange(userId: number, start: string, end: string): Promise<ApiResponse<CalendarEvent[]>> {
+  async getCalendarEventsByDateRange(
+    userId: number,
+    start: string,
+    end: string,
+  ): Promise<ApiResponse<CalendarEvent[]>> {
     return httpService.get<CalendarEvent[]>(`/calendarevents/user/${userId}/range`, { start, end })
   }
 
@@ -26,7 +30,10 @@ class CalendarService {
     return httpService.post<CalendarEvent>('/calendarevents', event)
   }
 
-  async updateCalendarEvent(id: number, event: Partial<CalendarEvent>): Promise<ApiResponse<CalendarEvent>> {
+  async updateCalendarEvent(
+    id: number,
+    event: Partial<CalendarEvent>,
+  ): Promise<ApiResponse<CalendarEvent>> {
     return httpService.put<CalendarEvent>(`/calendarevents/${id}`, event)
   }
 

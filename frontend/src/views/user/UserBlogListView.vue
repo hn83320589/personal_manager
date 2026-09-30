@@ -25,8 +25,15 @@
           v-for="tag in allTags"
           :key="tag"
           @click="selectedTag = selectedTag === tag ? '' : tag"
-          :class="['text-xs px-3 py-1 rounded-full font-medium transition-colors', selectedTag === tag ? 'bg-[var(--color-primary,#0ea5e9)] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
-        >#{{ tag }}</button>
+          :class="[
+            'text-xs px-3 py-1 rounded-full font-medium transition-colors',
+            selectedTag === tag
+              ? 'bg-[var(--color-primary,#0ea5e9)] text-white'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200',
+          ]"
+        >
+          #{{ tag }}
+        </button>
       </div>
     </div>
 
@@ -48,18 +55,30 @@
                   <span
                     v-if="post.category"
                     class="text-xs font-medium px-2 py-0.5 rounded-full"
-                    :style="{ backgroundColor: 'var(--color-primary-light,#e0f2fe)', color: 'var(--color-primary-dark,#0c4a6e)' }"
-                  >{{ post.category }}</span>
-                  <span class="text-xs text-gray-400">{{ formatDate(post.publishedAt || post.createdAt) }}</span>
-                  <span v-if="post.viewCount" class="text-xs text-gray-400">{{ post.viewCount }} 次瀏覽</span>
+                    :style="{
+                      backgroundColor: 'var(--color-primary-light,#e0f2fe)',
+                      color: 'var(--color-primary-dark,#0c4a6e)',
+                    }"
+                    >{{ post.category }}</span
+                  >
+                  <span class="text-xs text-gray-400">{{
+                    formatDate(post.publishedAt || post.createdAt)
+                  }}</span>
+                  <span v-if="post.viewCount" class="text-xs text-gray-400"
+                    >{{ post.viewCount }} 次瀏覽</span
+                  >
                   <span class="text-xs text-gray-400 flex items-center gap-1">
                     <ClockIcon class="h-3 w-3" />{{ estimateReadTime(post.content) }} 分鐘
                   </span>
                 </div>
-                <h2 class="text-base font-semibold text-gray-900 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors line-clamp-2">
+                <h2
+                  class="text-base font-semibold text-gray-900 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors line-clamp-2"
+                >
                   {{ post.title }}
                 </h2>
-                <p v-if="post.summary" class="mt-1 text-sm text-gray-500 line-clamp-2">{{ post.summary }}</p>
+                <p v-if="post.summary" class="mt-1 text-sm text-gray-500 line-clamp-2">
+                  {{ post.summary }}
+                </p>
               </div>
             </div>
             <!-- Tags -->
@@ -68,7 +87,8 @@
                 v-for="tag in parseTags(post.tags).slice(0, 4)"
                 :key="tag"
                 class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded"
-              >#{{ tag }}</span>
+                >#{{ tag }}</span
+              >
             </div>
           </div>
         </RouterLink>
@@ -80,19 +100,25 @@
           :disabled="currentPage === 1"
           @click="goToPage(currentPage - 1)"
           class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        >上一頁</button>
+        >
+          上一頁
+        </button>
         <span class="text-sm text-gray-500">{{ currentPage }} / {{ totalPages }}</span>
         <button
           :disabled="currentPage === totalPages"
           @click="goToPage(currentPage + 1)"
           class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        >下一頁</button>
+        >
+          下一頁
+        </button>
       </div>
     </template>
 
     <div v-else-if="!isLoading && isFiltered" class="text-center py-12 text-gray-400">
       <p>找不到符合的文章</p>
-      <button @click="clearFilters" class="mt-3 text-sm text-sky-600 hover:text-sky-800">清除篩選</button>
+      <button @click="clearFilters" class="mt-3 text-sm text-sky-600 hover:text-sky-800">
+        清除篩選
+      </button>
     </div>
 
     <div v-else-if="!isLoading" class="text-center text-gray-400 py-12">尚無文章</div>
@@ -124,7 +150,9 @@ const categories = ref<string[]>([])
 const perPage = 8
 let searchDebounce: ReturnType<typeof setTimeout> | null = null
 
-const isFiltered = computed(() => !!searchTerm.value || !!selectedCategory.value || !!selectedTag.value)
+const isFiltered = computed(
+  () => !!searchTerm.value || !!selectedCategory.value || !!selectedTag.value,
+)
 
 async function loadMeta(uid: number) {
   const [tagsRes, catsRes] = await Promise.all([
@@ -138,13 +166,16 @@ async function loadMeta(uid: number) {
 async function loadPosts(uid: number) {
   isLoading.value = true
   try {
-    const res = await httpService.get<PagedResult<BlogPost>>(`/blogposts/user/${uid}/public/paged`, {
-      page: currentPage.value,
-      pageSize: perPage,
-      keyword: searchTerm.value || undefined,
-      tag: selectedTag.value || undefined,
-      category: selectedCategory.value || undefined,
-    })
+    const res = await httpService.get<PagedResult<BlogPost>>(
+      `/blogposts/user/${uid}/public/paged`,
+      {
+        page: currentPage.value,
+        pageSize: perPage,
+        keyword: searchTerm.value || undefined,
+        tag: selectedTag.value || undefined,
+        category: selectedCategory.value || undefined,
+      },
+    )
     if (res.success && res.data) {
       posts.value = res.data.items
       totalPages.value = res.data.totalPages
@@ -178,11 +209,18 @@ watch([selectedCategory, selectedTag], onFilterChange)
 
 function parseTags(tags: string[] | string): string[] {
   if (Array.isArray(tags)) return tags.filter(Boolean)
-  return tags.split(',').map(t => t.trim()).filter(Boolean)
+  return tags
+    .split(',')
+    .map((t) => t.trim())
+    .filter(Boolean)
 }
 
 function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
+  return new Date(dateStr).toLocaleDateString('zh-TW', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
 }
 
 function estimateReadTime(content: string): number {
@@ -197,6 +235,13 @@ function clearFilters() {
   if (userId?.value) loadPosts(userId.value)
 }
 
-onMounted(() => { if (userId?.value) load(userId.value) })
-watch(() => userId?.value, (uid) => { if (uid) load(uid) })
+onMounted(() => {
+  if (userId?.value) load(userId.value)
+})
+watch(
+  () => userId?.value,
+  (uid) => {
+    if (uid) load(uid)
+  },
+)
 </script>

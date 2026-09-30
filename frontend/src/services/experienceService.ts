@@ -23,7 +23,10 @@ class ExperienceService {
     return httpService.post<Education>('/educations', education)
   }
 
-  async updateEducation(id: number, education: Partial<Education>): Promise<ApiResponse<Education>> {
+  async updateEducation(
+    id: number,
+    education: Partial<Education>,
+  ): Promise<ApiResponse<Education>> {
     return httpService.put<Education>(`/educations/${id}`, education)
   }
 
@@ -48,11 +51,16 @@ class ExperienceService {
     return httpService.get<WorkExperience[]>(`/workexperiences/user/${userId}/public`)
   }
 
-  async createWorkExperience(experience: Partial<WorkExperience>): Promise<ApiResponse<WorkExperience>> {
+  async createWorkExperience(
+    experience: Partial<WorkExperience>,
+  ): Promise<ApiResponse<WorkExperience>> {
     return httpService.post<WorkExperience>('/workexperiences', experience)
   }
 
-  async updateWorkExperience(id: number, experience: Partial<WorkExperience>): Promise<ApiResponse<WorkExperience>> {
+  async updateWorkExperience(
+    id: number,
+    experience: Partial<WorkExperience>,
+  ): Promise<ApiResponse<WorkExperience>> {
     return httpService.put<WorkExperience>(`/workexperiences/${id}`, experience)
   }
 

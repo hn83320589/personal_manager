@@ -27,7 +27,7 @@
         :key="post.id"
         class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
         :class="{
-          'ring-2 ring-blue-500 ring-opacity-50': selectedPosts.includes(post.id)
+          'ring-2 ring-blue-500 ring-opacity-50': selectedPosts.includes(post.id),
         }"
       >
         <!-- Card Header with Selection -->
@@ -55,7 +55,10 @@
           <div class="absolute top-3 right-3">
             <span :class="getStatusBadgeClass(post.status === 'Published' ? 'published' : 'draft')">
               <div class="flex items-center">
-                <div :class="getStatusDotClass(post.status === 'Published' ? 'published' : 'draft')" class="w-2 h-2 rounded-full mr-1"></div>
+                <div
+                  :class="getStatusDotClass(post.status === 'Published' ? 'published' : 'draft')"
+                  class="w-2 h-2 rounded-full mr-1"
+                ></div>
                 {{ getStatusLabel(post.status === 'Published' ? 'published' : 'draft') }}
               </div>
             </span>
@@ -63,7 +66,9 @@
 
           <!-- Public Badge -->
           <div v-if="post.isPublic" class="absolute bottom-3 right-3">
-            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <span
+              class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
+            >
               <EyeIcon class="w-3 h-3 mr-1" />
               公開
             </span>
@@ -74,8 +79,10 @@
         <div class="p-6">
           <!-- Post Title -->
           <div class="mb-3">
-            <h3 class="text-lg font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 cursor-pointer"
-                @click="$emit('edit-post', post)">
+            <h3
+              class="text-lg font-semibold text-gray-900 line-clamp-2 hover:text-blue-600 cursor-pointer"
+              @click="$emit('edit-post', post)"
+            >
               {{ post.title }}
             </h3>
           </div>
@@ -135,7 +142,7 @@
                   'p-2 rounded-full transition-colors',
                   post.status === 'Published'
                     ? 'text-yellow-600 hover:bg-yellow-100'
-                    : 'text-green-600 hover:bg-green-100'
+                    : 'text-green-600 hover:bg-green-100',
                 ]"
                 :title="post.status === 'Published' ? '取消發布' : '發布文章'"
               >
@@ -186,9 +193,7 @@
     <div v-else class="text-center py-12">
       <DocumentTextIcon class="mx-auto h-12 w-12 text-gray-400" />
       <h3 class="mt-2 text-sm font-medium text-gray-900">沒有找到文章</h3>
-      <p class="mt-1 text-sm text-gray-500">
-        開始撰寫您的第一篇文章吧
-      </p>
+      <p class="mt-1 text-sm text-gray-500">開始撰寫您的第一篇文章吧</p>
     </div>
   </div>
 </template>
@@ -202,7 +207,7 @@ import {
   PencilIcon,
   TrashIcon,
   DocumentDuplicateIcon,
-  TagIcon
+  TagIcon,
 } from '@heroicons/vue/24/outline'
 import type { BlogPost } from '@/types/api'
 
@@ -214,7 +219,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  loading: false
+  loading: false,
 })
 
 // Emits
@@ -233,17 +238,21 @@ function getStatusLabel(status: string): string {
     draft: '草稿',
     published: '已發布',
     scheduled: '排程發布',
-    archived: '已封存'
+    archived: '已封存',
   }
   return statusMap[status as keyof typeof statusMap] || '草稿'
 }
 
 function getStatusBadgeClass(status: string): string {
   const classMap = {
-    draft: 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800',
-    published: 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800',
-    scheduled: 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800',
-    archived: 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800'
+    draft:
+      'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800',
+    published:
+      'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800',
+    scheduled:
+      'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800',
+    archived:
+      'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800',
   }
   return classMap[status as keyof typeof classMap] || classMap.draft
 }
@@ -253,33 +262,37 @@ function getStatusDotClass(status: string): string {
     draft: 'bg-gray-400',
     published: 'bg-green-400',
     scheduled: 'bg-blue-400',
-    archived: 'bg-red-400'
+    archived: 'bg-red-400',
   }
   return classMap[status as keyof typeof classMap] || classMap.draft
 }
 
 function formatDate(dateString: string | undefined): string {
   if (!dateString) return ''
-  
+
   const date = new Date(dateString)
   const now = new Date()
   const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
-  
+
   if (diffDays === 0) return '今天'
   if (diffDays === 1) return '昨天'
   if (diffDays < 7) return `${diffDays} 天前`
-  
+
   return date.toLocaleDateString('zh-TW', {
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 
 function getTagsList(tags: string[] | string | undefined): string[] {
   if (!tags) return []
   if (Array.isArray(tags)) return tags.slice(0, 3)
-  return tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0).slice(0, 3)
+  return tags
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter((tag) => tag.length > 0)
+    .slice(0, 3)
 }
 </script>
 

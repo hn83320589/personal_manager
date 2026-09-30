@@ -11,7 +11,7 @@ vi.mock('@/services/portfolioService', () => ({
     createPortfolio: vi.fn(),
     updatePortfolio: vi.fn(),
     deletePortfolio: vi.fn(),
-  }
+  },
 }))
 
 const mockPortfolio: Portfolio = {
@@ -53,7 +53,7 @@ describe('PortfolioStore', () => {
         success: true,
         data: [mockPortfolio],
         message: 'Success',
-        errors: []
+        errors: [],
       }
 
       const portfolioService = await import('@/services/portfolioService')
@@ -72,7 +72,7 @@ describe('PortfolioStore', () => {
         success: false,
         data: [],
         message: 'Failed to fetch',
-        errors: ['Network error']
+        errors: ['Network error'],
       }
 
       const portfolioService = await import('@/services/portfolioService')
@@ -93,7 +93,7 @@ describe('PortfolioStore', () => {
         success: true,
         data: mockPortfolio,
         message: 'Success',
-        errors: []
+        errors: [],
       }
 
       const portfolioService = await import('@/services/portfolioService')

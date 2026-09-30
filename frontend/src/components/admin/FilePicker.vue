@@ -5,19 +5,35 @@
       <button
         type="button"
         @click="activeTab = 'library'"
-        :class="['px-4 py-2 text-sm font-medium border-b-2 transition-colors', activeTab === 'library' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700']"
-      >從檔案庫選取</button>
+        :class="[
+          'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+          activeTab === 'library'
+            ? 'border-blue-600 text-blue-600'
+            : 'border-transparent text-gray-500 hover:text-gray-700',
+        ]"
+      >
+        從檔案庫選取
+      </button>
       <button
         type="button"
         @click="activeTab = 'upload'"
-        :class="['px-4 py-2 text-sm font-medium border-b-2 transition-colors', activeTab === 'upload' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700']"
-      >直接上傳</button>
+        :class="[
+          'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+          activeTab === 'upload'
+            ? 'border-blue-600 text-blue-600'
+            : 'border-transparent text-gray-500 hover:text-gray-700',
+        ]"
+      >
+        直接上傳
+      </button>
     </div>
 
     <!-- Library Tab -->
     <div v-if="activeTab === 'library'">
       <div v-if="isLoading" class="text-center py-8 text-gray-400 text-sm">載入中...</div>
-      <div v-else-if="filteredFiles.length === 0" class="text-center py-8 text-gray-400 text-sm">尚無檔案</div>
+      <div v-else-if="filteredFiles.length === 0" class="text-center py-8 text-gray-400 text-sm">
+        尚無檔案
+      </div>
       <div v-else class="grid grid-cols-4 gap-2 max-h-64 overflow-y-auto">
         <button
           v-for="file in filteredFiles"
@@ -33,7 +49,10 @@
             :alt="file.fileName"
             class="w-full h-16 object-cover rounded"
           />
-          <div v-else class="w-full h-16 flex flex-col items-center justify-center text-gray-400 bg-gray-50 rounded">
+          <div
+            v-else
+            class="w-full h-16 flex flex-col items-center justify-center text-gray-400 bg-gray-50 rounded"
+          >
             <span class="text-2xl">{{ getFileIcon(file.fileType) }}</span>
           </div>
           <p class="text-xs text-gray-600 truncate mt-1 px-0.5">{{ file.fileName }}</p>
@@ -63,7 +82,9 @@
           type="button"
           @click="fileInputRef?.click()"
           class="mt-2 px-3 py-1.5 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700"
-        >選擇檔案</button>
+        >
+          選擇檔案
+        </button>
         <p class="mt-2 text-xs text-gray-400">最大 50MB</p>
       </div>
 
@@ -78,12 +99,15 @@ import { ref, computed, onMounted } from 'vue'
 import fileUploadService from '@/services/fileUploadService'
 import type { FileUpload, FileUploadType } from '@/types/api'
 
-const props = withDefaults(defineProps<{
-  modelValue: boolean
-  fileType?: 'image' | 'all'
-}>(), {
-  fileType: 'all'
-})
+const props = withDefaults(
+  defineProps<{
+    modelValue: boolean
+    fileType?: 'image' | 'all'
+  }>(),
+  {
+    fileType: 'all',
+  },
+)
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
@@ -98,14 +122,15 @@ const uploadError = ref('')
 const isDragging = ref(false)
 const fileInputRef = ref<HTMLInputElement>()
 
-const backendBase = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5037'
+const backendBase =
+  import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5037'
 
 function getFileUrl(file: FileUpload): string {
   return file.fileUrl.startsWith('http') ? file.fileUrl : `${backendBase}${file.fileUrl}`
 }
 
 const filteredFiles = computed(() => {
-  if (props.fileType === 'image') return files.value.filter(f => f.fileType === 'image')
+  if (props.fileType === 'image') return files.value.filter((f) => f.fileType === 'image')
   return files.value
 })
 
@@ -116,10 +141,14 @@ const acceptTypes = computed(() => {
 
 function getFileIcon(fileType: FileUploadType | string): string {
   switch (fileType) {
-    case 'pdf': return '📄'
-    case 'document': return '📝'
-    case 'presentation': return '📊'
-    default: return '📁'
+    case 'pdf':
+      return '📄'
+    case 'document':
+      return '📝'
+    case 'presentation':
+      return '📊'
+    default:
+      return '📁'
   }
 }
 

@@ -3,13 +3,11 @@
     <!-- Categories List -->
     <div>
       <h3 class="text-lg font-medium text-gray-900 mb-4">現有分類</h3>
-      
+
       <div v-if="categories.length === 0" class="text-center py-8">
         <TagIcon class="mx-auto h-12 w-12 text-gray-400" />
         <h3 class="mt-2 text-sm font-medium text-gray-900">還沒有分類</h3>
-        <p class="mt-1 text-sm text-gray-500">
-          建立您的第一個分類吧
-        </p>
+        <p class="mt-1 text-sm text-gray-500">建立您的第一個分類吧</p>
       </div>
 
       <div v-else class="space-y-3">
@@ -114,18 +112,13 @@
                   color.bgClass,
                   formData.color === color.value
                     ? 'ring-2 ring-gray-400 ring-offset-2'
-                    : 'hover:scale-110'
+                    : 'hover:scale-110',
                 ]"
                 :title="color.name"
               />
             </div>
             <div class="flex items-center space-x-2">
-              <div 
-                :class="[
-                  'w-4 h-4 rounded-full',
-                  getColorClass(formData.color || 'gray')
-                ]"
-              ></div>
+              <div :class="['w-4 h-4 rounded-full', getColorClass(formData.color || 'gray')]"></div>
               <span class="text-sm text-gray-600">
                 {{ getColorName(formData.color || 'gray') }}
               </span>
@@ -147,18 +140,8 @@
         </div>
 
         <div class="flex justify-end space-x-3 pt-4">
-          <BaseButton
-            type="button"
-            variant="outline"
-            @click="cancelEdit"
-          >
-            取消
-          </BaseButton>
-          <BaseButton
-            type="submit"
-            variant="primary"
-            :disabled="!isFormValid"
-          >
+          <BaseButton type="button" variant="outline" @click="cancelEdit"> 取消 </BaseButton>
+          <BaseButton type="submit" variant="primary" :disabled="!isFormValid">
             {{ editingCategory ? '更新分類' : '建立分類' }}
           </BaseButton>
         </div>
@@ -202,32 +185,16 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <BaseModal
-      :show="showDeleteConfirm"
-      @close="showDeleteConfirm = false"
-      title="確認刪除分類"
-    >
+    <BaseModal :show="showDeleteConfirm" @close="showDeleteConfirm = false" title="確認刪除分類">
       <div class="mt-2">
         <p class="text-sm text-gray-500">
           您確定要刪除分類「{{ deletingCategoryName }}」嗎？此操作無法復原。
         </p>
-        <p class="mt-2 text-xs text-red-600">
-          注意：刪除分類後，該分類下的文章將變為無分類狀態。
-        </p>
+        <p class="mt-2 text-xs text-red-600">注意：刪除分類後，該分類下的文章將變為無分類狀態。</p>
       </div>
       <div class="mt-5 flex justify-end space-x-3">
-        <BaseButton
-          variant="outline"
-          @click="showDeleteConfirm = false"
-        >
-          取消
-        </BaseButton>
-        <BaseButton
-          variant="danger"
-          @click="deleteCategory"
-        >
-          確認刪除
-        </BaseButton>
+        <BaseButton variant="outline" @click="showDeleteConfirm = false"> 取消 </BaseButton>
+        <BaseButton variant="danger" @click="deleteCategory"> 確認刪除 </BaseButton>
       </div>
     </BaseModal>
   </div>
@@ -240,7 +207,7 @@ import {
   PencilIcon,
   TrashIcon,
   DocumentTextIcon,
-  EyeIcon
+  EyeIcon,
 } from '@heroicons/vue/24/outline'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import BaseTextarea from '@/components/ui/BaseTextarea.vue'
@@ -265,13 +232,15 @@ const props = defineProps<Props>()
 
 // Emits
 const emit = defineEmits<{
-  save: [categoryData: {
-    name: string
-    description?: string
-    color?: string
-    isDefault?: boolean
-    oldName?: string // For editing
-  }]
+  save: [
+    categoryData: {
+      name: string
+      description?: string
+      color?: string
+      isDefault?: boolean
+      oldName?: string // For editing
+    },
+  ]
   delete: [categoryName: string]
 }>()
 
@@ -284,11 +253,11 @@ const formData = ref({
   name: '',
   description: '',
   color: 'blue',
-  isDefault: false
+  isDefault: false,
 })
 
 const errors = ref({
-  name: ''
+  name: '',
 })
 
 // Color options
@@ -301,7 +270,7 @@ const colorOptions = [
   { name: '粉色', value: 'pink', bgClass: 'bg-pink-500' },
   { name: '青色', value: 'cyan', bgClass: 'bg-cyan-500' },
   { name: '橙色', value: 'orange', bgClass: 'bg-orange-500' },
-  { name: '灰色', value: 'gray', bgClass: 'bg-gray-500' }
+  { name: '灰色', value: 'gray', bgClass: 'bg-gray-500' },
 ]
 
 // Computed
@@ -324,7 +293,7 @@ function editCategory(category: CategoryWithStats) {
     name: category.name,
     description: category.description || '',
     color: category.color || 'blue',
-    isDefault: category.isDefault || false
+    isDefault: category.isDefault || false,
   }
   errors.value.name = ''
 }
@@ -335,44 +304,45 @@ function cancelEdit() {
     name: '',
     description: '',
     color: 'blue',
-    isDefault: false
+    isDefault: false,
   }
   errors.value.name = ''
 }
 
 function validateForm(): boolean {
   errors.value.name = ''
-  
+
   if (!formData.value.name.trim()) {
     errors.value.name = '分類名稱為必填項'
     return false
   }
-  
+
   // Check for duplicate names (excluding current editing category)
-  const existingCategory = props.categories.find(cat => 
-    cat.name.toLowerCase() === formData.value.name.trim().toLowerCase() &&
-    cat.name !== editingCategory.value?.name
+  const existingCategory = props.categories.find(
+    (cat) =>
+      cat.name.toLowerCase() === formData.value.name.trim().toLowerCase() &&
+      cat.name !== editingCategory.value?.name,
   )
-  
+
   if (existingCategory) {
     errors.value.name = '此分類名稱已存在'
     return false
   }
-  
+
   return true
 }
 
 function handleSubmit() {
   if (!validateForm()) return
-  
+
   const categoryData = {
     name: formData.value.name.trim(),
     description: formData.value.description.trim() || undefined,
     color: formData.value.color,
     isDefault: formData.value.isDefault,
-    oldName: editingCategory.value?.name // For editing
+    oldName: editingCategory.value?.name, // For editing
   }
-  
+
   emit('save', categoryData)
   cancelEdit()
 }
@@ -398,7 +368,7 @@ function getColorClass(color: string): string {
     pink: 'bg-pink-500',
     cyan: 'bg-cyan-500',
     orange: 'bg-orange-500',
-    gray: 'bg-gray-500'
+    gray: 'bg-gray-500',
   }
   return colorMap[color as keyof typeof colorMap] || colorMap.gray
 }
@@ -413,7 +383,7 @@ function getColorName(color: string): string {
     pink: '粉色',
     cyan: '青色',
     orange: '橙色',
-    gray: '灰色'
+    gray: '灰色',
   }
   return colorMap[color as keyof typeof colorMap] || '灰色'
 }

@@ -7,7 +7,7 @@ import { createPinia } from 'pinia'
 // Mock 瀏覽器 APIs
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: vi.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -27,7 +27,7 @@ const localStorageMock = {
   clear: vi.fn(),
 }
 Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock
+  value: localStorageMock,
 })
 
 // Mock sessionStorage
@@ -38,7 +38,7 @@ const sessionStorageMock = {
   clear: vi.fn(),
 }
 Object.defineProperty(window, 'sessionStorage', {
-  value: sessionStorageMock
+  value: sessionStorageMock,
 })
 
 // Mock window.location
@@ -70,7 +70,7 @@ beforeEach(() => {
   localStorageMock.setItem.mockClear()
   localStorageMock.removeItem.mockClear()
   localStorageMock.clear.mockClear()
-  
+
   sessionStorageMock.getItem.mockClear()
   sessionStorageMock.setItem.mockClear()
   sessionStorageMock.removeItem.mockClear()

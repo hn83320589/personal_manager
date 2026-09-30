@@ -8,13 +8,13 @@ export default defineConfig({
     vue({
       script: {
         defineModel: true,
-        propsDestructure: true
-      }
+        propsDestructure: true,
+      },
     }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   build: {

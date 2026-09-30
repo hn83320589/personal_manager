@@ -4,7 +4,7 @@
       <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       <p class="mt-2 text-sm text-gray-500">載入中...</p>
     </div>
-    
+
     <div v-else-if="projects.length === 0" class="text-center py-8">
       <FolderIcon class="mx-auto h-12 w-12 text-gray-400" />
       <h3 class="mt-2 text-sm font-medium text-gray-900">沒有專案資料</h3>
@@ -31,11 +31,7 @@
                 <p class="text-sm text-gray-500">{{ project.totalTasks }} 個任務</p>
               </div>
             </div>
-            <BaseButton
-              variant="outline"
-              size="small"
-              @click.stop="$emit('edit-project', project)"
-            >
+            <BaseButton variant="outline" size="small" @click.stop="$emit('edit-project', project)">
               <PencilIcon class="w-4 h-4" />
             </BaseButton>
           </div>
@@ -47,7 +43,7 @@
               <span class="text-sm text-gray-500">{{ Math.round(project.completionRate) }}%</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 class="bg-green-600 h-2 rounded-full transition-all duration-300"
                 :style="{ width: `${project.completionRate}%` }"
               ></div>
@@ -60,11 +56,15 @@
           <!-- Time Statistics -->
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div class="text-center">
-              <div class="text-2xl font-bold text-blue-600">{{ project.totalHours.toFixed(1) }}</div>
+              <div class="text-2xl font-bold text-blue-600">
+                {{ project.totalHours.toFixed(1) }}
+              </div>
               <div class="text-xs text-gray-500">實際時間 (小時)</div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold text-gray-600">{{ project.estimatedHours.toFixed(1) }}</div>
+              <div class="text-2xl font-bold text-gray-600">
+                {{ project.estimatedHours.toFixed(1) }}
+              </div>
               <div class="text-xs text-gray-500">預估時間 (小時)</div>
             </div>
           </div>
@@ -73,13 +73,13 @@
           <div class="flex items-center justify-between mb-4">
             <span class="text-sm text-gray-700">時間效率</span>
             <div class="flex items-center space-x-2">
-              <div 
+              <div
                 :class="getEfficiencyStyle(project.efficiency)"
                 class="px-2 py-1 rounded-full text-xs font-medium"
               >
                 {{ project.efficiency.toFixed(0) }}%
               </div>
-              <component 
+              <component
                 :is="getEfficiencyIcon(project.efficiency)"
                 :class="getEfficiencyIconColor(project.efficiency)"
                 class="w-4 h-4"
@@ -135,7 +135,9 @@
             <div class="text-sm text-gray-500">總工作時間</div>
           </div>
           <div class="text-center">
-            <div class="text-3xl font-bold text-purple-600">{{ overallEfficiency.toFixed(0) }}%</div>
+            <div class="text-3xl font-bold text-purple-600">
+              {{ overallEfficiency.toFixed(0) }}%
+            </div>
             <div class="text-sm text-gray-500">整體效率</div>
           </div>
         </div>
@@ -153,7 +155,7 @@ import {
   PlusIcon,
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
-  MinusIcon
+  MinusIcon,
 } from '@heroicons/vue/24/outline'
 import BaseButton from '@/components/ui/BaseButton.vue'
 
@@ -189,7 +191,7 @@ const totalWorkedHours = computed(() => {
 const overallEfficiency = computed(() => {
   const totalEstimated = props.projects.reduce((sum, project) => sum + project.estimatedHours, 0)
   const totalActual = props.projects.reduce((sum, project) => sum + project.totalHours, 0)
-  
+
   if (totalEstimated === 0) return 0
   return (totalActual / totalEstimated) * 100
 })

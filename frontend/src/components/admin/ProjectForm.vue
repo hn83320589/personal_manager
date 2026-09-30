@@ -17,9 +17,7 @@
 
     <!-- Description -->
     <div>
-      <label for="description" class="block text-sm font-medium text-gray-700">
-        作品描述
-      </label>
+      <label for="description" class="block text-sm font-medium text-gray-700"> 作品描述 </label>
       <BaseTextarea
         id="description"
         v-model="formData.description"
@@ -74,9 +72,7 @@
     <!-- Project URLs -->
     <div class="space-y-4">
       <div>
-        <label for="projectUrl" class="block text-sm font-medium text-gray-700">
-          專案網址
-        </label>
+        <label for="projectUrl" class="block text-sm font-medium text-gray-700"> 專案網址 </label>
         <BaseInput
           id="projectUrl"
           v-model="formData.projectUrl"
@@ -84,9 +80,7 @@
           placeholder="https://your-project.com"
           class="mt-1"
         />
-        <p class="mt-1 text-xs text-gray-500">
-          線上展示網址或部署連結
-        </p>
+        <p class="mt-1 text-xs text-gray-500">線上展示網址或部署連結</p>
       </div>
 
       <div>
@@ -100,17 +94,13 @@
           placeholder="https://github.com/username/repository"
           class="mt-1"
         />
-        <p class="mt-1 text-xs text-gray-500">
-          GitHub、GitLab 或其他版本控制庫連結
-        </p>
+        <p class="mt-1 text-xs text-gray-500">GitHub、GitLab 或其他版本控制庫連結</p>
       </div>
     </div>
 
     <!-- Project Image -->
     <div>
-      <label for="imageUrl" class="block text-sm font-medium text-gray-700">
-        作品圖片
-      </label>
+      <label for="imageUrl" class="block text-sm font-medium text-gray-700"> 作品圖片 </label>
       <div class="mt-1 space-y-4">
         <BaseInput
           id="imageUrl"
@@ -119,7 +109,7 @@
           placeholder="https://example.com/image.jpg"
           class="w-full"
         />
-        
+
         <!-- Image Preview -->
         <div v-if="formData.imageUrl" class="mt-4">
           <p class="text-sm text-gray-700 mb-2">圖片預覽：</p>
@@ -142,18 +132,14 @@
             </div>
           </div>
         </div>
-        
-        <p class="text-xs text-gray-500">
-          建議尺寸：800x600 像素，支援 JPG、PNG 格式
-        </p>
+
+        <p class="text-xs text-gray-500">建議尺寸：800x600 像素，支援 JPG、PNG 格式</p>
       </div>
     </div>
 
     <!-- Project Categories/Tags -->
     <div>
-      <label class="block text-sm font-medium text-gray-700">
-        專案分類
-      </label>
+      <label class="block text-sm font-medium text-gray-700"> 專案分類 </label>
       <select
         v-model="formData.category"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -167,9 +153,7 @@
 
     <!-- Highlights/Features -->
     <div>
-      <label class="block text-sm font-medium text-gray-700">
-        專案亮點
-      </label>
+      <label class="block text-sm font-medium text-gray-700"> 專案亮點 </label>
       <div class="mt-1">
         <div class="space-y-2">
           <div
@@ -194,13 +178,7 @@
             </BaseButton>
           </div>
         </div>
-        <BaseButton
-          type="button"
-          variant="outline"
-          size="small"
-          @click="addHighlight"
-          class="mt-2"
-        >
+        <BaseButton type="button" variant="outline" size="small" @click="addHighlight" class="mt-2">
           <PlusIcon class="w-4 h-4 mr-2" />
           新增亮點
         </BaseButton>
@@ -209,9 +187,7 @@
 
     <!-- Sort Order -->
     <div>
-      <label for="sortOrder" class="block text-sm font-medium text-gray-700">
-        排序順序
-      </label>
+      <label for="sortOrder" class="block text-sm font-medium text-gray-700"> 排序順序 </label>
       <input
         id="sortOrder"
         v-model.number="formData.sortOrder"
@@ -253,18 +229,8 @@
 
     <!-- Form Actions -->
     <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-      <BaseButton
-        type="button"
-        variant="outline"
-        @click="$emit('cancel')"
-      >
-        取消
-      </BaseButton>
-      <BaseButton
-        type="submit"
-        variant="primary"
-        :loading="loading"
-      >
+      <BaseButton type="button" variant="outline" @click="$emit('cancel')"> 取消 </BaseButton>
+      <BaseButton type="submit" variant="primary" :loading="loading">
         {{ project ? '更新作品' : '建立作品' }}
       </BaseButton>
     </div>
@@ -285,7 +251,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  project: null
+  project: null,
 })
 
 // Emits
@@ -309,7 +275,7 @@ const formData = ref({
   highlights: [] as Array<{ text: string }>,
   sortOrder: 0,
   isPublic: true,
-  isFeatured: false
+  isFeatured: false,
 })
 
 // Constants
@@ -325,13 +291,16 @@ const projectCategories = [
   '開源專案',
   '個人專案',
   '商業專案',
-  '學習專案'
+  '學習專案',
 ]
 
 // Watchers
-watch(() => formData.value.imageUrl, () => {
-  imageError.value = false
-})
+watch(
+  () => formData.value.imageUrl,
+  () => {
+    imageError.value = false
+  },
+)
 
 // Methods
 function addTechnology() {
@@ -352,19 +321,19 @@ function removeHighlight(index: number) {
 
 async function handleSubmit() {
   loading.value = true
-  
+
   try {
     const submitData = { ...formData.value }
-    
+
     // Filter out empty technologies
     const technologies = submitData.technologies
-      .filter(tech => tech.name.trim())
-      .map(tech => tech.name.trim())
-    
+      .filter((tech) => tech.name.trim())
+      .map((tech) => tech.name.trim())
+
     // Filter out empty highlights
     const highlights = submitData.highlights
-      .filter(highlight => highlight.text.trim())
-      .map(highlight => highlight.text.trim())
+      .filter((highlight) => highlight.text.trim())
+      .map((highlight) => highlight.text.trim())
 
     // Prepare final data for API
     const finalData = {
@@ -376,16 +345,19 @@ async function handleSubmit() {
       imageUrl: submitData.imageUrl || undefined,
       sortOrder: submitData.sortOrder,
       isPublic: submitData.isPublic,
-      isFeatured: submitData.isFeatured
+      isFeatured: submitData.isFeatured,
     }
-    
+
     // Add highlights to description if they exist
     if (highlights.length > 0) {
       let extendedDescription = finalData.description || ''
-      extendedDescription += (extendedDescription ? '\n\n' : '') + '專案亮點:\n' + highlights.map(h => `• ${h}`).join('\n')
+      extendedDescription +=
+        (extendedDescription ? '\n\n' : '') +
+        '專案亮點:\n' +
+        highlights.map((h) => `• ${h}`).join('\n')
       finalData.description = extendedDescription
     }
-    
+
     emit('save', finalData)
   } catch (error) {
     console.error('Submit error:', error)
@@ -397,7 +369,7 @@ async function handleSubmit() {
 function initializeForm() {
   if (props.project) {
     const project = props.project
-    
+
     formData.value.title = project.title
     formData.value.description = project.description || ''
     formData.value.projectUrl = project.projectUrl || ''
@@ -412,24 +384,24 @@ function initializeForm() {
     if (technologies) {
       formData.value.technologies = technologies
         .split(/[,;|]/)
-        .map(tech => ({ name: tech.trim() }))
-        .filter(tech => tech.name)
+        .map((tech) => ({ name: tech.trim() }))
+        .filter((tech) => tech.name)
     }
-    
+
     // Parse highlights from description
     if (project.description) {
       const description = project.description
       const highlightsMatch = description.match(/專案亮點:\n((?:• .+\n?)+)/)
-      
+
       if (highlightsMatch) {
         const highlights = highlightsMatch[1]
           .split('\n')
-          .map(line => line.replace('• ', '').trim())
-          .filter(text => text)
-          .map(text => ({ text }))
-        
+          .map((line) => line.replace('• ', '').trim())
+          .filter((text) => text)
+          .map((text) => ({ text }))
+
         formData.value.highlights = highlights
-        
+
         // Clean description of parsed highlights
         formData.value.description = description.replace(/\n\n專案亮點:\n(?:• .+\n?)+/, '').trim()
       }
@@ -447,7 +419,7 @@ function initializeForm() {
       highlights: [],
       sortOrder: 0,
       isPublic: true,
-      isFeatured: false
+      isFeatured: false,
     }
   }
 }
@@ -458,7 +430,11 @@ onMounted(() => {
 })
 
 // Watch for project changes
-watch(() => props.project, () => {
-  initializeForm()
-}, { immediate: true })
+watch(
+  () => props.project,
+  () => {
+    initializeForm()
+  },
+  { immediate: true },
+)
 </script>

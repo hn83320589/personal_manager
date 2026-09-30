@@ -79,11 +79,7 @@
       <div class="bg-white rounded-lg border border-gray-200 p-6">
         <h4 class="text-lg font-medium text-gray-900 mb-4">專案時間分配</h4>
         <div class="space-y-4">
-          <div
-            v-for="project in projectStats"
-            :key="project.name"
-            class="flex items-center"
-          >
+          <div v-for="project in projectStats" :key="project.name" class="flex items-center">
             <div class="flex-1">
               <div class="flex justify-between items-center mb-1">
                 <span class="text-sm font-medium text-gray-700">{{ project.name }}</span>
@@ -173,27 +169,15 @@
 
     <!-- Export Actions -->
     <div class="flex justify-end space-x-3">
-      <BaseButton
-        variant="outline"
-        disabled
-        title="PDF 匯出功能尚未開放"
-      >
+      <BaseButton variant="outline" disabled title="PDF 匯出功能尚未開放">
         <DocumentArrowDownIcon class="w-4 h-4 mr-2" />
         匯出 PDF
       </BaseButton>
-      <BaseButton
-        variant="outline"
-        disabled
-        title="Excel 匯出功能尚未開放"
-      >
+      <BaseButton variant="outline" disabled title="Excel 匯出功能尚未開放">
         <TableCellsIcon class="w-4 h-4 mr-2" />
         匯出 Excel
       </BaseButton>
-      <BaseButton
-        variant="primary"
-        disabled
-        title="分享功能尚未開放"
-      >
+      <BaseButton variant="primary" disabled title="分享功能尚未開放">
         <ShareIcon class="w-4 h-4 mr-2" />
         分享報表
       </BaseButton>
@@ -211,7 +195,7 @@ import {
   DocumentArrowDownIcon,
   TableCellsIcon,
   ShareIcon,
-  AcademicCapIcon
+  AcademicCapIcon,
 } from '@heroicons/vue/24/outline'
 import type { WorkTask } from '@/types/api'
 import BaseButton from '@/components/ui/BaseButton.vue'
@@ -242,11 +226,11 @@ const props = defineProps<Props>()
 
 // Computed - Basic Metrics
 const totalWorkHours = computed(() => {
-  return props.timeEntries.reduce((sum, entry) => sum + (entry.duration / 60), 0)
+  return props.timeEntries.reduce((sum, entry) => sum + entry.duration / 60, 0)
 })
 
 const completedTasks = computed(() => {
-  return props.tasks.filter(task => task.status === 'Completed').length
+  return props.tasks.filter((task) => task.status === 'Completed').length
 })
 
 const productivityIndex = computed(() => {
@@ -258,7 +242,7 @@ const productivityIndex = computed(() => {
 const efficiencyScore = computed(() => {
   const totalEstimated = props.tasks.reduce((sum, task) => sum + (task.estimatedHours || 0), 0)
   const totalActual = props.tasks.reduce((sum, task) => sum + (task.actualHours || 0), 0)
-  
+
   if (totalEstimated === 0) return 100
   return Math.round((totalEstimated / Math.max(totalActual, 0.1)) * 100)
 })
@@ -266,53 +250,53 @@ const efficiencyScore = computed(() => {
 // Daily Hours Analysis
 const dailyHours = computed(() => {
   const dailyMap: Record<string, number> = {}
-  
-  props.timeEntries.forEach(entry => {
+
+  props.timeEntries.forEach((entry) => {
     if (!dailyMap[entry.date]) {
       dailyMap[entry.date] = 0
     }
     dailyMap[entry.date] += entry.duration / 60
   })
-  
+
   // Generate array for chart
   const startDate = new Date(props.dateRange.start)
   const endDate = new Date(props.dateRange.end)
   const days = []
-  
+
   for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
     const dateStr = date.toISOString().split('T')[0]
     days.push({
       date: dateStr,
-      hours: dailyMap[dateStr] || 0
+      hours: dailyMap[dateStr] || 0,
     })
   }
-  
+
   return days
 })
 
 const maxDailyHours = computed(() => {
-  return Math.max(...dailyHours.value.map(day => day.hours), 8)
+  return Math.max(...dailyHours.value.map((day) => day.hours), 8)
 })
 
 // Project Statistics
 const projectStats = computed(() => {
   const projectMap: Record<string, number> = {}
-  
-  props.timeEntries.forEach(entry => {
+
+  props.timeEntries.forEach((entry) => {
     const project = entry.project || '未分類'
     if (!projectMap[project]) {
       projectMap[project] = 0
     }
     projectMap[project] += entry.duration / 60
   })
-  
+
   const totalHours = Object.values(projectMap).reduce((sum, hours) => sum + hours, 0)
-  
+
   return Object.entries(projectMap)
     .map(([name, hours]) => ({
       name,
       hours,
-      percentage: totalHours > 0 ? (hours / totalHours) * 100 : 0
+      percentage: totalHours > 0 ? (hours / totalHours) * 100 : 0,
     }))
     .sort((a, b) => b.hours - a.hours)
     .slice(0, 8) // Top 8 projects
@@ -321,10 +305,16 @@ const projectStats = computed(() => {
 // Task Status Statistics
 const taskStatusStats = computed(() => {
   const statusMap: Record<string, number> = {
-    'Pending': 0, 'Planning': 0, 'InProgress': 0, 'Testing': 0, 'Completed': 0, 'OnHold': 0, 'Cancelled': 0
+    Pending: 0,
+    Planning: 0,
+    InProgress: 0,
+    Testing: 0,
+    Completed: 0,
+    OnHold: 0,
+    Cancelled: 0,
   }
 
-  props.tasks.forEach(task => {
+  props.tasks.forEach((task) => {
     statusMap[task.status] = (statusMap[task.status] || 0) + 1
   })
 
@@ -336,52 +326,52 @@ const taskStatusStats = computed(() => {
       count: statusMap['Pending'],
       percentage: total > 0 ? Math.round((statusMap['Pending'] / total) * 100) : 0,
       bgClass: 'bg-gray-50',
-      textClass: 'text-gray-900'
+      textClass: 'text-gray-900',
     },
     {
       label: '進行中',
       count: statusMap['InProgress'],
       percentage: total > 0 ? Math.round((statusMap['InProgress'] / total) * 100) : 0,
       bgClass: 'bg-blue-50',
-      textClass: 'text-blue-900'
+      textClass: 'text-blue-900',
     },
     {
       label: '已完成',
       count: statusMap['Completed'],
       percentage: total > 0 ? Math.round((statusMap['Completed'] / total) * 100) : 0,
       bgClass: 'bg-green-50',
-      textClass: 'text-green-900'
+      textClass: 'text-green-900',
     },
     {
       label: '暫停',
       count: statusMap['OnHold'],
       percentage: total > 0 ? Math.round((statusMap['OnHold'] / total) * 100) : 0,
       bgClass: 'bg-yellow-50',
-      textClass: 'text-yellow-900'
+      textClass: 'text-yellow-900',
     },
     {
       label: '已取消',
       count: statusMap['Cancelled'],
       percentage: total > 0 ? Math.round((statusMap['Cancelled'] / total) * 100) : 0,
       bgClass: 'bg-red-50',
-      textClass: 'text-red-900'
-    }
+      textClass: 'text-red-900',
+    },
   ]
 })
 
 // Average Statistics
 const averageDailyHours = computed(() => {
-  const workingDays = dailyHours.value.filter(day => day.hours > 0).length
+  const workingDays = dailyHours.value.filter((day) => day.hours > 0).length
   return workingDays > 0 ? totalWorkHours.value / workingDays : 0
 })
 
 const averageTaskTime = computed(() => {
-  const completedTasksWithTime = props.tasks.filter(task => 
-    task.status === 'Completed' && task.actualHours && task.actualHours > 0
+  const completedTasksWithTime = props.tasks.filter(
+    (task) => task.status === 'Completed' && task.actualHours && task.actualHours > 0,
   )
-  
+
   if (completedTasksWithTime.length === 0) return 0
-  
+
   const totalTime = completedTasksWithTime.reduce((sum, task) => sum + (task.actualHours || 0), 0)
   return totalTime / completedTasksWithTime.length
 })
@@ -392,14 +382,14 @@ const taskCompletionRate = computed(() => {
 })
 
 const onTimeCompletionRate = computed(() => {
-  const tasksWithDueDate = props.tasks.filter(task => task.dueDate && task.status === 'Completed')
+  const tasksWithDueDate = props.tasks.filter((task) => task.dueDate && task.status === 'Completed')
   if (tasksWithDueDate.length === 0) return 100
-  
-  const onTimeTasks = tasksWithDueDate.filter(task => {
+
+  const onTimeTasks = tasksWithDueDate.filter((task) => {
     if (!task.completedAt || !task.dueDate) return false
     return new Date(task.completedAt) <= new Date(task.dueDate)
   })
-  
+
   return Math.round((onTimeTasks.length / tasksWithDueDate.length) * 100)
 })
 
@@ -412,24 +402,23 @@ const weeklyGrowth = computed(() => {
 const focusTime = computed(() => {
   // Calculate focused work time (entries > 2 hours)
   return props.timeEntries
-    .filter(entry => entry.duration >= 120)
-    .reduce((sum, entry) => sum + (entry.duration / 60), 0)
+    .filter((entry) => entry.duration >= 120)
+    .reduce((sum, entry) => sum + entry.duration / 60, 0)
 })
 
 const peakHour = computed(() => {
   // Find most productive hour
   const hourMap: Record<number, number> = {}
-  
-  props.timeEntries.forEach(entry => {
+
+  props.timeEntries.forEach((entry) => {
     if (entry.startTime) {
       const hour = parseInt(entry.startTime.split(':')[0])
       hourMap[hour] = (hourMap[hour] || 0) + 1
     }
   })
-  
-  const peakHourNum = Object.entries(hourMap)
-    .sort(([,a], [,b]) => b - a)[0]?.[0]
-  
+
+  const peakHourNum = Object.entries(hourMap).sort(([, a], [, b]) => b - a)[0]?.[0]
+
   return peakHourNum ? `${peakHourNum}:00` : '09:00'
 })
 
@@ -444,15 +433,14 @@ const improvementArea = computed(() => {
 function formatDateRange(start: string, end: string): string {
   const startDate = new Date(start)
   const endDate = new Date(end)
-  
+
   return `${startDate.toLocaleDateString('zh-TW')} - ${endDate.toLocaleDateString('zh-TW')}`
 }
 
 function formatShortDate(date: string): string {
   return new Date(date).toLocaleDateString('zh-TW', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
-
 </script>

@@ -3,7 +3,7 @@
     <!-- Timer Selection -->
     <div class="space-y-4">
       <h3 class="text-lg font-medium text-gray-900">選擇要追蹤的任務</h3>
-      
+
       <!-- Quick Start Option -->
       <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div class="flex items-center space-x-3">
@@ -19,19 +19,10 @@
             <p class="text-sm text-gray-500">立即開始計時，稍後可以指定任務</p>
           </label>
         </div>
-        
+
         <div v-if="timerMode === 'quick'" class="mt-4 space-y-3">
-          <BaseInput
-            v-model="quickData.title"
-            type="text"
-            placeholder="輸入任務描述..."
-            required
-          />
-          <BaseInput
-            v-model="quickData.project"
-            type="text"
-            placeholder="專案名稱 (可選)"
-          />
+          <BaseInput v-model="quickData.title" type="text" placeholder="輸入任務描述..." required />
+          <BaseInput v-model="quickData.project" type="text" placeholder="專案名稱 (可選)" />
         </div>
       </div>
 
@@ -50,11 +41,13 @@
             <p class="text-sm text-gray-500">從已建立的任務中選擇</p>
           </label>
         </div>
-        
+
         <div v-if="timerMode === 'existing'" class="mt-4 space-y-4">
           <!-- Task Search -->
           <div class="relative">
-            <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlassIcon
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+            />
             <input
               v-model="taskSearchQuery"
               type="text"
@@ -73,7 +66,7 @@
                 'p-3 border rounded-lg cursor-pointer transition-colors',
                 selectedTaskId === task.id
                   ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:bg-gray-50'
+                  : 'border-gray-200 hover:bg-gray-50',
               ]"
             >
               <div class="flex items-center justify-between">
@@ -98,10 +91,7 @@
                   </div>
                 </div>
                 <div class="ml-4">
-                  <CheckIcon 
-                    v-if="selectedTaskId === task.id"
-                    class="w-5 h-5 text-blue-600"
-                  />
+                  <CheckIcon v-if="selectedTaskId === task.id" class="w-5 h-5 text-blue-600" />
                 </div>
               </div>
             </div>
@@ -129,7 +119,7 @@
             <p class="text-sm text-gray-500">記錄已完成的工作時間</p>
           </label>
         </div>
-        
+
         <div v-if="timerMode === 'manual'" class="mt-4 space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -144,24 +134,14 @@
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">
-                專案名稱
-              </label>
-              <BaseInput
-                v-model="manualData.project"
-                type="text"
-                placeholder="輸入專案名稱"
-              />
+              <label class="block text-sm font-medium text-gray-700 mb-1"> 專案名稱 </label>
+              <BaseInput v-model="manualData.project" type="text" placeholder="輸入專案名稱" />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
                 日期 <span class="text-red-500">*</span>
               </label>
-              <BaseInput
-                v-model="manualData.date"
-                type="date"
-                required
-              />
+              <BaseInput v-model="manualData.date" type="date" required />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -178,9 +158,7 @@
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              工作描述
-            </label>
+            <label class="block text-sm font-medium text-gray-700 mb-1"> 工作描述 </label>
             <BaseTextarea
               v-model="manualData.description"
               :rows="3"
@@ -194,20 +172,18 @@
     <!-- Timer Settings (for quick and existing modes) -->
     <div v-if="timerMode !== 'manual'" class="space-y-4">
       <h3 class="text-lg font-medium text-gray-900">計時器設定</h3>
-      
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            提醒間隔 (分鐘)
-          </label>
-          <BaseSelect 
+          <label class="block text-sm font-medium text-gray-700 mb-1"> 提醒間隔 (分鐘) </label>
+          <BaseSelect
             v-model="timerSettings.reminderInterval"
             :options="[
               { label: '不提醒', value: 0 },
               { label: '15 分鐘', value: 15 },
               { label: '30 分鐘', value: 30 },
               { label: '1 小時', value: 60 },
-              { label: '2 小時', value: 120 }
+              { label: '2 小時', value: 120 },
             ]"
           />
         </div>
@@ -239,18 +215,8 @@
 
     <!-- Form Actions -->
     <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-      <BaseButton
-        type="button"
-        variant="outline"
-        @click="$emit('cancel')"
-      >
-        取消
-      </BaseButton>
-      <BaseButton
-        type="submit"
-        variant="primary"
-        :disabled="!isFormValid"
-      >
+      <BaseButton type="button" variant="outline" @click="$emit('cancel')"> 取消 </BaseButton>
+      <BaseButton type="submit" variant="primary" :disabled="!isFormValid">
         {{ getSubmitButtonText() }}
       </BaseButton>
     </div>
@@ -259,11 +225,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import {
-  MagnifyingGlassIcon,
-  CheckIcon,
-  ListBulletIcon
-} from '@heroicons/vue/24/outline'
+import { MagnifyingGlassIcon, CheckIcon, ListBulletIcon } from '@heroicons/vue/24/outline'
 import type { WorkTask, WorkTaskStatus, WorkTaskPriority } from '@/types/api'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import BaseTextarea from '@/components/ui/BaseTextarea.vue'
@@ -290,7 +252,7 @@ const selectedTaskId = ref<number | null>(null)
 
 const quickData = ref({
   title: '',
-  project: ''
+  project: '',
 })
 
 const manualData = ref({
@@ -298,33 +260,33 @@ const manualData = ref({
   project: '',
   date: new Date().toISOString().split('T')[0],
   duration: 0,
-  description: ''
+  description: '',
 })
 
 const timerSettings = ref({
   reminderInterval: 30,
-  autoPause: true
+  autoPause: true,
 })
 
 // Computed
 const filteredTasks = computed(() => {
   if (!taskSearchQuery.value) {
-    return props.tasks.filter(task => task.status !== 'Completed') // Exclude completed tasks
+    return props.tasks.filter((task) => task.status !== 'Completed') // Exclude completed tasks
   }
 
   const query = taskSearchQuery.value.toLowerCase()
-  return props.tasks.filter(task =>
-    task.status !== 'Completed' && (
-      task.title.toLowerCase().includes(query) ||
-      task.description?.toLowerCase().includes(query) ||
-      task.projectName?.toLowerCase().includes(query)
-    )
+  return props.tasks.filter(
+    (task) =>
+      task.status !== 'Completed' &&
+      (task.title.toLowerCase().includes(query) ||
+        task.description?.toLowerCase().includes(query) ||
+        task.projectName?.toLowerCase().includes(query)),
   )
 })
 
 const selectedTask = computed(() => {
   if (selectedTaskId.value) {
-    return props.tasks.find(task => task.id === selectedTaskId.value)
+    return props.tasks.find((task) => task.id === selectedTaskId.value)
   }
   return null
 })
@@ -336,9 +298,11 @@ const isFormValid = computed(() => {
     case 'existing':
       return selectedTaskId.value !== null
     case 'manual':
-      return manualData.value.title.trim().length > 0 &&
-             manualData.value.date &&
-             manualData.value.duration > 0
+      return (
+        manualData.value.title.trim().length > 0 &&
+        manualData.value.date &&
+        manualData.value.duration > 0
+      )
     default:
       return false
   }
@@ -373,18 +337,18 @@ function handleSubmit() {
         mode: 'quick',
         title: quickData.value.title.trim(),
         project: quickData.value.project?.trim() || null,
-        settings: timerSettings.value
+        settings: timerSettings.value,
       }
       break
-    
+
     case 'existing':
       submitData = {
         mode: 'existing',
         taskId: selectedTaskId.value,
-        settings: timerSettings.value
+        settings: timerSettings.value,
       }
       break
-    
+
     case 'manual':
       submitData = {
         mode: 'manual',
@@ -392,7 +356,7 @@ function handleSubmit() {
         project: manualData.value.project?.trim() || null,
         date: manualData.value.date,
         duration: manualData.value.duration,
-        description: manualData.value.description?.trim() || null
+        description: manualData.value.description?.trim() || null,
       }
       break
   }
@@ -402,54 +366,64 @@ function handleSubmit() {
 
 function getStatusLabel(status: WorkTaskStatus): string {
   const labelMap: Record<WorkTaskStatus, string> = {
-    'Pending': '待處理',
-    'Planning': '規劃中',
-    'InProgress': '進行中',
-    'Testing': '測試中',
-    'Completed': '已完成',
-    'OnHold': '暫停',
-    'Cancelled': '已取消'
+    Pending: '待處理',
+    Planning: '規劃中',
+    InProgress: '進行中',
+    Testing: '測試中',
+    Completed: '已完成',
+    OnHold: '暫停',
+    Cancelled: '已取消',
   }
   return labelMap[status] || '未知'
 }
 
 function getStatusStyle(status: WorkTaskStatus): string {
   const styleMap: Record<WorkTaskStatus, string> = {
-    'Pending': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800',
-    'Planning': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800',
-    'InProgress': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800',
-    'Testing': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800',
-    'Completed': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800',
-    'OnHold': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800',
-    'Cancelled': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800'
+    Pending: 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800',
+    Planning: 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800',
+    InProgress:
+      'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800',
+    Testing:
+      'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800',
+    Completed:
+      'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800',
+    OnHold:
+      'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800',
+    Cancelled: 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800',
   }
-  return styleMap[status] || 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800'
+  return (
+    styleMap[status] ||
+    'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800'
+  )
 }
 
 function getPriorityLabel(priority: WorkTaskPriority): string {
   const priorityMap: Record<WorkTaskPriority, string> = {
-    'Low': '低',
-    'Medium': '中',
-    'High': '高',
-    'Urgent': '緊急'
+    Low: '低',
+    Medium: '中',
+    High: '高',
+    Urgent: '緊急',
   }
   return priorityMap[priority] || '未知'
 }
 
 function getPriorityStyle(priority: WorkTaskPriority): string {
   const styleMap: Record<WorkTaskPriority, string> = {
-    'Low': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800',
-    'Medium': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800',
-    'High': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800',
-    'Urgent': 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800'
+    Low: 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800',
+    Medium: 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800',
+    High: 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800',
+    Urgent: 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800',
   }
-  return styleMap[priority] || 'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800'
+  return (
+    styleMap[priority] ||
+    'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800'
+  )
 }
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('zh-TW', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 </script>

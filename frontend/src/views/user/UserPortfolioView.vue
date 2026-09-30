@@ -23,7 +23,10 @@
 
     <LoadingSpinner v-if="isLoading" size="medium" text="載入中..." />
 
-    <div v-else-if="filteredPortfolios.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      v-else-if="filteredPortfolios.length > 0"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
       <RouterLink
         v-for="project in filteredPortfolios"
         :key="project.id"
@@ -45,19 +48,31 @@
           <div
             v-if="project.isFeatured"
             class="absolute top-3 left-3 bg-amber-500 text-white px-2.5 py-0.5 rounded-full text-xs font-medium"
-          >精選</div>
+          >
+            精選
+          </div>
         </div>
         <div class="p-5">
-          <h3 class="font-semibold text-gray-900 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors mb-1">{{ project.title }}</h3>
-          <p v-if="project.description" class="text-sm text-gray-500 line-clamp-2 mb-3">{{ project.description }}</p>
+          <h3
+            class="font-semibold text-gray-900 group-hover:text-[var(--color-primary,#0ea5e9)] transition-colors mb-1"
+          >
+            {{ project.title }}
+          </h3>
+          <p v-if="project.description" class="text-sm text-gray-500 line-clamp-2 mb-3">
+            {{ project.description }}
+          </p>
           <!-- Tech tags -->
           <div v-if="project.technologies" class="flex flex-wrap gap-1.5 mb-3">
             <span
               v-for="tech in project.technologies.split(',').slice(0, 4)"
               :key="tech"
               class="text-xs px-2 py-0.5 rounded-full"
-              :style="{ backgroundColor: 'var(--color-primary-light,#e0f2fe)', color: 'var(--color-primary-dark,#0c4a6e)' }"
-            >{{ tech.trim() }}</span>
+              :style="{
+                backgroundColor: 'var(--color-primary-light,#e0f2fe)',
+                color: 'var(--color-primary-dark,#0c4a6e)',
+              }"
+              >{{ tech.trim() }}</span
+            >
           </div>
           <!-- Links + attachment badge -->
           <div class="flex items-center gap-3 flex-wrap">
@@ -84,7 +99,8 @@
             <span
               v-if="attachmentCounts[project.id]"
               class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full"
-            >📎 {{ attachmentCounts[project.id] }}</span>
+              >📎 {{ attachmentCounts[project.id] }}</span
+            >
           </div>
         </div>
       </RouterLink>
@@ -92,7 +108,9 @@
 
     <div v-else-if="!isLoading && portfolios.length > 0" class="text-center text-gray-400 py-12">
       <p>找不到符合的作品</p>
-      <button @click="clearFilters" class="mt-3 text-sm text-sky-600 hover:text-sky-800">清除篩選</button>
+      <button @click="clearFilters" class="mt-3 text-sm text-sky-600 hover:text-sky-800">
+        清除篩選
+      </button>
     </div>
 
     <div v-else-if="!isLoading" class="text-center text-gray-400 py-12">尚無作品集</div>
@@ -103,7 +121,11 @@
 import { ref, computed, inject, onMounted, watch } from 'vue'
 import type { ComputedRef } from 'vue'
 import { RouterLink } from 'vue-router'
-import { BriefcaseIcon, ArrowTopRightOnSquareIcon, CodeBracketIcon } from '@heroicons/vue/24/outline'
+import {
+  BriefcaseIcon,
+  ArrowTopRightOnSquareIcon,
+  CodeBracketIcon,
+} from '@heroicons/vue/24/outline'
 import httpService from '@/services/http'
 import portfolioAttachmentService from '@/services/portfolioAttachmentService'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
@@ -120,8 +142,8 @@ const selectedTech = ref('')
 
 const availableTechs = computed(() => {
   const techs = new Set<string>()
-  portfolios.value.forEach(p => {
-    if (p.technologies) p.technologies.split(',').forEach(t => techs.add(t.trim()))
+  portfolios.value.forEach((p) => {
+    if (p.technologies) p.technologies.split(',').forEach((t) => techs.add(t.trim()))
   })
   return Array.from(techs).sort()
 })
@@ -130,14 +152,17 @@ const filteredPortfolios = computed(() => {
   let list = portfolios.value
   if (searchTerm.value) {
     const q = searchTerm.value.toLowerCase()
-    list = list.filter(p =>
-      p.title.toLowerCase().includes(q) ||
-      (p.description?.toLowerCase().includes(q)) ||
-      (p.technologies?.toLowerCase().includes(q))
+    list = list.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q) ||
+        p.technologies?.toLowerCase().includes(q),
     )
   }
   if (selectedTech.value) {
-    list = list.filter(p => p.technologies?.toLowerCase().includes(selectedTech.value.toLowerCase()))
+    list = list.filter((p) =>
+      p.technologies?.toLowerCase().includes(selectedTech.value.toLowerCase()),
+    )
   }
   return list
 })
@@ -164,7 +189,9 @@ async function load(uid: number) {
           if (attRes.success && attRes.data?.length) {
             attachmentCounts.value = { ...attachmentCounts.value, [p.id]: attRes.data.length }
           }
-        } catch { /* ignore */ }
+        } catch {
+          /* ignore */
+        }
       })
     }
   } catch {
@@ -174,6 +201,13 @@ async function load(uid: number) {
   }
 }
 
-onMounted(() => { if (userId?.value) load(userId.value) })
-watch(() => userId?.value, (uid) => { if (uid) load(uid) })
+onMounted(() => {
+  if (userId?.value) load(userId.value)
+})
+watch(
+  () => userId?.value,
+  (uid) => {
+    if (uid) load(uid)
+  },
+)
 </script>

@@ -7,10 +7,10 @@ vi.mock('axios', () => ({
     create: vi.fn(() => ({
       interceptors: {
         request: { use: vi.fn() },
-        response: { use: vi.fn() }
-      }
-    }))
-  }
+        response: { use: vi.fn() },
+      },
+    })),
+  },
 }))
 
 type FakeClient = Record<'get' | 'post' | 'put' | 'delete', ReturnType<typeof vi.fn>>

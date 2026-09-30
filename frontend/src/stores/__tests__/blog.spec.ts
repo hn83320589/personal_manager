@@ -74,7 +74,7 @@ describe('useBlogStore', () => {
         makePost({ id: 2, status: 'Published', publishedAt: '2026-01-01T00:00:00Z' }),
         makePost({ id: 3, status: 'Published', publishedAt: '2026-01-02T00:00:00Z' }),
       ]
-      expect(store.publishedPosts.map(p => p.id)).toEqual([3, 2])
+      expect(store.publishedPosts.map((p) => p.id)).toEqual([3, 2])
     })
 
     it('excludes draft posts', () => {
@@ -91,18 +91,15 @@ describe('useBlogStore', () => {
         makePost({ id: 1, status: 'Published', isPublic: true }),
         makePost({ id: 2, status: 'Published', isPublic: false }),
       ]
-      expect(store.publicPosts.map(p => p.id)).toEqual([1])
+      expect(store.publicPosts.map((p) => p.id)).toEqual([1])
     })
   })
 
   describe('draftPosts getter', () => {
     it('returns only Draft posts', () => {
       const store = useBlogStore()
-      store.posts = [
-        makePost({ id: 1, status: 'Draft' }),
-        makePost({ id: 2, status: 'Published' }),
-      ]
-      expect(store.draftPosts.map(p => p.id)).toEqual([1])
+      store.posts = [makePost({ id: 1, status: 'Draft' }), makePost({ id: 2, status: 'Published' })]
+      expect(store.draftPosts.map((p) => p.id)).toEqual([1])
     })
   })
 
@@ -114,7 +111,7 @@ describe('useBlogStore', () => {
         makePost({ id: 2, title: 'React Guide', status: 'Published' }),
       ]
       const results = await store.searchPosts('vue')
-      expect(results.map(p => p.id)).toEqual([1])
+      expect(results.map((p) => p.id)).toEqual([1])
     })
 
     it('matches by content', async () => {
@@ -124,7 +121,7 @@ describe('useBlogStore', () => {
         makePost({ id: 2, content: 'Python is also great', status: 'Published' }),
       ]
       const results = await store.searchPosts('typescript')
-      expect(results.map(p => p.id)).toEqual([1])
+      expect(results.map((p) => p.id)).toEqual([1])
     })
 
     it('returns empty array when no match', async () => {
@@ -141,7 +138,7 @@ describe('useBlogStore', () => {
         makePost({ id: 2, title: 'Draft Post Published', status: 'Published' }),
       ]
       const results = await store.searchPosts('draft post')
-      expect(results.map(p => p.id)).toEqual([2])
+      expect(results.map((p) => p.id)).toEqual([2])
     })
   })
 
@@ -149,7 +146,12 @@ describe('useBlogStore', () => {
     it('adds new post to store on success', async () => {
       const store = useBlogStore()
       const newPost = makePost({ id: 99, title: 'New Post' })
-      vi.mocked(blogService.createBlogPost).mockResolvedValue({ data: newPost, success: true, message: '', errors: [] })
+      vi.mocked(blogService.createBlogPost).mockResolvedValue({
+        data: newPost,
+        success: true,
+        message: '',
+        errors: [],
+      })
 
       await store.createPost({ title: 'New Post' })
 
@@ -171,11 +173,16 @@ describe('useBlogStore', () => {
     it('removes post from store on success', async () => {
       const store = useBlogStore()
       store.posts = [makePost({ id: 1 }), makePost({ id: 2 })]
-      vi.mocked(blogService.deleteBlogPost).mockResolvedValue({ data: undefined, success: true, message: '', errors: [] })
+      vi.mocked(blogService.deleteBlogPost).mockResolvedValue({
+        data: undefined,
+        success: true,
+        message: '',
+        errors: [],
+      })
 
       await store.deletePost(1)
 
-      expect(store.posts.map(p => p.id)).toEqual([2])
+      expect(store.posts.map((p) => p.id)).toEqual([2])
     })
 
     it('returns false and sets error on failure', async () => {

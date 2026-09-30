@@ -19,7 +19,9 @@ class SkillService {
   }
 
   async getSkillsByCategory(userId: number, category: string): Promise<ApiResponse<Skill[]>> {
-    return httpService.get<Skill[]>(`/skills/user/${userId}/category/${encodeURIComponent(category)}`)
+    return httpService.get<Skill[]>(
+      `/skills/user/${userId}/category/${encodeURIComponent(category)}`,
+    )
   }
 
   async createSkill(skill: Partial<Skill>): Promise<ApiResponse<Skill>> {
