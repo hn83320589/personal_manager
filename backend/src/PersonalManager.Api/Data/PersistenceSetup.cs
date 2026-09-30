@@ -1,6 +1,5 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using PersonalManager.Api.Repositories;
 
 namespace PersonalManager.Api.Data;
 
@@ -43,8 +42,6 @@ public static class PersistenceSetup
             throw new InvalidOperationException(
                 $"不支援的 Database:Provider「{provider}」，請使用 {SqliteProvider} 或 {MySqlProvider}。");
         }
-
-        services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
         return services;
     }

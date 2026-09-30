@@ -80,3 +80,15 @@ public static class SampleFiles
         buffer[offset + 2] = (byte)(value >> 16);
     }
 }
+
+public static class TestFiles
+{
+    /// <summary>以指定使用者上傳檔案，回傳 API 的檔案資料（含 id、url、寬高）。</summary>
+    public static async Task<System.Text.Json.JsonElement> UploadAsync(this TestUser user, string fileName, byte[] content)
+    {
+        var form = new MultipartFormDataContent { { new ByteArrayContent(content), "file", fileName } };
+        var response = await user.Client().PostAsync("/api/me/files", form);
+        Assert.Equal(System.Net.HttpStatusCode.Created, response.StatusCode);
+        return await response.ReadDataAsync<System.Text.Json.JsonElement>();
+    }
+}

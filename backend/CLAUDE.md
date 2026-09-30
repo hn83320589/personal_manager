@@ -65,8 +65,7 @@ HTTP 請求
   → ErrorHandlingMiddleware（統一錯誤處理）
   → JWT 認證/授權
   → Controller（接收請求，回傳 ApiResponse<T>）
-  → Service（業務邏輯，使用 DTO）
-  → IRepository<T> → EfRepository<T>（重構中：Phase 2 將改為 service 直接使用 DbContext，見 ADR-011）
+  → Feature Service（業務邏輯，直接使用 ApplicationDbContext，見 ADR-011）
 ```
 
 ### 資料庫設定（`Data/PersistenceSetup.cs`）
@@ -138,39 +137,17 @@ backend/
 │   ├── JwtSettings.cs            # JWT 設定 model（無預設金鑰）
 │   └── JwtSetup.cs               # 金鑰驗證與 JWT 驗證註冊
 │
-├── Controllers/                  # API 控制器（皆繼承 BaseApiController）
-│   ├── BaseApiController.cs      # GetCurrentUserId() 等共用 helper
-│   ├── AuthController.cs         # /api/auth（login、register、me、refresh、logout、密碼重設）
-│   ├── UsersController.cs        # /api/users
-│   ├── ProfilesController.cs     # /api/profiles
-│   ├── EducationsController.cs   # /api/educations
-│   ├── WorkExperiencesController.cs # /api/workexperiences
-│   ├── SkillsController.cs       # /api/skills
-│   ├── PortfoliosController.cs   # /api/portfolios
-│   ├── PortfolioAttachmentsController.cs # /api/portfolioattachments
-│   ├── CalendarEventsController.cs  # /api/calendarevents
-│   ├── TodoItemsController.cs    # /api/todoitems
-│   ├── WorkTasksController.cs    # /api/worktasks
-│   ├── ProjectsController.cs     # /api/projects
-│   ├── TimeEntriesController.cs  # /api/timeentries
-│   ├── BlogPostsController.cs    # /api/blogposts
-│   ├── GuestBookEntriesController.cs # /api/guestbookentries
-│   ├── ContactMethodsController.cs  # /api/contactmethods
-│   └── FileUploadsController.cs  # /api/fileuploads
+├── Features/<名稱>/               # 各功能的 Controller、Service、DTO（見下方「Feature 寫法」）
 │
 ├── DTOs/
-│   ├── ApiResponse.cs            # 統一回應格式 ApiResponse<T>
-│   ├── AuthDtos.cs               # LoginRequest, RegisterRequest, AuthResponse
-│   └── EntityDtos.cs             # 所有實體的 Create/Update/Response DTOs
+│   └── ApiResponse.cs            # 統一回應格式 ApiResponse<T>、PagedResult<T>
 │
 ├── Data/
 │   ├── ApplicationDbContext.cs   # EF Core 資料模型
 │   ├── ProviderDbContexts.cs     # Sqlite／MySql 子類別與 design-time factory
 │   ├── PersistenceSetup.cs       # AddPersistence()：依設定選擇 provider
+│   ├── JsonColumns.cs            # 值物件清單以 JSON 文字儲存（作品內容）
 │   └── DatabaseSeeder.cs         # 初始資料種子（索引由 ApplicationDbContext 定義）
-│
-├── Mappings/
-│   └── MappingExtensions.cs      # Model ↔ DTO 手動映射擴展方法
 │
 ├── Middleware/
 │   └── ErrorHandlingMiddleware.cs # AppException → 對應狀態碼；其他例外 → 500 通用訊息（不外洩細節）
@@ -179,13 +156,7 @@ backend/
 │
 ├── Models/                       # EF Core 實體（以資料夾內容為準）
 │
-├── Repositories/
-│   ├── IRepository.cs            # 通用 CRUD 介面
-│   └── EfRepository.cs           # EF Core 實作（以 open generic 註冊；Phase 2 完成後移除）
-│
 ├── Services/
-│   ├── CrudService.cs            # 通用 CRUD 業務邏輯基礎類別
-│   ├── EntityServices.cs         # 各實體的具體服務類別
 │   ├── EmailService.cs           # 寄信（SMTP / 未設定時 NoOp）
 │   ├── FileStorageProviders.cs   # 檔案儲存（本地 / S3 相容 Object Storage）
 │   └── DbHealthCheck.cs          # DB 連線健康檢查
@@ -205,7 +176,7 @@ backend/
 | PublicResumeController／MyEducationsController | `/api/public/users/{username}/educations`、`/api/me/educations` | 學歷（已重建） |
 | PublicResumeController／MyWorkExperiencesController | `/api/public/users/{username}/work-experiences`、`/api/me/work-experiences` | 工作經歷（已重建） |
 | PublicSkillsController／MySkillsController | `/api/public/users/{username}/skills`、`/api/me/skills` | 技能（已重建） |
-| PortfoliosController | `/api/portfolios` | 作品集 |
+| PublicPortfoliosController／MyPortfoliosController | `/api/public/users/{username}/portfolios`（卡片列表，`?category`、`?tag`；`facets`；`{slug}`）、`/api/me/portfolios`（含 `order`） | 作品集（已重建，區塊式內容，ADR-012） |
 | PublicCalendarController／MyCalendarController | `/api/public/users/{username}/calendar?from&to`、`/api/me/calendar`（展開後的發生時間）、`/api/me/calendar/events` | 行事曆（已重建） |
 | MyTodosController | `/api/me/todos` | 待辦事項（已重建） |
 | MyWorkTasksController | `/api/me/work-tasks` | 工作任務（已重建，實際時數由時間紀錄加總） |
@@ -215,7 +186,6 @@ backend/
 | MyProjectsController | `/api/me/projects` | 工作追蹤專案（已重建） |
 | MyTimeEntriesController | `/api/me/time-entries`（含 `summary`） | 時間紀錄（已重建） |
 | MyFilesController | `/api/me/files` | 檔案上傳（已重建：副檔名與 magic bytes 須一致、伺服器判定 MIME、記錄圖片寬高） |
-| PortfolioAttachmentsController | `/api/portfolioattachments` | 作品集附件 |
 
 所有資料回應格式：
 ```json
@@ -285,9 +255,9 @@ Jwt__SecretKey = <隨機密鑰>
 
 ---
 
-## Feature 寫法（ADR-011，重構中）
+## Feature 寫法（ADR-011）
 
-已重建的 feature 放在 `Features/<名稱>/`，範本為 `Features/Skills/`。尚未重建的仍是下方「如何新增一個實體」的舊寫法，重建完成後舊寫法會移除。
+所有 feature 放在 `Features/<名稱>/`，範本為 `Features/Skills/`。新增資料表時，Model 放 `Models/`、在 `ApplicationDbContext` 加 `DbSet` 與索引，再產生兩組 migration（見「注意事項」）。
 
 | 項目 | 規則 |
 |------|------|
@@ -300,63 +270,6 @@ Jwt__SecretKey = <隨機密鑰>
 | 排序 | 實體實作 `ISortable`；新增時 `NextPositionAsync()`，`PUT api/me/<資源>/order` 以 `ApplyOrder()` 套用 |
 | 實體 | 屬於使用者的實體實作 `IOwnedByUser` |
 | 測試 | `tests/.../Features/<名稱>ApiTests.cs`，以 `ApiFactory` + `CreateUserAsync()` 打真實 HTTP。清單型資源繼承 `OwnedCollectionContract` 取得共用的 9 個行為測試，只需另寫該資源特有的規則 |
-
-## 如何新增一個實體（舊寫法，重建中）
-
-1. **新增 Model**（`Models/NewEntity.cs`）：
-   ```csharp
-   public class NewEntity
-   {
-       public int Id { get; set; }
-       public int UserId { get; set; }
-       public string Name { get; set; } = string.Empty;
-       public DateTime CreatedAt { get; set; }
-       public DateTime UpdatedAt { get; set; }
-   }
-   ```
-
-2. **新增 DTO**（`DTOs/EntityDtos.cs`）：
-   ```csharp
-   public class CreateNewEntityDto { ... }
-   public class UpdateNewEntityDto { ... }
-   public class NewEntityResponseDto { ... }
-   ```
-
-3. **新增映射**（`Mappings/MappingExtensions.cs`）：
-   ```csharp
-   public static NewEntityResponseDto ToResponseDto(this NewEntity entity) { ... }
-   public static NewEntity ToModel(this CreateNewEntityDto dto) { ... }
-   ```
-
-4. **新增 DbSet**（`Data/ApplicationDbContext.cs`）：
-   ```csharp
-   public DbSet<NewEntity> NewEntities { get; set; }
-   ```
-
-5. **新增 Service**（`Services/EntityServices.cs`）：
-   ```csharp
-   public interface INewEntityService : ICrudService<NewEntity, CreateNewEntityDto, UpdateNewEntityDto, NewEntityResponseDto> { }
-   public class NewEntityService : CrudService<NewEntity, CreateNewEntityDto, UpdateNewEntityDto, NewEntityResponseDto>, INewEntityService
-   {
-       public NewEntityService(IRepository<NewEntity> repo) : base(repo) { }
-       protected override NewEntityResponseDto ToResponseDto(NewEntity entity) => entity.ToResponseDto();
-       protected override NewEntity ToModel(CreateNewEntityDto dto) => dto.ToModel();
-       protected override void UpdateModel(NewEntity entity, UpdateNewEntityDto dto) => dto.ApplyTo(entity);
-   }
-   ```
-
-6. **在 `Setup/ApplicationSetup.cs` 註冊 Service**（repository 已由 open generic 自動註冊）：
-   ```csharp
-   builder.Services.AddScoped<INewEntityService, NewEntityService>();
-   ```
-
-7. **新增 Controller**（`Controllers/NewEntitiesController.cs`）：
-   參考 `SkillsController.cs` 的結構，繼承 `BaseApiController`，注入 `INewEntityService`。
-   以 `GetCurrentUserId()`（回傳 `int?`）取得目前使用者：Create 時強制寫入 `dto.UserId`，Update/Delete 先驗證資源擁有者。
-
-8. **新增 migration**：Sqlite 與 MySql 各產生一次（指令見「注意事項」），並 commit 產生的檔案。
-
----
 
 ## 開發注意事項
 

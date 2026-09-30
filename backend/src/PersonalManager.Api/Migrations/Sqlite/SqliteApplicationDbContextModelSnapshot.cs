@@ -496,16 +496,29 @@ namespace PersonalManager.Api.Migrations.Sqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Blocks")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CoverFocus")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Covers")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Fields")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsFeatured")
@@ -514,21 +527,31 @@ namespace PersonalManager.Api.Migrations.Sqlite
                     b.Property<bool>("IsPublic")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ProjectUrl")
+                    b.Property<string>("Links")
                         .IsRequired()
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("RepositoryUrl")
+                    b.Property<string>("Period")
                         .IsRequired()
-                        .HasMaxLength(500)
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("SortOrder")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Technologies")
+                    b.Property<string>("Summary")
                         .IsRequired()
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -542,53 +565,19 @@ namespace PersonalManager.Api.Migrations.Sqlite
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("Year")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SortOrder");
 
-                    b.HasIndex("UserId");
-
                     b.HasIndex("IsPublic", "IsFeatured");
 
+                    b.HasIndex("UserId", "Slug")
+                        .IsUnique();
+
                     b.ToTable("Portfolios");
-                });
-
-            modelBuilder.Entity("PersonalManager.Api.Models.PortfolioAttachment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("FileSize")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FileType")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("FileUploadId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FileUrl")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("PortfolioId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PortfolioAttachments");
                 });
 
             modelBuilder.Entity("PersonalManager.Api.Models.Project", b =>
@@ -1008,6 +997,21 @@ namespace PersonalManager.Api.Migrations.Sqlite
                     b.ToTable("WorkTasks");
                 });
 
+            modelBuilder.Entity("PortfolioTags", b =>
+                {
+                    b.Property<int>("PortfolioId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("PortfolioId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("PortfolioTags");
+                });
+
             modelBuilder.Entity("BlogPostTags", b =>
                 {
                     b.HasOne("PersonalManager.Api.Models.BlogPost", null)
@@ -1037,6 +1041,21 @@ namespace PersonalManager.Api.Migrations.Sqlite
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("PortfolioTags", b =>
+                {
+                    b.HasOne("PersonalManager.Api.Models.Portfolio", null)
+                        .WithMany()
+                        .HasForeignKey("PortfolioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PersonalManager.Api.Models.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

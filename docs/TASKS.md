@@ -45,13 +45,20 @@
 - [x] 檔案上傳（副檔名與 magic bytes 須一致、不收 SVG／原始檔、伺服器判定 MIME、記錄圖片寬高、50 MB 上限且超過時不先寫入暫存、nosniff、S3 改用伺服器判定的 Content-Type）
 - [x] Auth（httpOnly cookie refresh token、token 雜湊、輪換與重用偵測、登入與 refresh 檢查停用帳號、重設／修改密碼後撤銷全部工作階段、帳號限英數底線連字號、密碼至少 8 碼、access token 15 分鐘）
 - [x] Admin：使用者列表、停用／啟用（停用時結束工作階段）、角色變更（不可停用或降級自己）；第一位管理員以 `Admin:BootstrapEmails` 建立
-- [ ] 移除 `IRepository`、`CrudService` 與舊的 DTO／Mapping 檔 → 只剩作品集使用，Phase 3 重建作品集後一併移除
+- [x] 移除 `IRepository`、`CrudService`、`BaseApiController` 與舊的 DTO／Mapping 檔（Phase 3 重建作品集時一併移除）
+
+### Phase 3 — 作品集（ADR-012）
+- [x] 區塊式作品：封面輪播與裁切重點、角色／期間與自訂欄位、連結、七種內容區塊（文字、圖片、圖庫、附件、嵌入、重點數字、程式碼）
+- [x] 伺服器依使用者自己上傳的檔案填入網址、尺寸與檔名；文字區塊清洗 HTML；嵌入白名單；外部圖片限 https
+- [x] 公開卡片列表（分類、標籤篩選與 facets）、以 slug 取得單件作品；後台整份儲存與排序
+- [x] 移除 `PortfolioAttachment`；migration 保留既有作品的標題並產生不重複的 slug（含資料遷移測試）
 
 ### 技術債（重構期間發現）
 - [x] 第一位管理員以 `Admin:BootstrapEmails` 建立
 - [x] 【Bug】部落格「特色圖片」從未被儲存 → 後端已新增 `CoverImageUrl`（前端於 Phase 4 串接）
 - [x] 移除 `WorkTask.Tags` 字串欄位
 - [x] `dotnet-ef` 以 local tool 鎖定 9.0.13；CI 檢查兩組 migration 是否都已產生
+- [ ] 刪除仍被作品引用的上傳檔案時，作品中的圖片或附件會失效 → 刪除前檢查引用或提示使用者（Phase 5 後台檔案管理時處理）
 
 ---
 

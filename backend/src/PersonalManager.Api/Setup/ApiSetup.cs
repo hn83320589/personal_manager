@@ -29,6 +29,8 @@ public static class ApiSetup
             {
                 o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                // 作品區塊以「type」區分類型；允許 type 不是第一個屬性
+                o.JsonSerializerOptions.AllowOutOfOrderMetadataProperties = true;
             })
             // 驗證失敗也回傳與其他錯誤相同的 ApiResponse 格式，前端只需處理一種錯誤結構
             .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = context =>

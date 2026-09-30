@@ -28,7 +28,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<GuestBookEntry> GuestBookEntries => Set<GuestBookEntry>();
     public DbSet<ContactMethod> ContactMethods => Set<ContactMethod>();
     public DbSet<FileUpload> FileUploads => Set<FileUpload>();
-    public DbSet<PortfolioAttachment> PortfolioAttachments => Set<PortfolioAttachment>();
     public DbSet<TimeEntry> TimeEntries => Set<TimeEntry>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Project> Projects => Set<Project>();
@@ -121,6 +120,8 @@ public class ApplicationDbContext : DbContext
             .WithMany()
             .UsingEntity("BlogPostTags");
 
+        ConfigurePortfolio(modelBuilder);
+
         // Unique constraints
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Username)
@@ -136,6 +137,19 @@ public class ApplicationDbContext : DbContext
             .IsUnique();
 
         ConfigureLookupIndexes(modelBuilder);
+    }
+
+    /// <summary>作品內容（封面、欄位、連結、區塊）以 JSON 存在作品資料列中（ADR-012）。</summary>
+    private static void ConfigurePortfolio(ModelBuilder b)
+    {
+        var portfolio = b.Entity<Portfolio>();
+        portfolio.Property(p => p.Covers).HasJsonConversion();
+        portfolio.Property(p => p.Fields).HasJsonConversion();
+        portfolio.Property(p => p.Links).HasJsonConversion();
+        portfolio.Property(p => p.Blocks).HasJsonConversion();
+        portfolio.HasMany(p => p.Tags).WithMany().UsingEntity("PortfolioTags");
+        // slug 在同一位使用者的作品中唯一
+        portfolio.HasIndex(p => new { p.UserId, p.Slug }).IsUnique();
     }
 
     /// <summary>
@@ -160,7 +174,6 @@ public class ApplicationDbContext : DbContext
         b.Entity<Skill>().HasIndex(e => e.Category);
         b.Entity<Skill>().HasIndex(e => new { e.IsPublic, e.SortOrder });
 
-        b.Entity<Portfolio>().HasIndex(e => e.UserId);
         b.Entity<Portfolio>().HasIndex(e => new { e.IsPublic, e.IsFeatured });
         b.Entity<Portfolio>().HasIndex(e => e.SortOrder);
 

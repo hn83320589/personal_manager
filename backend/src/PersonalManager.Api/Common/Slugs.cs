@@ -11,13 +11,13 @@ public static partial class Slugs
 
     public static bool IsValid(string slug) => ValidSlug().IsMatch(slug);
 
-    /// <summary>由標題中的英數字組成；標題沒有英數字（例如全中文）時產生隨機代稱。</summary>
-    public static string FromTitle(string title)
+    /// <summary>由標題中的英數字組成；標題沒有英數字（例如全中文）時產生「前綴-隨機字元」。</summary>
+    public static string FromTitle(string title, string fallbackPrefix = "post")
     {
         var slug = NonSlugCharacters().Replace(title.ToLowerInvariant(), "-").Trim('-');
         if (slug.Length > MaxLength)
             slug = slug[..MaxLength].TrimEnd('-');
-        return slug.Length > 0 ? slug : "post-" + RandomToken(8);
+        return slug.Length > 0 ? slug : $"{fallbackPrefix}-{RandomToken(8)}";
     }
 
     /// <summary>若 <paramref name="baseSlug"/> 已被使用，依序嘗試 -2、-3…</summary>

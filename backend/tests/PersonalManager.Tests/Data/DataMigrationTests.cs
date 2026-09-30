@@ -70,6 +70,27 @@ public sealed class DataMigrationTests : IDisposable
         Assert.Equal(0, remaining);
     }
 
+    [Fact]
+    public async Task BlockPortfolio_KeepsLegacyPortfoliosReadableWithUniqueSlugs()
+    {
+        await MigrateToMigrationBeforeAsync("BlockPortfolio");
+        await _db.Database.ExecuteSqlAsync($"""
+            INSERT INTO Users (Username, Email, PasswordHash, FullName, Role, IsActive, CreatedAt, UpdatedAt)
+            VALUES ('legacy', 'legacy@test.local', 'x', 'Legacy', 'User', 1, '2026-01-01', '2026-01-01')
+            """);
+        await _db.Database.ExecuteSqlAsync($"""
+            INSERT INTO Portfolios (UserId, Title, Description, ImageUrl, ProjectUrl, RepositoryUrl, Technologies,
+                                    IsFeatured, IsPublic, SortOrder, CreatedAt, UpdatedAt)
+            VALUES (1, '舊作品一', '舊的描述', '', '', '', 'Vue', 0, 1, 1, '2026-01-01', '2026-01-01'),
+                   (1, '舊作品二', '', '', '', '', '', 0, 1, 2, '2026-01-01', '2026-01-01')
+            """);
+
+        await _db.Database.MigrateAsync();
+        var portfolios = await _db.Portfolios.AsNoTracking().OrderBy(p => p.Id).ToListAsync();
+
+        Assert.Equal(("舊的描述", 2, 0), (portfolios[0].Summary, portfolios.Select(p => p.Slug).Distinct().Count(), portfolios[0].Blocks.Count));
+    }
+
     public void Dispose()
     {
         _db.Dispose();
