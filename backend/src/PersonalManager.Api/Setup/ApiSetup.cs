@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
@@ -50,6 +51,17 @@ public static class ApiSetup
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Personal Manager API", Version = "v1" });
+            // 讓產生的前端型別（openapi-typescript）與 C# 一致：非 nullable 的屬性為必填，
+            // 作品區塊依 [JsonDerivedType] 產生以 type 區分的 oneOf
+            c.SupportNonNullableReferenceTypes();
+            c.NonNullableReferenceTypesAsRequired();
+            c.UseOneOfForPolymorphism();
+            c.UseAllOfForInheritance();
+            c.SelectDiscriminatorNameUsing(type =>
+                type.GetCustomAttribute<JsonPolymorphicAttribute>()?.TypeDiscriminatorPropertyName);
+            c.SelectDiscriminatorValueUsing(subType =>
+                subType.BaseType?.GetCustomAttributes<JsonDerivedTypeAttribute>()
+                    .FirstOrDefault(a => a.DerivedType == subType)?.TypeDiscriminator as string);
             var bearer = new OpenApiSecurityScheme
             {
                 Description = "JWT Authorization header. Enter 'Bearer' [space] and then your token.",
