@@ -148,22 +148,6 @@ public static class MappingExtensions
         if (d.SortOrder.HasValue) p.SortOrder = d.SortOrder.Value;
     }
 
-    // ===== GuestBookEntry =====
-    public static GuestBookEntryResponse ToResponse(this GuestBookEntry g) => new()
-    {
-        Id = g.Id, TargetUserId = g.TargetUserId, Name = g.Name, Email = g.Email,
-        Message = g.Message, IsApproved = g.IsApproved, AdminReply = g.AdminReply, CreatedAt = g.CreatedAt
-    };
-    public static GuestBookEntry ToEntity(this CreateGuestBookEntryDto d) => new()
-    {
-        TargetUserId = d.TargetUserId, Name = d.Name, Email = d.Email, Message = d.Message
-    };
-    public static void ApplyUpdate(this GuestBookEntry g, UpdateGuestBookEntryDto d)
-    {
-        if (d.IsApproved.HasValue) g.IsApproved = d.IsApproved.Value;
-        if (d.AdminReply != null) g.AdminReply = d.AdminReply;
-    }
-
     // ===== FileUpload =====
     public static FileUploadResponse ToResponse(this FileUpload f) => new()
     {

@@ -216,31 +216,6 @@ public class WorkTaskResponse
     public DateTime UpdatedAt { get; set; }
 }
 
-// ===== GuestBookEntry =====
-public class CreateGuestBookEntryDto
-{
-    public int TargetUserId { get; set; } = 1;
-    [Required] public string Name { get; set; } = string.Empty;
-    [EmailAddress] public string Email { get; set; } = string.Empty;
-    [Required] public string Message { get; set; } = string.Empty;
-}
-public class UpdateGuestBookEntryDto
-{
-    public bool? IsApproved { get; set; }
-    public string? AdminReply { get; set; }
-}
-public class GuestBookEntryResponse
-{
-    public int Id { get; set; }
-    public int TargetUserId { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Message { get; set; } = string.Empty;
-    public bool IsApproved { get; set; }
-    public string AdminReply { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-}
-
 // ===== FileUpload =====
 public class FileUploadResponse
 {

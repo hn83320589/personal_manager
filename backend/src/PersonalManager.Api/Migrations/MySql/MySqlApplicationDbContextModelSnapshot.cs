@@ -349,12 +349,16 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime?>("RepliedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("TargetUserId")
                         .HasColumnType("int");

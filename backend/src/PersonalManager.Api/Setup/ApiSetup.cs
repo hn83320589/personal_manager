@@ -84,13 +84,17 @@ public static class ApiSetup
         return services;
     }
 
-    public static IServiceCollection AddRateLimitPolicies(this IServiceCollection services)
+    /// <summary>每個 IP 每分鐘的次數上限，可由 <c>RateLimiting:*PermitsPerMinute</c> 調整（預設 10）。</summary>
+    public static IServiceCollection AddRateLimitPolicies(this IServiceCollection services, IConfiguration configuration)
     {
+        var authLimit = configuration.GetValue("RateLimiting:AuthPermitsPerMinute", 10);
+        var publicWriteLimit = configuration.GetValue("RateLimiting:PublicWritePermitsPerMinute", 10);
+
         services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-            options.AddPolicy(RateLimitPolicies.Auth, PerClientIp(permitsPerMinute: 10));
-            options.AddPolicy(RateLimitPolicies.PublicWrite, PerClientIp(permitsPerMinute: 10));
+            options.AddPolicy(RateLimitPolicies.Auth, PerClientIp(authLimit));
+            options.AddPolicy(RateLimitPolicies.PublicWrite, PerClientIp(publicWriteLimit));
         });
         return services;
     }

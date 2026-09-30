@@ -12,7 +12,7 @@ builder.Services
     .AddApiControllers()
     .AddApiDocumentation()
     .AddFrontendCors(builder.Configuration, builder.Environment)
-    .AddRateLimitPolicies()
+    .AddRateLimitPolicies(builder.Configuration)
     .AddApiHealthChecks()
     .AddJwtAuthentication(builder.Configuration, builder.Environment, startupLogger)
     .AddPersistence(builder.Configuration, builder.Environment)   // ADR-008：預設 SQLite

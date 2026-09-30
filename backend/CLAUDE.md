@@ -208,7 +208,7 @@ backend/
 | TodoItemsController | `/api/todoitems` | 待辦事項 |
 | WorkTasksController | `/api/worktasks` | 工作追蹤 |
 | PublicPostsController／MyPostsController／MyTagsController | `/api/public/users/{username}/posts`（含 `facets`、`{slug}/views`）、`/api/me/posts`、`/api/me/tags` | 部落格文章與標籤（已重建） |
-| GuestBookEntriesController | `/api/guestbookentries` | 留言板 |
+| PublicGuestbookController／MyGuestbookController | `/api/public/users/{username}/guestbook`（GET、POST 限流）、`/api/me/guestbook`（含 `approval`、`reply`） | 留言板（已重建） |
 | PublicContactMethodsController／MyContactMethodsController | `/api/public/users/{username}/contact-methods`、`/api/me/contact-methods` | 聯絡方式（已重建） |
 | ProjectsController | `/api/projects` | 工作追蹤專案 |
 | TimeEntriesController | `/api/timeentries` | 時間記錄 |
@@ -272,6 +272,7 @@ Jwt__SecretKey = <隨機密鑰>
 ```
 
 - JWT 設定區段名稱為 `Jwt`（非 `JwtSettings`）
+- **流量限制**：`RateLimiting:AuthPermitsPerMinute`、`RateLimiting:PublicWritePermitsPerMinute`（每個 IP 每分鐘，預設 10）
 - **只在 Development 發生的行為**：示範資料 seeder（含 `admin/password123`）、Swagger、未設定時預設允許 `localhost:5173`／`4173` 的 CORS
 - **`Cors:AllowedOrigins`**：正式環境以 `Cors__AllowedOrigins__0` 等環境變數設定前端網址；`appsettings.json` 刻意留空陣列，避免依索引合併時殘留 localhost
 - **`Jwt:SecretKey` 在啟動時驗證**（`Auth/JwtSetup.cs`）：需至少 32 字元且不可為占位字串。Development 未設定時會產生臨時金鑰（重啟後需重新登入）；其他環境未設定則拒絕啟動。程式碼中沒有預設金鑰

@@ -280,47 +280,6 @@ public class PortfolioAttachmentService : CrudService<PortfolioAttachment, Creat
     }
 }
 
-// ===== GuestBookEntry Service =====
-public interface IGuestBookEntryService : ICrudService<GuestBookEntry, CreateGuestBookEntryDto, UpdateGuestBookEntryDto, GuestBookEntryResponse>
-{
-    Task<List<GuestBookEntryResponse>> GetApprovedAsync();
-    Task<List<GuestBookEntryResponse>> GetApprovedByTargetUserIdAsync(int targetUserId);
-    Task<PagedResult<GuestBookEntryResponse>> GetApprovedPagedAsync(int targetUserId, int page, int pageSize);
-}
-
-public class GuestBookEntryService : CrudService<GuestBookEntry, CreateGuestBookEntryDto, UpdateGuestBookEntryDto, GuestBookEntryResponse>, IGuestBookEntryService
-{
-    public GuestBookEntryService(IRepository<GuestBookEntry> repo) : base(repo) { }
-    protected override GuestBookEntry MapToEntity(CreateGuestBookEntryDto dto) => dto.ToEntity();
-    protected override GuestBookEntryResponse MapToResponse(GuestBookEntry entity) => entity.ToResponse();
-    protected override void ApplyUpdate(GuestBookEntry entity, UpdateGuestBookEntryDto dto) => entity.ApplyUpdate(dto);
-
-    public async Task<List<GuestBookEntryResponse>> GetApprovedAsync()
-    {
-        var items = await Repository.FindAsync(g => g.IsApproved);
-        return items.OrderByDescending(g => g.CreatedAt).Select(MapToResponse).ToList();
-    }
-
-    public async Task<List<GuestBookEntryResponse>> GetApprovedByTargetUserIdAsync(int targetUserId)
-    {
-        var items = await Repository.FindAsync(g => g.TargetUserId == targetUserId && g.IsApproved);
-        return items.OrderByDescending(g => g.CreatedAt).Select(MapToResponse).ToList();
-    }
-
-    public async Task<PagedResult<GuestBookEntryResponse>> GetApprovedPagedAsync(int targetUserId, int page, int pageSize)
-    {
-        var items = await Repository.FindAsync(g => g.TargetUserId == targetUserId && g.IsApproved);
-        var ordered = items.OrderByDescending(g => g.CreatedAt).ToList();
-        return new PagedResult<GuestBookEntryResponse>
-        {
-            Items = ordered.Skip((page - 1) * pageSize).Take(pageSize).Select(MapToResponse).ToList(),
-            TotalCount = ordered.Count,
-            Page = page,
-            PageSize = pageSize
-        };
-    }
-}
-
 // ===== TimeEntry Service =====
 public interface ITimeEntryService : ICrudService<TimeEntry, CreateTimeEntryDto, UpdateTimeEntryDto, TimeEntryResponse>
 {

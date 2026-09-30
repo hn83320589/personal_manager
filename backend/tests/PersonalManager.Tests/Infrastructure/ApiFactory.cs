@@ -40,6 +40,9 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
         builder.UseEnvironment(_environment);
         builder.UseSetting("Database:Provider", "Sqlite");
         builder.UseSetting("ConnectionStrings:DefaultConnection", $"Data Source={_databasePath}");
+        // 測試都從同一個「IP」發出，放寬限流以免互相影響；限流本身由專門的測試以較低額度驗證
+        builder.UseSetting("RateLimiting:AuthPermitsPerMinute", "10000");
+        builder.UseSetting("RateLimiting:PublicWritePermitsPerMinute", "10000");
         if (_jwtSecret is not null)
             builder.UseSetting("Jwt:SecretKey", _jwtSecret);
         foreach (var (key, value) in _settings)

@@ -39,7 +39,7 @@
 - [x] 經歷、學歷（日期驗證、在職中忽略結束日期、經歷日期改為 DateOnly）
 - [x] 聯絡方式（新增 Behance、Dribbble、YouTube、Threads、LINE、個人網站；拒絕 javascript:／data: 等非 http(s) 連結）
 - [x] 部落格（封面圖、HtmlSanitizer 清洗、嵌入白名單、每位使用者範圍內唯一的 slug、排程、閱讀時間、DB 端分頁與篩選、原子遞增瀏覽數；標籤改用 Tag 資料表並提供 `/api/me/tags`）
-- [ ] 留言板（公開不含 Email、只回傳已審核）
+- [x] 留言板（公開不含 Email、只回傳已審核、回覆時間、移除 TargetUserId 預設值 1；流量限制改為可設定）
 - [ ] 行事曆
 - [ ] 待辦、工作追蹤（Project、WorkTask、TimeEntry）
 - [ ] 檔案上傳（magic bytes、50 MB 上限）
