@@ -1,9 +1,4 @@
-# 排除本地的前後端開發資料夾
-# 這些資料夾有各自獨立的Git倉庫
-PersonalManagerBackend/
-PersonalManagerFrontend/
-
-# 或者使用 local-development 資料夾結構時
+# 舊的獨立 repo clone（已合併進 backend/ 與 frontend/，保留供對照，不納入版控）
 local-development/
 
 # 常見系統檔案
@@ -13,6 +8,10 @@ Thumbs.db
 # IDE 設定檔
 .vscode/
 .idea/
+
+# 本機專用的 AI 工具設定與暫存
+.claude/settings.local.json
+.playwright-mcp/
 
 # 臨時檔案
 *.tmp
@@ -24,13 +23,13 @@ Thumbs.db
 .env.local
 .env.production
 
-# Node.js (如果主專案有用到)
+# Node.js
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# .NET (如果主專案有用到)
+# .NET
 bin/
 obj/
 *.user
