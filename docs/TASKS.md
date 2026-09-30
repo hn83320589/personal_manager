@@ -37,7 +37,7 @@
 - [x] 範本：技能（熟練度與年資改為選填、排序 API、13 個整合測試）
 - [x] 個人資料／使用者目錄（新增作品集模式、卡片版型與比例、技能顯示方式、目前狀態；目錄支援搜尋與分頁）
 - [x] 經歷、學歷（日期驗證、在職中忽略結束日期、經歷日期改為 DateOnly）
-- [ ] 聯絡方式
+- [x] 聯絡方式（新增 Behance、Dribbble、YouTube、Threads、LINE、個人網站；拒絕 javascript:／data: 等非 http(s) 連結）
 - [ ] 部落格（含 CoverImage、HtmlSanitizer、每位使用者範圍內唯一的 slug）
 - [ ] 留言板（公開不含 Email、只回傳已審核）
 - [ ] 行事曆

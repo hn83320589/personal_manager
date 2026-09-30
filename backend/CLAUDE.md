@@ -209,7 +209,7 @@ backend/
 | WorkTasksController | `/api/worktasks` | 工作追蹤 |
 | BlogPostsController | `/api/blogposts` | 部落格文章 |
 | GuestBookEntriesController | `/api/guestbookentries` | 留言板 |
-| ContactMethodsController | `/api/contactmethods` | 聯絡方式 |
+| PublicContactMethodsController／MyContactMethodsController | `/api/public/users/{username}/contact-methods`、`/api/me/contact-methods` | 聯絡方式（已重建） |
 | ProjectsController | `/api/projects` | 工作追蹤專案 |
 | TimeEntriesController | `/api/timeentries` | 時間記錄 |
 | FileUploadsController | `/api/fileuploads` | 檔案上傳 |

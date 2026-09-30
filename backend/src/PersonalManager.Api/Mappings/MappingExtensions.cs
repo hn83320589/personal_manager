@@ -221,27 +221,6 @@ public static class MappingExtensions
         if (d.SortOrder.HasValue) a.SortOrder = d.SortOrder.Value;
     }
 
-    // ===== ContactMethod =====
-    public static ContactMethodResponse ToResponse(this ContactMethod c) => new()
-    {
-        Id = c.Id, UserId = c.UserId, Type = c.Type, Label = c.Label,
-        Value = c.Value, Icon = c.Icon, IsPublic = c.IsPublic, SortOrder = c.SortOrder
-    };
-    public static ContactMethod ToEntity(this CreateContactMethodDto d) => new()
-    {
-        UserId = d.UserId, Type = d.Type, Label = d.Label, Value = d.Value,
-        Icon = d.Icon, IsPublic = d.IsPublic, SortOrder = d.SortOrder
-    };
-    public static void ApplyUpdate(this ContactMethod c, UpdateContactMethodDto d)
-    {
-        if (d.Type.HasValue) c.Type = d.Type.Value;
-        if (d.Label != null) c.Label = d.Label;
-        if (d.Value != null) c.Value = d.Value;
-        if (d.Icon != null) c.Icon = d.Icon;
-        if (d.IsPublic.HasValue) c.IsPublic = d.IsPublic.Value;
-        if (d.SortOrder.HasValue) c.SortOrder = d.SortOrder.Value;
-    }
-
     // ===== TimeEntry =====
     public static TimeEntryResponse ToResponse(this TimeEntry t) => new()
     {

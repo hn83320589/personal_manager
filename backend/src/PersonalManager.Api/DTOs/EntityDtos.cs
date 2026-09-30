@@ -324,38 +324,6 @@ public class PortfolioAttachmentResponse
     public DateTime CreatedAt { get; set; }
 }
 
-// ===== ContactMethod =====
-public class CreateContactMethodDto
-{
-    public int UserId { get; set; }
-    public ContactType Type { get; set; }
-    public string Label { get; set; } = string.Empty;
-    [Required] public string Value { get; set; } = string.Empty;
-    public string Icon { get; set; } = string.Empty;
-    public bool IsPublic { get; set; } = true;
-    public int SortOrder { get; set; }
-}
-public class UpdateContactMethodDto
-{
-    public ContactType? Type { get; set; }
-    public string? Label { get; set; }
-    public string? Value { get; set; }
-    public string? Icon { get; set; }
-    public bool? IsPublic { get; set; }
-    public int? SortOrder { get; set; }
-}
-public class ContactMethodResponse
-{
-    public int Id { get; set; }
-    public int UserId { get; set; }
-    public ContactType Type { get; set; }
-    public string Label { get; set; } = string.Empty;
-    public string Value { get; set; } = string.Empty;
-    public string Icon { get; set; } = string.Empty;
-    public bool IsPublic { get; set; }
-    public int SortOrder { get; set; }
-}
-
 // ===== TimeEntry =====
 public class CreateTimeEntryDto
 {

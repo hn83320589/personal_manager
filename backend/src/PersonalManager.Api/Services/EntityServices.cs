@@ -460,33 +460,6 @@ public class GuestBookEntryService : CrudService<GuestBookEntry, CreateGuestBook
     }
 }
 
-// ===== ContactMethod Service =====
-public interface IContactMethodService : ICrudService<ContactMethod, CreateContactMethodDto, UpdateContactMethodDto, ContactMethodResponse>
-{
-    Task<List<ContactMethodResponse>> GetByUserIdAsync(int userId);
-    Task<List<ContactMethodResponse>> GetPublicByUserIdAsync(int userId);
-}
-
-public class ContactMethodService : CrudService<ContactMethod, CreateContactMethodDto, UpdateContactMethodDto, ContactMethodResponse>, IContactMethodService
-{
-    public ContactMethodService(IRepository<ContactMethod> repo) : base(repo) { }
-    protected override ContactMethod MapToEntity(CreateContactMethodDto dto) => dto.ToEntity();
-    protected override ContactMethodResponse MapToResponse(ContactMethod entity) => entity.ToResponse();
-    protected override void ApplyUpdate(ContactMethod entity, UpdateContactMethodDto dto) => entity.ApplyUpdate(dto);
-
-    public async Task<List<ContactMethodResponse>> GetByUserIdAsync(int userId)
-    {
-        var items = await Repository.FindAsync(c => c.UserId == userId);
-        return items.OrderBy(c => c.SortOrder).Select(MapToResponse).ToList();
-    }
-
-    public async Task<List<ContactMethodResponse>> GetPublicByUserIdAsync(int userId)
-    {
-        var items = await Repository.FindAsync(c => c.UserId == userId && c.IsPublic);
-        return items.OrderBy(c => c.SortOrder).Select(MapToResponse).ToList();
-    }
-}
-
 // ===== TimeEntry Service =====
 public interface ITimeEntryService : ICrudService<TimeEntry, CreateTimeEntryDto, UpdateTimeEntryDto, TimeEntryResponse>
 {

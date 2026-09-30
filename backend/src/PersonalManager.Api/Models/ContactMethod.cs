@@ -14,10 +14,16 @@ public enum ContactType
     Twitter,
     Instagram,
     Discord,
-    Other
+    Other,
+    Behance,
+    Dribbble,
+    YouTube,
+    Threads,
+    Line,
+    Website
 }
 
-public class ContactMethod
+public class ContactMethod : IOwnedByUser, ISortable
 {
     public int Id { get; set; }
     public int UserId { get; set; }
