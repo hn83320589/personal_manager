@@ -1,6 +1,26 @@
 # Personal Manager — 任務清單
 
-> 最後更新：2026-03-13 | 依優先度排列
+> 最後更新：2026-09-30 | 依優先度排列
+
+---
+
+## 🚧 2026 重構（進行中）
+
+完整計畫：重構計畫頁面（claude.ai artifact「Personal Manager 重構計畫」）。已確認的決策：
+- D1 移除 JSON fallback，本地與暫時的執行環境一律使用 SQLite，保留 Pomelo（MySQL/MariaDB）套件以便日後切換
+- D2 合併為 monorepo（`backend/`、`frontend/`、`docs/`）
+- D3 refresh token 改用 httpOnly cookie，access token 只放記憶體
+- D4 引入 DOMPurify、HtmlSanitizer、ESLint + Prettier、openapi-typescript、GitHub Actions
+- D5 後端改為 feature folder
+- 目前沒有雲端環境（Zeabur 已停用），不使用 Docker
+
+### Phase 0 — 安全網
+- [x] 合併前後端 repo 為 monorepo（git subtree，保留歷史）
+- [x] 修復後端測試專案編譯（29 個測試恢復執行）
+- [x] 修復前端 8 個失敗的單元測試（改為驗證行為）
+- [x] 新增 GitHub Actions CI（後端 build/test、前端 test/type-check/build）
+- [x] 整理 git 追蹤範圍（`.gitignore` 改為 monorepo 版本）
+- [-] `.sln` 與測試專案搬遷 → 併入後端重構，避免搬兩次
 
 ---
 
