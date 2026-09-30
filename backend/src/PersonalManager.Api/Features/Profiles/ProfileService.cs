@@ -10,11 +10,8 @@ public sealed class ProfileService(ApplicationDbContext db, ICurrentUser current
 {
     public const int MaxPageSize = 100;
 
-    public async Task<PagedResult<DirectoryCardDto>> GetDirectoryAsync(string? keyword, int page, int pageSize)
+    public Task<PagedResult<DirectoryCardDto>> GetDirectoryAsync(string? keyword, int page, int pageSize)
     {
-        page = Math.Max(page, 1);
-        pageSize = Math.Clamp(pageSize, 1, MaxPageSize);
-
         var query =
             from user in db.Users.AsNoTracking()
             where user.IsActive
@@ -29,10 +26,8 @@ public sealed class ProfileService(ApplicationDbContext db, ICurrentUser current
                                      || (x.profile != null && x.profile.Title.Contains(k)));
         }
 
-        var total = await query.CountAsync();
-        var items = await query
+        return query
             .OrderBy(x => x.user.Id)
-            .Skip((page - 1) * pageSize).Take(pageSize)
             .Select(x => new DirectoryCardDto(
                 x.user.Username, x.user.FullName,
                 x.profile != null ? x.profile.Title : "",
@@ -40,9 +35,7 @@ public sealed class ProfileService(ApplicationDbContext db, ICurrentUser current
                 x.profile != null ? x.profile.ProfileImageUrl : "",
                 x.profile != null ? x.profile.Location : "",
                 x.profile != null ? x.profile.ThemeColor : "blue"))
-            .ToListAsync();
-
-        return new PagedResult<DirectoryCardDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };
+            .ToPagedResultAsync(page, pageSize, MaxPageSize);
     }
 
     public async Task<ProfileDto> GetPublicAsync(string username)

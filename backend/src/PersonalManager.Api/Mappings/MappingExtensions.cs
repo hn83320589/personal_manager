@@ -148,38 +148,6 @@ public static class MappingExtensions
         if (d.SortOrder.HasValue) p.SortOrder = d.SortOrder.Value;
     }
 
-    // ===== BlogPost =====
-    public static BlogPostResponse ToResponse(this BlogPost b) => new()
-    {
-        Id = b.Id, UserId = b.UserId, Title = b.Title, Slug = b.Slug,
-        Content = b.Content, Summary = b.Summary, Category = b.Category,
-        // Use normalized TagEntities if available; fall back to legacy comma-separated string
-        Tags = b.TagEntities.Any()
-            ? b.TagEntities.Select(t => t.Name).ToList()
-            : (string.IsNullOrEmpty(b.Tags) ? new() : b.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()).ToList()),
-        Status = b.Status, IsPublic = b.IsPublic,
-        ViewCount = b.ViewCount, PublishedAt = b.PublishedAt,
-        CreatedAt = b.CreatedAt, UpdatedAt = b.UpdatedAt
-    };
-    public static BlogPost ToEntity(this CreateBlogPostDto d) => new()
-    {
-        UserId = d.UserId, Title = d.Title, Content = d.Content,
-        Summary = d.Summary, Category = d.Category,
-        Tags = string.Join(",", d.Tags ?? []),  // legacy string for JSON fallback
-        Status = d.Status, IsPublic = d.IsPublic
-    };
-    public static void ApplyUpdate(this BlogPost b, UpdateBlogPostDto d)
-    {
-        if (d.Title != null) b.Title = d.Title;
-        if (d.Content != null) b.Content = d.Content;
-        if (d.Summary != null) b.Summary = d.Summary;
-        if (d.Category != null) b.Category = d.Category;
-        if (d.Tags != null) b.Tags = string.Join(",", d.Tags);  // legacy string for JSON fallback
-        if (d.Status.HasValue) b.Status = d.Status.Value;
-        if (d.IsPublic.HasValue) b.IsPublic = d.IsPublic.Value;
-        if (d.PublishedAt.HasValue) b.PublishedAt = d.PublishedAt;
-    }
-
     // ===== GuestBookEntry =====
     public static GuestBookEntryResponse ToResponse(this GuestBookEntry g) => new()
     {

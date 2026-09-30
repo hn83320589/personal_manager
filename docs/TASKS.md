@@ -38,7 +38,7 @@
 - [x] 個人資料／使用者目錄（新增作品集模式、卡片版型與比例、技能顯示方式、目前狀態；目錄支援搜尋與分頁）
 - [x] 經歷、學歷（日期驗證、在職中忽略結束日期、經歷日期改為 DateOnly）
 - [x] 聯絡方式（新增 Behance、Dribbble、YouTube、Threads、LINE、個人網站；拒絕 javascript:／data: 等非 http(s) 連結）
-- [ ] 部落格（含 CoverImage、HtmlSanitizer、每位使用者範圍內唯一的 slug）
+- [x] 部落格（封面圖、HtmlSanitizer 清洗、嵌入白名單、每位使用者範圍內唯一的 slug、排程、閱讀時間、DB 端分頁與篩選、原子遞增瀏覽數；標籤改用 Tag 資料表並提供 `/api/me/tags`）
 - [ ] 留言板（公開不含 Email、只回傳已審核）
 - [ ] 行事曆
 - [ ] 待辦、工作追蹤（Project、WorkTask、TimeEntry）
@@ -49,8 +49,8 @@
 
 ### 技術債（重構期間發現）
 - [ ] 非 Development 環境不再自動建立 admin 帳號 → Phase 2 Admin 功能需提供建立第一個管理員的方式（例如以設定指定的 Email 註冊時授予 Admin）
-- [ ] 【Bug】部落格編輯器的「特色圖片」欄位不存在於前端型別與後端資料表，上傳的圖片從未被儲存 → Phase 2 Blog 重建時補上 `CoverImage`
-- [ ] `BlogPost.Tags`、`WorkTask.Tags` 字串欄位與其註解仍寫著「供 JSON fallback 使用」，JSON 模式已移除 → Phase 2 一併刪除欄位
+- [x] 【Bug】部落格「特色圖片」從未被儲存 → 後端已新增 `CoverImageUrl`（前端於 Phase 4 串接）
+- [ ] `WorkTask.Tags` 字串欄位仍在（`BlogPost.Tags` 已刪除）→ 工作追蹤重建時處理
 - [x] `dotnet-ef` 以 local tool 鎖定 9.0.13；CI 檢查兩組 migration 是否都已產生
 
 ---

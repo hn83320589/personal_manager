@@ -216,47 +216,6 @@ public class WorkTaskResponse
     public DateTime UpdatedAt { get; set; }
 }
 
-// ===== BlogPost =====
-public class CreateBlogPostDto
-{
-    public int UserId { get; set; }
-    [Required] public string Title { get; set; } = string.Empty;
-    public string Content { get; set; } = string.Empty;
-    public string Summary { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
-    public List<string> Tags { get; set; } = new();
-    public BlogPostStatus Status { get; set; } = BlogPostStatus.Draft;
-    public bool IsPublic { get; set; } = true;
-}
-public class UpdateBlogPostDto
-{
-    public string? Title { get; set; }
-    public string? Content { get; set; }
-    public string? Summary { get; set; }
-    public string? Category { get; set; }
-    public List<string>? Tags { get; set; }
-    public BlogPostStatus? Status { get; set; }
-    public bool? IsPublic { get; set; }
-    public DateTime? PublishedAt { get; set; }
-}
-public class BlogPostResponse
-{
-    public int Id { get; set; }
-    public int UserId { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Slug { get; set; } = string.Empty;
-    public string Content { get; set; } = string.Empty;
-    public string Summary { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
-    public List<string> Tags { get; set; } = new();
-    public BlogPostStatus Status { get; set; }
-    public bool IsPublic { get; set; }
-    public int ViewCount { get; set; }
-    public DateTime? PublishedAt { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
-}
-
 // ===== GuestBookEntry =====
 public class CreateGuestBookEntryDto
 {

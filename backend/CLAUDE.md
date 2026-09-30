@@ -38,6 +38,7 @@ dotnet test PersonalManager.sln                # 執行測試
   dotnet ef migrations add <Name> --context SqliteApplicationDbContext --output-dir Migrations/Sqlite
   dotnet ef migrations add <Name> --context MySqlApplicationDbContext --output-dir Migrations/MySql
   ```
+- **產生 migration 後要檢查內容**：一個欄位刪除、另一個同型別欄位新增時，EF 可能判斷成「改名」而沿用舊資料（例如 `IsPublic` → `ReadingMinutes`），需手動改成刪除後新增。
 - **重設本地資料庫**：刪除 `App_Data/` 後重新啟動即可。
 
 ---
@@ -178,8 +179,7 @@ backend/
 │
 ├── Repositories/
 │   ├── IRepository.cs            # 通用 CRUD 介面
-│   ├── EfRepository.cs           # EF Core 實作（以 open generic 註冊）
-│   └── BlogPostRepository.cs     # BlogPost 專用（含 Tag 關聯同步）
+│   └── EfRepository.cs           # EF Core 實作（以 open generic 註冊；Phase 2 完成後移除）
 │
 ├── Services/
 │   ├── CrudService.cs            # 通用 CRUD 業務邏輯基礎類別
@@ -207,7 +207,7 @@ backend/
 | CalendarEventsController | `/api/calendarevents` | 行事曆 |
 | TodoItemsController | `/api/todoitems` | 待辦事項 |
 | WorkTasksController | `/api/worktasks` | 工作追蹤 |
-| BlogPostsController | `/api/blogposts` | 部落格文章 |
+| PublicPostsController／MyPostsController／MyTagsController | `/api/public/users/{username}/posts`（含 `facets`、`{slug}/views`）、`/api/me/posts`、`/api/me/tags` | 部落格文章與標籤（已重建） |
 | GuestBookEntriesController | `/api/guestbookentries` | 留言板 |
 | PublicContactMethodsController／MyContactMethodsController | `/api/public/users/{username}/contact-methods`、`/api/me/contact-methods` | 聯絡方式（已重建） |
 | ProjectsController | `/api/projects` | 工作追蹤專案 |

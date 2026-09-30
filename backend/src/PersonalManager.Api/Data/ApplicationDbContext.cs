@@ -89,7 +89,7 @@ public class ApplicationDbContext : DbContext
 
         // BlogPost ↔ Tag many-to-many
         modelBuilder.Entity<BlogPost>()
-            .HasMany(b => b.TagEntities)
+            .HasMany(b => b.Tags)
             .WithMany()
             .UsingEntity("BlogPostTags");
 
@@ -102,8 +102,9 @@ public class ApplicationDbContext : DbContext
             .HasIndex(u => u.Email)
             .IsUnique();
 
+        // slug 在同一位使用者的文章中唯一，不同使用者可以使用相同的 slug
         modelBuilder.Entity<BlogPost>()
-            .HasIndex(b => b.Slug)
+            .HasIndex(b => new { b.UserId, b.Slug })
             .IsUnique();
 
         ConfigureLookupIndexes(modelBuilder);
@@ -149,9 +150,7 @@ public class ApplicationDbContext : DbContext
         b.Entity<TodoItem>().HasIndex(e => e.Priority);
         b.Entity<TodoItem>().HasIndex(e => e.DueDate);
 
-        b.Entity<BlogPost>().HasIndex(e => e.UserId);
-        b.Entity<BlogPost>().HasIndex(e => e.Status);
-        b.Entity<BlogPost>().HasIndex(e => e.PublishedAt);
+        b.Entity<BlogPost>().HasIndex(e => new { e.UserId, e.Status, e.PublishedAt });
         b.Entity<BlogPost>().HasIndex(e => e.Category);
         b.Entity<BlogPost>().HasIndex(e => e.ViewCount);
 

@@ -11,6 +11,8 @@ public static class ApplicationSetup
     {
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, HttpCurrentUser>();
+        services.AddSingleton(TimeProvider.System);
+        services.AddSingleton<RichTextSanitizer>();
 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
@@ -23,7 +25,8 @@ public static class ApplicationSetup
         services.AddScoped<ITodoItemService, TodoItemService>();
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<IWorkTaskService, WorkTaskService>();
-        services.AddScoped<IBlogPostService, BlogPostService>();
+        services.AddScoped<Features.Blog.BlogService>();
+        services.AddScoped<Features.Blog.TagService>();
         services.AddScoped<IGuestBookEntryService, GuestBookEntryService>();
         services.AddScoped<Features.Contacts.ContactMethodService>();
         services.AddScoped<IFileUploadService, FileUploadService>();

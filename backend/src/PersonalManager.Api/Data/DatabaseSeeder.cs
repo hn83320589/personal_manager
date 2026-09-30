@@ -236,11 +236,9 @@ public static class DatabaseSeeder
                 Content = "在現代應用程式開發中，資料庫設計是非常重要的一環...",
                 Summary = "分享資料庫架構設計的經驗與最佳實踐",
                 Status = BlogPostStatus.Published,
-                IsPublic = true,
                 ViewCount = 0,
                 PublishedAt = new DateTime(2025, 8, 10, 10, 0, 0),
                 Category = "技術分享",
-                Tags = "資料庫,架構設計,.NET Core",
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             },
@@ -252,10 +250,8 @@ public static class DatabaseSeeder
                 Content = "Vue.js 3 結合 TypeScript 可以大幅提升開發效率...",
                 Summary = "分享 Vue3 + TypeScript 的開發經驗",
                 Status = BlogPostStatus.Draft,
-                IsPublic = false,
                 ViewCount = 0,
                 Category = "前端開發",
-                Tags = "Vue.js,TypeScript,前端",
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             }

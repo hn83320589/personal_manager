@@ -1,6 +1,5 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using PersonalManager.Api.Models;
 using PersonalManager.Api.Repositories;
 
 namespace PersonalManager.Api.Data;
@@ -46,8 +45,6 @@ public static class PersistenceSetup
         }
 
         services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-        services.AddScoped<BlogPostRepository>();
-        services.AddScoped<IRepository<BlogPost>>(sp => sp.GetRequiredService<BlogPostRepository>());
 
         return services;
     }

@@ -27,12 +27,12 @@ namespace PersonalManager.Api.Migrations.MySql
                     b.Property<int>("BlogPostId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TagEntitiesId")
+                    b.Property<int>("TagsId")
                         .HasColumnType("int");
 
-                    b.HasKey("BlogPostId", "TagEntitiesId");
+                    b.HasKey("BlogPostId", "TagsId");
 
-                    b.HasIndex("TagEntitiesId");
+                    b.HasIndex("TagsId");
 
                     b.ToTable("BlogPostTags");
                 });
@@ -54,14 +54,19 @@ namespace PersonalManager.Api.Migrations.MySql
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("CoverImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<DateTime?>("PublishedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<int>("ReadingMinutes")
+                        .HasColumnType("int");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -77,10 +82,6 @@ namespace PersonalManager.Api.Migrations.MySql
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
-
-                    b.Property<string>("Tags")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -100,16 +101,12 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasIndex("Category");
 
-                    b.HasIndex("PublishedAt");
+                    b.HasIndex("ViewCount");
 
-                    b.HasIndex("Slug")
+                    b.HasIndex("UserId", "Slug")
                         .IsUnique();
 
-                    b.HasIndex("Status");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("ViewCount");
+                    b.HasIndex("UserId", "Status", "PublishedAt");
 
                     b.ToTable("BlogPosts");
                 });
@@ -1055,7 +1052,7 @@ namespace PersonalManager.Api.Migrations.MySql
 
                     b.HasOne("PersonalManager.Api.Models.Tag", null)
                         .WithMany()
-                        .HasForeignKey("TagEntitiesId")
+                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
