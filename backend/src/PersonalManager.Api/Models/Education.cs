@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PersonalManager.Api.Models;
 
-public class Education
+public class Education : IOwnedByUser, ISortable
 {
     public int Id { get; set; }
     public int UserId { get; set; }

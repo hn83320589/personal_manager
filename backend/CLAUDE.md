@@ -200,8 +200,8 @@ backend/
 | AuthController | `/api/auth` | 登入、註冊、refresh、登出、密碼重設 |
 | UsersController | `/api/users` | 使用者管理（待 Admin 重建；公開端點已移至 `/api/public/users`） |
 | PublicProfilesController／MyProfileController | `/api/public/users`（目錄）、`/api/public/users/{username}`、`/api/me/profile` | 個人資料與前台呈現設定（已重建） |
-| EducationsController | `/api/educations` | 學歷 |
-| WorkExperiencesController | `/api/workexperiences` | 工作經歷 |
+| PublicResumeController／MyEducationsController | `/api/public/users/{username}/educations`、`/api/me/educations` | 學歷（已重建） |
+| PublicResumeController／MyWorkExperiencesController | `/api/public/users/{username}/work-experiences`、`/api/me/work-experiences` | 工作經歷（已重建） |
 | PublicSkillsController／MySkillsController | `/api/public/users/{username}/skills`、`/api/me/skills` | 技能（已重建） |
 | PortfoliosController | `/api/portfolios` | 作品集 |
 | CalendarEventsController | `/api/calendarevents` | 行事曆 |
@@ -291,9 +291,9 @@ Jwt__SecretKey = <隨機密鑰>
 | Service | 直接使用 `ApplicationDbContext` 與 `ICurrentUser`；讀取加 `AsNoTracking()`，以 `Select` 投影成 DTO |
 | DTO | `record`：`SaveXxxRequest`（新增與更新共用，含 DataAnnotations）、`XxxDto`（後台）、`PublicXxxDto`（公開，不含管理欄位） |
 | 錯誤 | 丟 `AppException` 子類別；驗證失敗由 `[ApiController]` 自動回 400 + `ApiResponse` |
-| 排序 | `PUT api/me/<資源>/order`，body 為 `ReorderRequest`，必須剛好包含自己的全部項目 |
+| 排序 | 實體實作 `ISortable`；新增時 `NextPositionAsync()`，`PUT api/me/<資源>/order` 以 `ApplyOrder()` 套用 |
 | 實體 | 屬於使用者的實體實作 `IOwnedByUser` |
-| 測試 | `tests/.../Features/<名稱>ApiTests.cs`，以 `ApiFactory` + `CreateUserAsync()` 打真實 HTTP；至少涵蓋匿名存取、存取他人資料、公開資料過濾 |
+| 測試 | `tests/.../Features/<名稱>ApiTests.cs`，以 `ApiFactory` + `CreateUserAsync()` 打真實 HTTP。清單型資源繼承 `OwnedCollectionContract` 取得共用的 9 個行為測試，只需另寫該資源特有的規則 |
 
 ## 如何新增一個實體（舊寫法，重建中）
 

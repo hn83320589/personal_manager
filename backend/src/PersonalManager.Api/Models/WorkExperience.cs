@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PersonalManager.Api.Models;
 
-public class WorkExperience
+public class WorkExperience : IOwnedByUser, ISortable
 {
     public int Id { get; set; }
     public int UserId { get; set; }
@@ -13,8 +13,8 @@ public class WorkExperience
     [Required, StringLength(200)]
     public string Position { get; set; } = string.Empty;
 
-    public DateTime? StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
+    public DateOnly? StartDate { get; set; }
+    public DateOnly? EndDate { get; set; }
     public bool IsCurrent { get; set; }
 
     public string Description { get; set; } = string.Empty;

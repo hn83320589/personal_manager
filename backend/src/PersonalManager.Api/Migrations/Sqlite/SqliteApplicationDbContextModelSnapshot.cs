@@ -895,7 +895,7 @@ namespace PersonalManager.Api.Migrations.Sqlite
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("EndDate")
+                    b.Property<DateOnly?>("EndDate")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsCurrent")
@@ -912,7 +912,7 @@ namespace PersonalManager.Api.Migrations.Sqlite
                     b.Property<int>("SortOrder")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("StartDate")
+                    b.Property<DateOnly?>("StartDate")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedAt")

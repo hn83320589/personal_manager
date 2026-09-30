@@ -23,56 +23,6 @@ public static class MappingExtensions
         if (d.IsActive.HasValue) u.IsActive = d.IsActive.Value;
     }
 
-    // ===== Education =====
-    public static EducationResponse ToResponse(this Education e) => new()
-    {
-        Id = e.Id, UserId = e.UserId, School = e.School, Degree = e.Degree,
-        FieldOfStudy = e.FieldOfStudy, StartYear = e.StartYear, EndYear = e.EndYear,
-        Description = e.Description, IsPublic = e.IsPublic, SortOrder = e.SortOrder
-    };
-    public static Education ToEntity(this CreateEducationDto d) => new()
-    {
-        UserId = d.UserId, School = d.School, Degree = d.Degree, FieldOfStudy = d.FieldOfStudy,
-        StartYear = d.StartYear, EndYear = d.EndYear, Description = d.Description,
-        IsPublic = d.IsPublic, SortOrder = d.SortOrder
-    };
-    public static void ApplyUpdate(this Education e, UpdateEducationDto d)
-    {
-        if (d.School != null) e.School = d.School;
-        if (d.Degree != null) e.Degree = d.Degree;
-        if (d.FieldOfStudy != null) e.FieldOfStudy = d.FieldOfStudy;
-        if (d.StartYear.HasValue) e.StartYear = d.StartYear;
-        if (d.EndYear.HasValue) e.EndYear = d.EndYear;
-        if (d.Description != null) e.Description = d.Description;
-        if (d.IsPublic.HasValue) e.IsPublic = d.IsPublic.Value;
-        if (d.SortOrder.HasValue) e.SortOrder = d.SortOrder.Value;
-    }
-
-    // ===== WorkExperience =====
-    public static WorkExperienceResponse ToResponse(this WorkExperience w) => new()
-    {
-        Id = w.Id, UserId = w.UserId, Company = w.Company, Position = w.Position,
-        StartDate = w.StartDate, EndDate = w.EndDate, IsCurrent = w.IsCurrent,
-        Description = w.Description, IsPublic = w.IsPublic, SortOrder = w.SortOrder
-    };
-    public static WorkExperience ToEntity(this CreateWorkExperienceDto d) => new()
-    {
-        UserId = d.UserId, Company = d.Company, Position = d.Position,
-        StartDate = d.StartDate, EndDate = d.EndDate, IsCurrent = d.IsCurrent,
-        Description = d.Description, IsPublic = d.IsPublic, SortOrder = d.SortOrder
-    };
-    public static void ApplyUpdate(this WorkExperience w, UpdateWorkExperienceDto d)
-    {
-        if (d.Company != null) w.Company = d.Company;
-        if (d.Position != null) w.Position = d.Position;
-        if (d.StartDate.HasValue) w.StartDate = d.StartDate;
-        if (d.EndDate.HasValue) w.EndDate = d.EndDate;
-        if (d.IsCurrent.HasValue) w.IsCurrent = d.IsCurrent.Value;
-        if (d.Description != null) w.Description = d.Description;
-        if (d.IsPublic.HasValue) w.IsPublic = d.IsPublic.Value;
-        if (d.SortOrder.HasValue) w.SortOrder = d.SortOrder.Value;
-    }
-
     // ===== Portfolio =====
     public static PortfolioResponse ToResponse(this Portfolio p) => new()
     {

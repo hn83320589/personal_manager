@@ -25,60 +25,6 @@ public class UserService : CrudService<User, CreateUserDto, UpdateUserDto, UserR
     protected override void ApplyUpdate(User entity, UpdateUserDto dto) => entity.ApplyUpdate(dto);
 }
 
-// ===== Education Service =====
-public interface IEducationService : ICrudService<Education, CreateEducationDto, UpdateEducationDto, EducationResponse>
-{
-    Task<List<EducationResponse>> GetByUserIdAsync(int userId);
-    Task<List<EducationResponse>> GetPublicByUserIdAsync(int userId);
-}
-
-public class EducationService : CrudService<Education, CreateEducationDto, UpdateEducationDto, EducationResponse>, IEducationService
-{
-    public EducationService(IRepository<Education> repo) : base(repo) { }
-    protected override Education MapToEntity(CreateEducationDto dto) => dto.ToEntity();
-    protected override EducationResponse MapToResponse(Education entity) => entity.ToResponse();
-    protected override void ApplyUpdate(Education entity, UpdateEducationDto dto) => entity.ApplyUpdate(dto);
-
-    public async Task<List<EducationResponse>> GetByUserIdAsync(int userId)
-    {
-        var items = await Repository.FindAsync(e => e.UserId == userId);
-        return items.OrderBy(e => e.SortOrder).Select(MapToResponse).ToList();
-    }
-
-    public async Task<List<EducationResponse>> GetPublicByUserIdAsync(int userId)
-    {
-        var items = await Repository.FindAsync(e => e.UserId == userId && e.IsPublic);
-        return items.OrderBy(e => e.SortOrder).Select(MapToResponse).ToList();
-    }
-}
-
-// ===== WorkExperience Service =====
-public interface IWorkExperienceService : ICrudService<WorkExperience, CreateWorkExperienceDto, UpdateWorkExperienceDto, WorkExperienceResponse>
-{
-    Task<List<WorkExperienceResponse>> GetByUserIdAsync(int userId);
-    Task<List<WorkExperienceResponse>> GetPublicByUserIdAsync(int userId);
-}
-
-public class WorkExperienceService : CrudService<WorkExperience, CreateWorkExperienceDto, UpdateWorkExperienceDto, WorkExperienceResponse>, IWorkExperienceService
-{
-    public WorkExperienceService(IRepository<WorkExperience> repo) : base(repo) { }
-    protected override WorkExperience MapToEntity(CreateWorkExperienceDto dto) => dto.ToEntity();
-    protected override WorkExperienceResponse MapToResponse(WorkExperience entity) => entity.ToResponse();
-    protected override void ApplyUpdate(WorkExperience entity, UpdateWorkExperienceDto dto) => entity.ApplyUpdate(dto);
-
-    public async Task<List<WorkExperienceResponse>> GetByUserIdAsync(int userId)
-    {
-        var items = await Repository.FindAsync(w => w.UserId == userId);
-        return items.OrderBy(w => w.SortOrder).Select(MapToResponse).ToList();
-    }
-
-    public async Task<List<WorkExperienceResponse>> GetPublicByUserIdAsync(int userId)
-    {
-        var items = await Repository.FindAsync(w => w.UserId == userId && w.IsPublic);
-        return items.OrderBy(w => w.SortOrder).Select(MapToResponse).ToList();
-    }
-}
-
 // ===== Portfolio Service =====
 public interface IPortfolioService : ICrudService<Portfolio, CreatePortfolioDto, UpdatePortfolioDto, PortfolioResponse>
 {
