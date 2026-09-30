@@ -6,13 +6,11 @@ This file provides guidance to Claude Code when working with the frontend codeba
 
 ## 給 AI 的指示
 
-每次任務完成後，你必須：
-1. 更新下方「進度」區塊的 checkbox
-2. 若有新的技術債，加入「已知問題」
-3. 若做了未預期的架構決策，加入「架構決策」並說明原因
-4. 回報你更新了哪些區塊
-
-以上未完成，任務視為未完成。
+每次任務完成時：
+1. 在主專案的 `docs/TASKS.md` 勾選對應項目的 checkbox
+2. 有新的技術債時，加入主專案 `docs/TASKS.md` 的「技術債」區塊
+3. 做了未預期的架構決策時，記錄到主專案的 `docs/system-specification.md` §12 架構決策紀錄（ADR），附上原因
+4. 回報更新了哪些檔案與區塊
 
 ---
 
@@ -105,7 +103,7 @@ View（.vue）
 
 - **請求**：自動從 `authStore` 取得 JWT token，加入 `Authorization: Bearer ...` header
 - **回應**：解包 `ApiResponse<T>` wrapper，回傳 `.data`
-- **錯誤**：401 自動登出並導向 `/login`
+- **錯誤**：401 時先以 `refresh_token` 呼叫 `/auth/refresh` 並重試原請求；refresh 失敗才登出並導向 `/login`
 
 ### API 回應格式
 
@@ -121,12 +119,12 @@ interface ApiResponse<T> {
 
 ### Store 持久化
 
-`pinia-plugin-persistedstate` v4 語法（composition API store 需要三參數形式）：
+目前沒有 store 使用持久化（時間記錄已改由 `/api/timeentries` 儲存）。若需要持久化，`pinia-plugin-persistedstate` v4 的 composition store 語法為三參數形式：
 ```typescript
-export const useTaskStore = defineStore('task', () => {
+export const useExampleStore = defineStore('example', () => {
   // ...
-  return { timeEntries }
-}, { persist: { pick: ['timeEntries'] } })  // 只持久化指定欄位
+  return { draft }
+}, { persist: { pick: ['draft'] } })  // 只持久化指定欄位
 ```
 
 ---
@@ -153,6 +151,10 @@ PersonalManagerFrontend/
 │   │   ├── calendarService.ts        # /api/calendarevents
 │   │   ├── taskService.ts            # /api/todoitems
 │   │   ├── workTrackingService.ts    # /api/worktasks
+│   │   ├── projectService.ts         # /api/projects
+│   │   ├── timeEntryService.ts       # /api/timeentries
+│   │   ├── fileUploadService.ts      # /api/fileuploads
+│   │   ├── portfolioAttachmentService.ts # /api/portfolioattachments
 │   │   ├── blogService.ts            # /api/blogposts
 │   │   ├── commentService.ts         # /api/guestbookentries
 │   │   ├── contactMethodService.ts   # /api/contactmethods
@@ -166,7 +168,7 @@ PersonalManagerFrontend/
 │   │   ├── skill.ts                  # 技能
 │   │   ├── portfolio.ts              # 作品集
 │   │   ├── calendar.ts               # 行事曆
-│   │   ├── task.ts                   # 待辦事項 + 工作任務 + 時間記錄（timeEntries 持久化）
+│   │   ├── task.ts                   # 待辦事項 + 工作任務 + 時間記錄（timeEntryService）
 │   │   ├── blog.ts                   # 部落格文章
 │   │   ├── comment.ts                # 留言
 │   │   └── userDirectory.ts          # 用戶目錄與 username → userId 解析

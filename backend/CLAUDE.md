@@ -6,13 +6,11 @@ This file provides guidance to Claude Code when working with the backend codebas
 
 ## 給 AI 的指示
 
-每次任務完成後，你必須：
-1. 更新下方「進度」區塊的 checkbox
-2. 若有新的技術債，加入「已知問題」
-3. 若做了未預期的架構決策，加入「架構決策」並說明原因
-4. 回報你更新了哪些區塊
-
-以上未完成，任務視為未完成。
+每次任務完成時：
+1. 在主專案的 `docs/TASKS.md` 勾選對應項目的 checkbox
+2. 有新的技術債時，加入主專案 `docs/TASKS.md` 的「技術債」區塊
+3. 做了未預期的架構決策時，記錄到主專案的 `docs/system-specification.md` §12 架構決策紀錄（ADR），附上原因
+4. 回報更新了哪些檔案與區塊
 
 ---
 
@@ -34,7 +32,7 @@ dotnet run
   DOTNET_ROLL_FORWARD=LatestMajor dotnet run
   ```
 - **DB 連線**：若 `appsettings.json` 的 `ConnectionStrings.DefaultConnection` 可連線，自動使用 MariaDB（EF Core）；無法連線時自動 fallback 至 `Data/JsonData/*.json`。
-- **不需要執行 migrations**：`EnsureCreated()` 在每次啟動時自動建立資料表（只在 DB 模式有效）。
+- **Schema 由 EF Core Migrations 管理**：啟動時 `db.Database.Migrate()` 自動套用未執行的 migration（只在 DB 模式有效）。Model 異動後需執行 `dotnet ef migrations add <Name>`。
 
 ---
 
@@ -67,7 +65,7 @@ HTTP 請求
 ### DB 自動偵測機制（`Program.cs`）
 
 啟動時嘗試 `ServerVersion.AutoDetect(connectionString)`：
-- **成功** → 使用 `EfRepository<T>`，執行 `EnsureCreated()` + `DatabaseSeeder`
+- **成功** → 使用 `EfRepository<T>`，執行 `Migrate()` + `DatabaseSeeder`
 - **失敗** → 使用 `JsonRepository<T>`，讀寫本地 JSON 檔案
 
 啟動 log 會顯示：
@@ -123,20 +121,25 @@ PersonalManagerBackend/
 │   ├── AuthService.cs            # JWT token 產生、使用者驗證
 │   └── JwtSettings.cs            # JWT 設定 model
 │
-├── Controllers/                  # 12 個 API 控制器
-│   ├── AuthController.cs         # POST /api/auth/login, /register
+├── Controllers/                  # API 控制器（皆繼承 BaseApiController）
+│   ├── BaseApiController.cs      # GetCurrentUserId() 等共用 helper
+│   ├── AuthController.cs         # /api/auth（login、register、me、refresh、logout、密碼重設）
 │   ├── UsersController.cs        # /api/users
 │   ├── ProfilesController.cs     # /api/profiles
 │   ├── EducationsController.cs   # /api/educations
 │   ├── WorkExperiencesController.cs # /api/workexperiences
 │   ├── SkillsController.cs       # /api/skills
 │   ├── PortfoliosController.cs   # /api/portfolios
+│   ├── PortfolioAttachmentsController.cs # /api/portfolioattachments
 │   ├── CalendarEventsController.cs  # /api/calendarevents
 │   ├── TodoItemsController.cs    # /api/todoitems
 │   ├── WorkTasksController.cs    # /api/worktasks
+│   ├── ProjectsController.cs     # /api/projects
+│   ├── TimeEntriesController.cs  # /api/timeentries
 │   ├── BlogPostsController.cs    # /api/blogposts
 │   ├── GuestBookEntriesController.cs # /api/guestbookentries
-│   └── ContactMethodsController.cs  # /api/contactmethods
+│   ├── ContactMethodsController.cs  # /api/contactmethods
+│   └── FileUploadsController.cs  # /api/fileuploads
 │
 ├── DTOs/
 │   ├── ApiResponse.cs            # 統一回應格式 ApiResponse<T>
@@ -144,7 +147,8 @@ PersonalManagerBackend/
 │   └── EntityDtos.cs             # 所有實體的 Create/Update/Response DTOs
 │
 ├── Data/
-│   ├── ApplicationDbContext.cs   # EF Core DbContext（12 個 DbSet）
+│   ├── ApplicationDbContext.cs   # EF Core DbContext
+│   ├── DesignTimeDbContextFactory.cs # dotnet ef 工具的 design-time 支援
 │   ├── DatabaseSeeder.cs         # 初始資料種子 + 索引建立
 │   └── JsonData/                 # JSON fallback 資料檔案（*.json）
 │
@@ -154,28 +158,26 @@ PersonalManagerBackend/
 ├── Middleware/
 │   └── ErrorHandlingMiddleware.cs # 全域例外處理，統一回傳 ApiResponse
 │
-├── Models/                       # 12 個 EF Core 實體
-│   ├── User.cs
-│   ├── PersonalProfile.cs
-│   ├── Education.cs
-│   ├── WorkExperience.cs
-│   ├── Skill.cs
-│   ├── Portfolio.cs
-│   ├── CalendarEvent.cs
-│   ├── TodoItem.cs
-│   ├── WorkTask.cs
-│   ├── BlogPost.cs
-│   ├── GuestBookEntry.cs
-│   └── ContactMethod.cs
+├── Migrations/                   # EF Core migrations（啟動時自動套用）
+│
+├── Models/                       # EF Core 實體（以資料夾內容為準）
 │
 ├── Repositories/
 │   ├── IRepository.cs            # 通用 CRUD 介面
 │   ├── EfRepository.cs           # EF Core 實作（DB 模式）
-│   └── JsonRepository.cs         # JSON 檔案實作（fallback 模式）
+│   ├── JsonRepository.cs         # JSON 檔案實作（fallback 模式）
+│   └── BlogPostRepository.cs     # BlogPost 專用（含 Tag 關聯同步）
 │
-└── Services/
-    ├── CrudService.cs            # 通用 CRUD 業務邏輯基礎類別
-    └── EntityServices.cs         # 12 個實體的具體服務類別
+├── Services/
+│   ├── CrudService.cs            # 通用 CRUD 業務邏輯基礎類別
+│   ├── EntityServices.cs         # 各實體的具體服務類別
+│   ├── EmailService.cs           # 寄信（SMTP / 未設定時 NoOp）
+│   ├── FileStorageProviders.cs   # 檔案儲存（本地 / S3 相容 Object Storage）
+│   └── DbHealthCheck.cs          # DB 連線健康檢查
+│
+├── Settings/                     # EmailSettings、FileStorageSettings
+│
+└── tests/                        # PersonalManager.Tests（xUnit）
 ```
 
 ---
@@ -184,7 +186,7 @@ PersonalManagerBackend/
 
 | Controller | 路由前綴 | 說明 |
 |------------|----------|------|
-| AuthController | `/api/auth` | 登入、註冊 |
+| AuthController | `/api/auth` | 登入、註冊、refresh、登出、密碼重設 |
 | UsersController | `/api/users` | 使用者管理 |
 | ProfilesController | `/api/profiles` | 個人資料 |
 | EducationsController | `/api/educations` | 學歷 |
@@ -197,6 +199,10 @@ PersonalManagerBackend/
 | BlogPostsController | `/api/blogposts` | 部落格文章 |
 | GuestBookEntriesController | `/api/guestbookentries` | 留言板 |
 | ContactMethodsController | `/api/contactmethods` | 聯絡方式 |
+| ProjectsController | `/api/projects` | 工作追蹤專案 |
+| TimeEntriesController | `/api/timeentries` | 時間記錄 |
+| FileUploadsController | `/api/fileuploads` | 檔案上傳 |
+| PortfolioAttachmentsController | `/api/portfolioattachments` | 作品集附件 |
 
 所有資料回應格式：
 ```json
@@ -318,7 +324,10 @@ Jwt__SecretKey = <隨機密鑰>
    ```
 
 8. **新增 Controller**（`Controllers/NewEntitiesController.cs`）：
-   參考 `SkillsController.cs` 的結構，注入 `INewEntityService`。
+   參考 `SkillsController.cs` 的結構，繼承 `BaseApiController`，注入 `INewEntityService`。
+   以 `GetCurrentUserId()`（回傳 `int?`）取得目前使用者：Create 時強制寫入 `dto.UserId`，Update/Delete 先驗證資源擁有者。
+
+9. **新增 migration**：`dotnet ef migrations add AddNewEntity`，並 commit `Migrations/` 下產生的檔案。
 
 ---
 
@@ -328,7 +337,7 @@ Jwt__SecretKey = <隨機密鑰>
 - **不要 disable 測試**，修復它
 - **commit 前先確認 `dotnet build` 通過**
 - **Model 屬性異動後**，JSON fallback 的 `.json` 資料可能需要更新欄位
-- **EF 模式**下，`EnsureCreated()` 自動處理 schema，不需要手動執行 migrations
+- **Model 異動後**需新增 migration（`dotnet ef migrations add <Name>`），並 commit `Migrations/` 下產生的檔案
 
 ---
 
