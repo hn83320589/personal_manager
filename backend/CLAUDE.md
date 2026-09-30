@@ -202,7 +202,7 @@ backend/
 | ProfilesController | `/api/profiles` | 個人資料 |
 | EducationsController | `/api/educations` | 學歷 |
 | WorkExperiencesController | `/api/workexperiences` | 工作經歷 |
-| SkillsController | `/api/skills` | 技能 |
+| PublicSkillsController／MySkillsController | `/api/public/users/{username}/skills`、`/api/me/skills` | 技能（已重建） |
 | PortfoliosController | `/api/portfolios` | 作品集 |
 | CalendarEventsController | `/api/calendarevents` | 行事曆 |
 | TodoItemsController | `/api/todoitems` | 待辦事項 |
@@ -279,7 +279,23 @@ Jwt__SecretKey = <隨機密鑰>
 
 ---
 
-## 如何新增一個實體
+## Feature 寫法（ADR-011，重構中）
+
+已重建的 feature 放在 `Features/<名稱>/`，範本為 `Features/Skills/`。尚未重建的仍是下方「如何新增一個實體」的舊寫法，重建完成後舊寫法會移除。
+
+| 項目 | 規則 |
+|------|------|
+| 路由 | 公開頁面 `api/public/users/{username}/<資源>`（`[AllowAnonymous]`）；後台 `api/me/<資源>`（`[Authorize]`）；管理員 `api/admin/<資源>` |
+| 資料範圍 | 後台查詢一律 `.OwnedBy(currentUser.RequireUserId())`；公開查詢先 `db.RequirePublicUserIdAsync(username)` 再篩選公開資料 |
+| 存取別人的資料 | 查不到 → `NotFoundException`（404），不回 403 |
+| Service | 直接使用 `ApplicationDbContext` 與 `ICurrentUser`；讀取加 `AsNoTracking()`，以 `Select` 投影成 DTO |
+| DTO | `record`：`SaveXxxRequest`（新增與更新共用，含 DataAnnotations）、`XxxDto`（後台）、`PublicXxxDto`（公開，不含管理欄位） |
+| 錯誤 | 丟 `AppException` 子類別；驗證失敗由 `[ApiController]` 自動回 400 + `ApiResponse` |
+| 排序 | `PUT api/me/<資源>/order`，body 為 `ReorderRequest`，必須剛好包含自己的全部項目 |
+| 實體 | 屬於使用者的實體實作 `IOwnedByUser` |
+| 測試 | `tests/.../Features/<名稱>ApiTests.cs`，以 `ApiFactory` + `CreateUserAsync()` 打真實 HTTP；至少涵蓋匿名存取、存取他人資料、公開資料過濾 |
+
+## 如何新增一個實體（舊寫法，重建中）
 
 1. **新增 Model**（`Models/NewEntity.cs`）：
    ```csharp

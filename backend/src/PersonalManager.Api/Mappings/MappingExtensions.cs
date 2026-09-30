@@ -98,29 +98,6 @@ public static class MappingExtensions
         if (d.SortOrder.HasValue) w.SortOrder = d.SortOrder.Value;
     }
 
-    // ===== Skill =====
-    public static SkillResponse ToResponse(this Skill s) => new()
-    {
-        Id = s.Id, UserId = s.UserId, Name = s.Name, Category = s.Category,
-        Level = s.Level, YearsOfExperience = s.YearsOfExperience,
-        IsPublic = s.IsPublic, SortOrder = s.SortOrder
-    };
-    public static Skill ToEntity(this CreateSkillDto d) => new()
-    {
-        UserId = d.UserId, Name = d.Name, Category = d.Category,
-        Level = d.Level, YearsOfExperience = d.YearsOfExperience,
-        IsPublic = d.IsPublic, SortOrder = d.SortOrder
-    };
-    public static void ApplyUpdate(this Skill s, UpdateSkillDto d)
-    {
-        if (d.Name != null) s.Name = d.Name;
-        if (d.Category != null) s.Category = d.Category;
-        if (d.Level.HasValue) s.Level = d.Level.Value;
-        if (d.YearsOfExperience.HasValue) s.YearsOfExperience = d.YearsOfExperience.Value;
-        if (d.IsPublic.HasValue) s.IsPublic = d.IsPublic.Value;
-        if (d.SortOrder.HasValue) s.SortOrder = d.SortOrder.Value;
-    }
-
     // ===== Portfolio =====
     public static PortfolioResponse ToResponse(this Portfolio p) => new()
     {

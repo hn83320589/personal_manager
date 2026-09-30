@@ -33,6 +33,20 @@
 - [x] `ICurrentUser` 與統一錯誤處理（不外洩例外訊息）
 - [-] feature folder 骨架 → 併入 Phase 2，各 feature 重建時直接建立於 `Features/`
 
+### Phase 2 — 後端功能重建（public／me／admin）
+- [x] 範本：技能（熟練度與年資改為選填、排序 API、13 個整合測試）
+- [ ] 個人資料／使用者目錄
+- [ ] 經歷、學歷
+- [ ] 聯絡方式
+- [ ] 部落格（含 CoverImage、HtmlSanitizer、每位使用者範圍內唯一的 slug）
+- [ ] 留言板（公開不含 Email、只回傳已審核）
+- [ ] 行事曆
+- [ ] 待辦、工作追蹤（Project、WorkTask、TimeEntry）
+- [ ] 檔案上傳（magic bytes、50 MB 上限）
+- [ ] Auth（httpOnly cookie refresh token、token 雜湊、重設密碼後撤銷）
+- [ ] Admin：使用者管理、建立第一位管理員的方式
+- [ ] 移除 `IRepository`、`CrudService` 與舊的 DTO／Mapping 檔
+
 ### 技術債（重構期間發現）
 - [ ] 非 Development 環境不再自動建立 admin 帳號 → Phase 2 Admin 功能需提供建立第一個管理員的方式（例如以設定指定的 Email 註冊時授予 Admin）
 - [ ] 【Bug】部落格編輯器的「特色圖片」欄位不存在於前端型別與後端資料表，上傳的圖片從未被儲存 → Phase 2 Blog 重建時補上 `CoverImage`

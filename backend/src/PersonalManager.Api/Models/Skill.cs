@@ -12,7 +12,7 @@ public enum SkillLevel
     Expert
 }
 
-public class Skill
+public class Skill : IOwnedByUser
 {
     public int Id { get; set; }
     public int UserId { get; set; }
@@ -23,9 +23,11 @@ public class Skill
     [StringLength(50)]
     public string Category { get; set; } = string.Empty;
 
-    public SkillLevel Level { get; set; } = SkillLevel.Beginner;
+    /// <summary>選填：不是每種職業都習慣標示熟練度。</summary>
+    public SkillLevel? Level { get; set; }
 
-    public int YearsOfExperience { get; set; }
+    /// <summary>選填。</summary>
+    public int? YearsOfExperience { get; set; }
 
     public bool IsPublic { get; set; } = true;
     public int SortOrder { get; set; }

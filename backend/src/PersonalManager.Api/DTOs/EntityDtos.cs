@@ -160,38 +160,6 @@ public class WorkExperienceResponse
     public int SortOrder { get; set; }
 }
 
-// ===== Skill =====
-public class CreateSkillDto
-{
-    public int UserId { get; set; }
-    [Required] public string Name { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
-    public SkillLevel Level { get; set; } = SkillLevel.Beginner;
-    public int YearsOfExperience { get; set; }
-    public bool IsPublic { get; set; } = true;
-    public int SortOrder { get; set; }
-}
-public class UpdateSkillDto
-{
-    public string? Name { get; set; }
-    public string? Category { get; set; }
-    public SkillLevel? Level { get; set; }
-    public int? YearsOfExperience { get; set; }
-    public bool? IsPublic { get; set; }
-    public int? SortOrder { get; set; }
-}
-public class SkillResponse
-{
-    public int Id { get; set; }
-    public int UserId { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
-    public SkillLevel Level { get; set; }
-    public int YearsOfExperience { get; set; }
-    public bool IsPublic { get; set; }
-    public int SortOrder { get; set; }
-}
-
 // ===== Portfolio =====
 public class CreatePortfolioDto
 {

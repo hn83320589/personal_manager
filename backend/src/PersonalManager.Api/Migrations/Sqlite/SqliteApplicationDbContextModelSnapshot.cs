@@ -635,7 +635,6 @@ namespace PersonalManager.Api.Migrations.Sqlite
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Level")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
@@ -653,7 +652,7 @@ namespace PersonalManager.Api.Migrations.Sqlite
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("YearsOfExperience")
+                    b.Property<int?>("YearsOfExperience")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

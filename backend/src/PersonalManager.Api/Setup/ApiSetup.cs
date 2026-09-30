@@ -1,9 +1,11 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
+using PersonalManager.Api.DTOs;
 using PersonalManager.Api.Services;
 
 namespace PersonalManager.Api.Setup;
@@ -22,11 +24,21 @@ public static class ApiSetup
 {
     public static IServiceCollection AddApiControllers(this IServiceCollection services)
     {
-        services.AddControllers().AddJsonOptions(o =>
-        {
-            o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        });
+        services.AddControllers()
+            .AddJsonOptions(o =>
+            {
+                o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            })
+            // 驗證失敗也回傳與其他錯誤相同的 ApiResponse 格式，前端只需處理一種錯誤結構
+            .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = context =>
+            {
+                var errors = context.ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => string.IsNullOrEmpty(e.ErrorMessage) ? "欄位格式不正確" : e.ErrorMessage)
+                    .ToList();
+                return new BadRequestObjectResult(ApiResponse.Fail("資料格式有誤", errors));
+            });
         return services;
     }
 

@@ -99,40 +99,6 @@ public class WorkExperienceService : CrudService<WorkExperience, CreateWorkExper
     }
 }
 
-// ===== Skill Service =====
-public interface ISkillService : ICrudService<Skill, CreateSkillDto, UpdateSkillDto, SkillResponse>
-{
-    Task<List<SkillResponse>> GetByUserIdAsync(int userId);
-    Task<List<SkillResponse>> GetPublicByUserIdAsync(int userId);
-    Task<List<SkillResponse>> GetByCategoryAsync(int userId, string category);
-}
-
-public class SkillService : CrudService<Skill, CreateSkillDto, UpdateSkillDto, SkillResponse>, ISkillService
-{
-    public SkillService(IRepository<Skill> repo) : base(repo) { }
-    protected override Skill MapToEntity(CreateSkillDto dto) => dto.ToEntity();
-    protected override SkillResponse MapToResponse(Skill entity) => entity.ToResponse();
-    protected override void ApplyUpdate(Skill entity, UpdateSkillDto dto) => entity.ApplyUpdate(dto);
-
-    public async Task<List<SkillResponse>> GetByUserIdAsync(int userId)
-    {
-        var items = await Repository.FindAsync(s => s.UserId == userId);
-        return items.OrderBy(s => s.SortOrder).Select(MapToResponse).ToList();
-    }
-
-    public async Task<List<SkillResponse>> GetPublicByUserIdAsync(int userId)
-    {
-        var items = await Repository.FindAsync(s => s.UserId == userId && s.IsPublic);
-        return items.OrderBy(s => s.SortOrder).Select(MapToResponse).ToList();
-    }
-
-    public async Task<List<SkillResponse>> GetByCategoryAsync(int userId, string category)
-    {
-        var items = await Repository.FindAsync(s => s.UserId == userId && s.Category == category);
-        return items.OrderBy(s => s.SortOrder).Select(MapToResponse).ToList();
-    }
-}
-
 // ===== Portfolio Service =====
 public interface IPortfolioService : ICrudService<Portfolio, CreatePortfolioDto, UpdatePortfolioDto, PortfolioResponse>
 {

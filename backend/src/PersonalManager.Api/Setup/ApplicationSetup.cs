@@ -17,7 +17,7 @@ public static class ApplicationSetup
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IEducationService, EducationService>();
         services.AddScoped<IWorkExperienceService, WorkExperienceService>();
-        services.AddScoped<ISkillService, SkillService>();
+        services.AddScoped<Features.Skills.SkillService>();
         services.AddScoped<IPortfolioService, PortfolioService>();
         services.AddScoped<ICalendarEventService, CalendarEventService>();
         services.AddScoped<ITodoItemService, TodoItemService>();
