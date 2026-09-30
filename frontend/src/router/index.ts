@@ -26,6 +26,13 @@ const router = createRouter({
       meta: { title: '登入', requiresGuest: true },
     },
 
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue'),
+      meta: { title: '建立帳號', requiresGuest: true },
+    },
+
     // 忘記密碼 / 重設密碼
     {
       path: '/forgot-password',
@@ -105,6 +112,24 @@ const router = createRouter({
       meta: { requiresAuth: true },
       children: [
         { path: '', redirect: '/admin/dashboard' },
+        {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: () => import('../views/manage/DashboardView.vue'),
+          meta: { title: '儀表板' },
+        },
+        {
+          path: 'account',
+          name: 'manage-account',
+          component: () => import('../views/manage/AccountView.vue'),
+          meta: { title: '修改密碼' },
+        },
+        {
+          path: 'users',
+          name: 'manage-users',
+          component: () => import('../views/manage/UsersView.vue'),
+          meta: { title: '使用者管理', requiresAdmin: true },
+        },
         {
           path: 'profile',
           name: 'manage-profile',
@@ -188,12 +213,6 @@ const router = createRouter({
         },
       ],
     },
-    {
-      path: '/admin/dashboard',
-      name: 'dashboard',
-      component: () => import('../views/admin/DashboardView.vue'),
-      meta: { title: '管理儀表板', requiresAuth: true },
-    },
     // Catch all 404
     {
       path: '/:pathMatch(.*)*',
@@ -221,6 +240,12 @@ router.beforeEach(async (to, from, next) => {
   // Check auth requirements
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({ name: 'login', query: { redirect: to.fullPath } })
+    return
+  }
+
+  // 管理員頁面：一般使用者導回儀表板（後端同樣會拒絕）
+  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    next({ name: 'dashboard' })
     return
   }
 

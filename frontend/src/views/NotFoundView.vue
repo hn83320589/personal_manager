@@ -1,70 +1,18 @@
 <template>
-  <div class="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
-      <div class="bg-gray-50 py-16 px-6 rounded-lg">
-        <!-- 404 Icon -->
-        <div class="flex justify-center mb-6">
-          <ExclamationTriangleIcon class="h-20 w-20 text-gray-400" />
-        </div>
-
-        <!-- Error Message -->
-        <h1 class="text-6xl font-bold text-primary-600 mb-4">404</h1>
-        <h2 class="text-2xl font-semibold text-gray-900 mb-4">頁面不存在</h2>
-        <p class="text-gray-600 mb-8">抱歉，您要找的頁面不存在或已被移動。</p>
-
-        <!-- Action Buttons -->
-        <div class="space-y-3 sm:space-y-0 sm:space-x-3 sm:flex sm:justify-center">
-          <BaseButton @click="goHome" variant="primary"> 回到首頁 </BaseButton>
-          <BaseButton @click="goBack" variant="secondary"> 返回上頁 </BaseButton>
-        </div>
-      </div>
-
-      <!-- Helpful Links -->
-      <div class="mt-8">
-        <h3 class="text-sm font-medium text-gray-900 mb-4">您可能在尋找：</h3>
-        <div class="grid grid-cols-2 gap-4 text-sm">
-          <RouterLink
-            to="/portfolio"
-            class="text-primary-600 hover:text-primary-700 transition-colors duration-200"
-          >
-            作品集
-          </RouterLink>
-          <RouterLink
-            to="/blog"
-            class="text-primary-600 hover:text-primary-700 transition-colors duration-200"
-          >
-            部落格
-          </RouterLink>
-          <RouterLink
-            to="/about"
-            class="text-primary-600 hover:text-primary-700 transition-colors duration-200"
-          >
-            關於我
-          </RouterLink>
-          <RouterLink
-            to="/contact"
-            class="text-primary-600 hover:text-primary-700 transition-colors duration-200"
-          >
-            聯絡我
-          </RouterLink>
-        </div>
-      </div>
+  <main class="flex min-h-screen flex-col items-center justify-center gap-4 px-4 text-center">
+    <p class="font-mono text-sm text-muted">404</p>
+    <h1 class="font-hand text-3xl font-bold">找不到這個頁面</h1>
+    <p class="max-w-sm text-muted">網址可能打錯了，或是頁面已經移除。</p>
+    <div class="mt-2 flex gap-2">
+      <RouterLink to="/" class="btn btn-primary">回到首頁</RouterLink>
+      <button type="button" class="btn" @click="$router.back()">返回上一頁</button>
     </div>
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
-import BaseButton from '@/components/ui/BaseButton.vue'
+import { onMounted } from 'vue'
+import { setPageSeo } from '@/composables/useSeo'
 
-const router = useRouter()
-
-function goHome() {
-  router.push('/')
-}
-
-function goBack() {
-  router.go(-1)
-}
+onMounted(() => setPageSeo({ title: '找不到頁面' }))
 </script>

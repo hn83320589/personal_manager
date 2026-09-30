@@ -1,129 +1,81 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="text-center">
-        <h1 class="text-3xl font-bold text-gray-900">Personal Manager</h1>
-        <h2 class="mt-6 text-2xl font-semibold text-gray-900">重設密碼</h2>
-      </div>
+  <AuthCard title="重設密碼">
+    <p v-if="!token" class="text-sm text-muted">
+      這個重設連結無效。<RouterLink to="/forgot-password" class="text-accent hover:underline"
+        >重新申請</RouterLink
+      >
+    </p>
+    <div v-else-if="done" class="flex flex-col gap-4">
+      <p class="rounded-lg bg-success/10 p-3 text-sm text-success" role="status">
+        密碼已重設，請以新密碼登入。
+      </p>
+      <RouterLink to="/login" class="btn btn-primary justify-center">前往登入</RouterLink>
     </div>
-
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-        <!-- No token -->
-        <div v-if="!token" class="text-center">
-          <p class="text-sm text-gray-600">無效的重設連結，請重新申請。</p>
-          <div class="mt-4">
-            <router-link
-              to="/forgot-password"
-              class="text-sm font-medium text-primary-600 hover:text-primary-500"
-            >
-              重新申請重設連結
-            </router-link>
-          </div>
-        </div>
-
-        <!-- Success -->
-        <div v-else-if="success" class="text-center">
-          <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-            <CheckIcon class="h-6 w-6 text-green-600" />
-          </div>
-          <h3 class="mt-4 text-lg font-medium text-gray-900">密碼重設成功</h3>
-          <p class="mt-2 text-sm text-gray-600">請使用新密碼重新登入。</p>
-          <div class="mt-6">
-            <router-link
-              to="/login"
-              class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700"
-            >
-              前往登入
-            </router-link>
-          </div>
-        </div>
-
-        <!-- Form -->
-        <template v-else>
-          <div v-if="errorMsg" class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-            <p class="text-sm text-red-700">{{ errorMsg }}</p>
-          </div>
-
-          <BaseForm @submit="handleSubmit">
-            <BaseInput
-              v-model="newPassword"
-              type="password"
-              label="新密碼"
-              placeholder="至少 8 個字元"
-              required
-              :disabled="isLoading"
-            />
-            <BaseInput
-              v-model="confirmPassword"
-              type="password"
-              label="確認新密碼"
-              placeholder="再次輸入新密碼"
-              required
-              :disabled="isLoading"
-            />
-
-            <p v-if="passwordMismatch" class="text-sm text-red-600 -mt-2">兩次密碼輸入不一致</p>
-
-            <BaseButton
-              type="submit"
-              class="w-full"
-              :loading="isLoading"
-              :disabled="!isFormValid || isLoading"
-            >
-              <span v-if="!isLoading">確認重設</span>
-              <span v-else>重設中...</span>
-            </BaseButton>
-          </BaseForm>
-        </template>
-      </div>
-    </div>
-  </div>
+    <form v-else class="flex flex-col gap-4" @submit.prevent="submit">
+      <FormField v-slot="{ id }" label="新密碼" hint="至少 8 個字元">
+        <input
+          :id="id"
+          v-model="password"
+          type="password"
+          class="input"
+          autocomplete="new-password"
+          minlength="8"
+          required
+        />
+      </FormField>
+      <FormField v-slot="{ id }" label="再輸入一次">
+        <input
+          :id="id"
+          v-model="confirm"
+          type="password"
+          class="input"
+          autocomplete="new-password"
+          required
+        />
+      </FormField>
+      <p v-if="mismatch" class="text-sm text-danger" role="alert">兩次輸入的密碼不一樣。</p>
+      <p v-if="error" class="text-sm text-danger" role="alert">{{ error }}</p>
+      <button
+        type="submit"
+        class="btn btn-primary justify-center"
+        :disabled="running || mismatch || password.length < 8"
+      >
+        {{ running ? '重設中…' : '重設密碼' }}
+      </button>
+    </form>
+  </AuthCard>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { CheckIcon } from '@heroicons/vue/24/outline'
 import { authApi } from '@/api/auth'
-import { ApiError } from '@/api/http'
-import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseInput from '@/components/ui/BaseInput.vue'
-import BaseForm from '@/components/ui/BaseForm.vue'
+import { errorMessage } from '@/composables/useAsyncAction'
+import { setPageSeo } from '@/composables/useSeo'
+import FormField from '@/components/manage/FormField.vue'
+import AuthCard from '@/components/public/AuthCard.vue'
 
 const route = useRoute()
-const token = computed(() => (route.query.token as string) || '')
+const token = computed(() => (typeof route.query.token === 'string' ? route.query.token : ''))
+const password = ref('')
+const confirm = ref('')
+const mismatch = computed(() => confirm.value.length > 0 && confirm.value !== password.value)
+const running = ref(false)
+const done = ref(false)
+const error = ref<string | null>(null)
 
-const newPassword = ref('')
-const confirmPassword = ref('')
-const isLoading = ref(false)
-const success = ref(false)
-const errorMsg = ref('')
-
-const passwordMismatch = computed(
-  () => confirmPassword.value.length > 0 && newPassword.value !== confirmPassword.value,
-)
-
-const isFormValid = computed(
-  () =>
-    newPassword.value.length >= 8 &&
-    confirmPassword.value.length > 0 &&
-    newPassword.value === confirmPassword.value,
-)
-
-async function handleSubmit() {
-  if (!isFormValid.value || isLoading.value) return
-
-  isLoading.value = true
-  errorMsg.value = ''
-
+async function submit() {
+  running.value = true
+  error.value = null
   try {
-    await authApi.resetPassword({ token: token.value, newPassword: newPassword.value })
-    success.value = true
+    await authApi.resetPassword({ token: token.value, newPassword: password.value })
+    done.value = true
   } catch (e) {
-    errorMsg.value = e instanceof ApiError ? e.message : '操作失敗，請稍後再試'
+    error.value = errorMessage(e)
   } finally {
-    isLoading.value = false
+    running.value = false
   }
 }
+
+onMounted(() => setPageSeo({ title: '重設密碼' }))
 </script>

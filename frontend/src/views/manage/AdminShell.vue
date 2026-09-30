@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, type Component } from 'vue'
+import { computed, ref, type Component } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   AcademicCapIcon,
@@ -104,7 +104,6 @@ import {
   UsersIcon,
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
-import { useColorScheme } from '@/composables/useColorScheme'
 import ColorSchemeToggle from '@/components/public/ColorSchemeToggle.vue'
 
 interface NavItem {
@@ -148,10 +147,6 @@ const groups = computed<{ label: string; items: NavItem[] }[]>(() => [
     ],
   },
 ])
-
-// 舊後台頁面會把畫面固定成淺色；回到新版後台時恢復使用者的選擇
-const { scheme, setScheme } = useColorScheme()
-onMounted(() => setScheme(scheme.value))
 
 async function logout() {
   await auth.logout()

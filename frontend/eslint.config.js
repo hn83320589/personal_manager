@@ -23,18 +23,5 @@ export default defineConfigWithVueTs(
       ],
     },
   },
-  {
-    // Phase 5 依新設計重寫的舊畫面：暫時容許 any，重寫時從清單移除（docs/TASKS.md Phase 5）
-    name: 'app/legacy-screens',
-    files: [
-      'src/views/admin/**',
-      'src/views/*.vue',
-      'src/components/{admin,blog,calendar,layout,task,work,ui,common}/**',
-      'src/stores/profile.ts',
-      'src/services/**',
-      'src/types/api.ts',
-    ],
-    rules: { '@typescript-eslint/no-explicit-any': 'warn' },
-  },
   skipFormatting,
 )

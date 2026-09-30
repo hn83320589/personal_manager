@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { authApi } from '@/api/auth'
 import { ApiError, http } from '@/api/http'
+import { errorMessage } from '@/composables/useAsyncAction'
 import type { Schemas } from '@/api/types'
 
 type AuthUser = Schemas['AuthUserDto']
@@ -55,7 +56,22 @@ export const useAuthStore = defineStore('auth', () => {
       startSession(await authApi.login(credentials))
       return true
     } catch (e) {
-      error.value = e instanceof ApiError ? e.message : '登入失敗，請稍後再試'
+      error.value = e instanceof ApiError ? errorMessage(e) : '登入失敗，請稍後再試'
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /** 註冊成功後直接登入。 */
+  async function register(request: Schemas['RegisterRequest']): Promise<boolean> {
+    isLoading.value = true
+    error.value = null
+    try {
+      startSession(await authApi.register(request))
+      return true
+    } catch (e) {
+      error.value = errorMessage(e)
       return false
     } finally {
       isLoading.value = false
@@ -100,6 +116,7 @@ export const useAuthStore = defineStore('auth', () => {
     userDisplayName,
     userRole,
     login,
+    register,
     logout,
     restoreSession,
     refreshAccessToken,

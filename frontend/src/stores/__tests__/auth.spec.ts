@@ -5,7 +5,7 @@ import { authApi } from '@/api/auth'
 import { ApiError, http, type AuthHooks } from '@/api/http'
 
 vi.mock('@/api/auth', () => ({
-  authApi: { login: vi.fn(), refresh: vi.fn(), logout: vi.fn() },
+  authApi: { login: vi.fn(), register: vi.fn(), refresh: vi.fn(), logout: vi.fn() },
 }))
 
 vi.mock('@/api/http', async (importOriginal) => {
@@ -52,6 +52,36 @@ describe('auth store', () => {
 
     expect(success).toBe(false)
     expect(store.error).toBe('帳號或密碼錯誤')
+  })
+
+  it('signs in right after registering', async () => {
+    vi.mocked(authApi.register).mockResolvedValue(session('token-new'))
+    const store = useAuthStore()
+
+    const success = await store.register({
+      username: 'dada',
+      email: 'dada@test.local',
+      password: 'secret123',
+      fullName: 'Dada',
+    })
+
+    expect([success, store.isAuthenticated]).toEqual([true, true])
+  })
+
+  it('shows every validation problem when registration is rejected', async () => {
+    vi.mocked(authApi.register).mockRejectedValue(
+      new ApiError('資料格式有誤', 400, ['密碼至少 8 個字元']),
+    )
+    const store = useAuthStore()
+
+    await store.register({
+      username: 'dada',
+      email: 'dada@test.local',
+      password: 'short',
+      fullName: 'Dada',
+    })
+
+    expect(store.error).toBe('資料格式有誤：密碼至少 8 個字元')
   })
 
   it('restores the session from the refresh cookie when the app starts', async () => {
