@@ -25,11 +25,11 @@ This file provides guidance to Claude Code when working in this repository.
 | 個人介紹 | 基本資料、個人簡介 | 否（公開） |
 | 學/經歷 | 教育背景、工作經歷 | 否（公開） |
 | 專長技能 | 技能分類與等級 | 否（公開） |
-| 作品集 | 專案展示 | 否（公開） |
+| 作品集 | 區塊式作品（設計／前端／後端三種模式） | 否（公開） |
 | 公開行事曆 | 公開行程 | 否（公開） |
 | 部落格 | 公開文章 | 否（公開） |
 | 留言板 | 訪客留言 | 否（公開） |
-| 聯絡我 | 社群/Email/手機 | 否（公開） |
+| 聯絡我 | 社群/Email/手機（在個人首頁） | 否（公開） |
 | 管理後台 | 所有內容管理 | **是** |
 | 行事曆管理 | 完整行事曆 | **是** |
 | 工作追蹤 | 任務計時、進度 | **是** |
@@ -42,13 +42,19 @@ This file provides guidance to Claude Code when working in this repository.
 ```
 personal_manager/
 ├── CLAUDE.md                     # 本檔案
-├── .github/workflows/ci.yml      # 後端 build/test、前端 test/type-check/build
+├── CHANGELOG.md                  # 重要變更
+├── .github/workflows/ci.yml      # 後端 build/test/migration 檢查、前端 lint/test/build、E2E
 ├── backend/
 │   ├── PersonalManager.sln
 │   ├── src/PersonalManager.Api/  # .NET 9 Web API
 │   └── tests/PersonalManager.Tests/
 ├── frontend/                     # Vue 3 SPA
-└── docs/                         # 規格、ADR、TASKS.md
+└── docs/
+    ├── TASKS.md                  # 任務清單與技術債
+    ├── system-specification.md   # 系統規格與架構決策紀錄（ADR）
+    ├── development-guide.md      # 本地開發流程
+    ├── database-design.md        # 資料表
+    └── deployment-guide.md       # 部署條件（目前沒有正式環境）
 ```
 
 `local-development/` 是合併前的舊 repo clone，已不再使用（git-ignored）。
@@ -71,8 +77,10 @@ dotnet test PersonalManager.sln
 cd frontend
 npm install   # 首次或 package.json 有變動
 npm run dev
-# → http://localhost:5173
+# → http://localhost:5173（/api 與 /files 由 Vite 轉送到後端）
 ```
+
+示範帳號（只在 Development 建立）：`admin` / `password123`，公開頁面 `http://localhost:5173/@admin`。
 
 > 後端預設使用 SQLite，資料庫檔在 `backend/src/PersonalManager.Api/App_Data/`，刪除後重新啟動即可重建（ADR-008）。
 
@@ -82,88 +90,23 @@ npm run dev
 
 | 端 | 技術 |
 |----|------|
-| 後端 | C# .NET 9.0 Web API + EF Core 9 + MariaDB |
-| 前端 | Vue 3 + TypeScript + Pinia + Axios + Tailwind CSS |
-| 部署 | 暫無（Zeabur 已停用，目前僅本地開發） |
+| 後端 | C# .NET 9 Web API + EF Core 9（feature folder，ADR-011） |
+| 前端 | Vue 3 + TypeScript（strict）+ Pinia + Tailwind CSS + Tiptap |
+| 部署 | 暫無，目前僅本地開發（見 `docs/deployment-guide.md`） |
 | 資料庫 | SQLite（預設）；可由 `Database:Provider` 切換為 MySQL/MariaDB |
-| 認證 | JWT Bearer Token |
+| 認證 | JWT access token（前端記憶體）+ httpOnly cookie refresh token（ADR-010） |
+| 測試 | xUnit 整合測試、Vitest、Playwright E2E |
 
 ---
 
 ## 重要規則
 
 **每次異動後：**
-- 後端有異動 → 更新 `backend/CLAUDE.md`
-- 前端有異動 → 更新 `frontend/CLAUDE.md`
-- 重大進度 → 同步更新本檔案
+- 後端有異動 → 更新 `backend/CLAUDE.md`（規則、結構、設定有變時）
+- 前端有異動 → 更新 `frontend/CLAUDE.md`（同上）
+- 重要的功能或架構變更 → 記錄在根目錄 `CHANGELOG.md`；逐次的細節由 git log 承擔，CLAUDE.md 不寫異動記錄
 
 **開發規範：**
 - 不使用 `--no-verify`
 - commit 前確認可正確建置
 - 不 disable 測試，修復它
-
----
-
-## 最新異動記錄
-
-### 2026/03/13
-- **後端 EF Core Migrations 策略遷移完成**：
-  - `Data/DesignTimeDbContextFactory.cs` 新增（ef tools design-time 支援）
-  - `Migrations/20260313084338_InitialCreate.cs` 建立（完整初始 schema）
-  - `Program.cs` 改用 `db.Database.Migrate()` 取代 `EnsureCreated()`
-  - ⚠️ 生產 DB 切換需手動建立 `__EFMigrationsHistory` 並插入 migration 記錄（見後端 CLAUDE.md）
-- **後端公開端點 Rate Limiting 完成**：
-  - `Program.cs` 加入 `AddRateLimiter` + `UseRateLimiter()`
-  - `"auth"` policy → login/register（每 IP 每分鐘 10 次）
-  - `"public_write"` policy → guestbook POST（每 IP 每分鐘 10 次）
-  - 超過回傳 HTTP 429
-- **後端資源所有權驗證（TD-02）完成**：
-  - 新增 `Controllers/BaseApiController.cs`（`GetCurrentUserId()` helper）
-  - 全部 11 個 Controller 加入所有權驗證（Create 強制 `dto.UserId = currentUserId`；Update/Delete 驗證擁有者）
-  - 修復 `TodoItemsController` / `WorkTasksController` `GetAll()` 原本洩漏所有用戶資料的問題
-  - `GuestBookEntriesController` 使用 `TargetUserId` 作為所有權依據；`GetAll` 改為只回傳目標用戶為當前用戶的留言
-- **文件整併與任務清單建立**：
-  - `docs/system-specification.md` 新增（系統規格書，12 章節完整架構文件）
-  - 刪除 7 個過時文件：`api-documentation.md`、`deployment-production.md`、`jwt-authentication.md`、`project-summary.md`、`user-manual.md`、`feature-overview.md`、`quick-start-guide.md`
-  - `docs/development-guide.md` 更新：移除 Docker 指令，改為實際三倉庫啟動流程；更新目錄結構
-  - `docs/TASKS.md` 新增（任務清單，含 TD-01~TD-05 技術債 + 15 項功能優化 + 完成項目）
-  - 文件從 12 個精簡至 6 個（含 Postman Collection）
-
-### 2026/03/11
-- **前端功能補完與修復**：
-  - `UserContactView.vue` 新增（聯絡我獨立公開頁），路由 `/@:username/contact`，UserLayout 導覽列加入「聯絡我」
-  - `BlogManageView.vue`：修正 `previewPost()` URL（`/@{username}/blog/{slug}`）；`duplicatePost()` 加 null check
-  - `BlogEditorView.vue`：移除未實作的 WYSIWYG 富文本 toggle，僅保留 Markdown 模式
-
-### 2026/02/23
-- **多使用者架構大改寫**（後端 + 前端）：
-  - 後端：新增公開用戶端點（`/api/users/public`）、個人目錄端點（`/api/profiles/directory`）、每人留言板（`/api/guestbookentries/user/{id}`）
-  - 後端：`PersonalProfile` 加 `ThemeColor`，`GuestBookEntry` 加 `TargetUserId`
-  - 前端路由：改為 `/@:username` 架構（類 GitHub），移除舊扁平路由
-  - 前端：新增 `UserLayout.vue`（主題 + Header + 導覽）、完整 10 個 user/* views（含 UserContactView）
-  - 前端：`HomeView.vue` 改為用戶目錄頁（搜尋 + 格狀卡片）
-  - 前端：修復 admin 頁面 hardcoded userId、AppHeader 連結、CSS 表單樣式
-  - 主題系統：5 套預設主題（blue/green/purple/rose/slate），由 CSS 變數控制
-- **Bug 修復**：
-  - 後端 `AuthResponse` 新增 `UserId` 欄位（修復頁面重整後 userId 遺失問題）
-  - 前端留言回覆（`CommentManageView`）`adminReply` 欄位未傳送已修正
-  - 工作追蹤時間記錄（`TimeEntry`）改以 localStorage 持久化（後端無對應 API）
-  - 後台側欄移除 `/admin/files` 和 `/admin/settings` 尚未實作的導覽項目
-- **功能補全**：聯絡方式 CRUD（`ContactManageView`）、Blog 分類管理、工作追蹤專案重新命名
-
-### 2026/02/22
-- **JSON 序列化修復**：後端 camelCase 輸出修正，前後端欄位對齊
-- **DB 自動 fallback**：後端啟動時自動偵測 DB 連線，無法連線時使用本地 JSON
-- **移除 `sql/` 資料夾**：由 EF Core `EnsureCreated()` + `DatabaseSeeder` 取代
-- **前後端 CLAUDE.md 全面重寫**：移除過時內容，補充實際架構與操作指南
-
-### 2026/02/20
-- 前後端 README.md 全面重寫，移除過時 Docker/CI/CD 內容
-
-### 2025/10/01
-- RBAC 權限管理系統完整實作完成
-
-### 2025/08/08 — 2025/09/19
-- Phase 1 & 2：後端 + 前端完整開發
-- 企業級功能整合：JWT、EF Core、RBAC、Rate Limiting
-- CI/CD、測試框架、文件體系建立
