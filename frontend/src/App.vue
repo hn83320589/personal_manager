@@ -7,17 +7,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { RouterView } from 'vue-router'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import { useAuthStore } from '@/stores/auth'
 
-const authStore = useAuthStore()
 const isGlobalLoading = ref(false)
-
-onMounted(() => {
-  authStore.initializeAuth()
-})
 </script>
 
 <style>

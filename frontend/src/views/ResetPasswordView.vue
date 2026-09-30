@@ -50,7 +50,7 @@
               v-model="newPassword"
               type="password"
               label="新密碼"
-              placeholder="至少 6 個字元"
+              placeholder="至少 8 個字元"
               required
               :disabled="isLoading"
             />
@@ -85,7 +85,8 @@
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { CheckIcon } from '@heroicons/vue/24/outline'
-import authService from '@/services/authService'
+import { authApi } from '@/api/auth'
+import { ApiError } from '@/api/http'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import BaseForm from '@/components/ui/BaseForm.vue'
@@ -105,7 +106,7 @@ const passwordMismatch = computed(
 
 const isFormValid = computed(
   () =>
-    newPassword.value.length >= 6 &&
+    newPassword.value.length >= 8 &&
     confirmPassword.value.length > 0 &&
     newPassword.value === confirmPassword.value,
 )
@@ -117,14 +118,10 @@ async function handleSubmit() {
   errorMsg.value = ''
 
   try {
-    const resp = await authService.resetPassword(token.value, newPassword.value)
-    if (resp.success) {
-      success.value = true
-    } else {
-      errorMsg.value = resp.message || '重設連結無效或已過期'
-    }
-  } catch {
-    errorMsg.value = '操作失敗，請稍後再試'
+    await authApi.resetPassword({ token: token.value, newPassword: newPassword.value })
+    success.value = true
+  } catch (e) {
+    errorMsg.value = e instanceof ApiError ? e.message : '操作失敗，請稍後再試'
   } finally {
     isLoading.value = false
   }

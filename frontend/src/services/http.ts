@@ -1,6 +1,7 @@
 import axios from 'axios'
 import type { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
 import type { ApiResponse } from '@/types/api'
+import { useAuthStore } from '@/stores/auth'
 
 class HttpService {
   private client: AxiosInstance
@@ -87,39 +88,18 @@ class HttpService {
     )
   }
 
+  // 舊頁面的過渡：登入狀態一律由 auth store 管理（記憶體 + refresh cookie），
+  // 不再讀寫 localStorage。Phase 5 各頁改用 src/api 後刪除本檔。
   private getAuthToken(): string | null {
-    return localStorage.getItem('auth_token')
+    return useAuthStore().accessToken
   }
 
-  private async tryRefreshToken(): Promise<string> {
-    const refreshToken = localStorage.getItem('refresh_token')
-    if (!refreshToken) throw new Error('No refresh token')
-
-    const response = await this.client.post<
-      ApiResponse<{ token: string; expiresAt: string; refreshToken: string }>
-    >('/auth/refresh', { refreshToken })
-
-    const data = response.data.data
-    localStorage.setItem('auth_token', data.token)
-    localStorage.setItem('refresh_token', data.refreshToken)
-    if (data.expiresAt) {
-      localStorage.setItem('token_expiry', new Date(data.expiresAt).getTime().toString())
-    }
-    return data.token
+  private tryRefreshToken(): Promise<string> {
+    return useAuthStore().refreshAccessToken()
   }
 
   private handleUnauthorized() {
-    // Clear auth token
-    localStorage.removeItem('auth_token')
-    localStorage.removeItem('user_data')
-
-    // Don't redirect on public user profile pages (/@username/*)
-    const isPublicUserPage = window.location.pathname.startsWith('/@')
-
-    // Redirect to login page
-    if (!isPublicUserPage && window.location.pathname !== '/login') {
-      window.location.href = '/login'
-    }
+    useAuthStore().clearSession()
   }
 
   // Request retry mechanism

@@ -1,161 +1,114 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useAuthStore } from '../auth'
+import { authApi } from '@/api/auth'
+import { ApiError, http, type AuthHooks } from '@/api/http'
 
-// Mock authService
-vi.mock('@/services/authService', () => ({
-  default: {
-    login: vi.fn(),
-    logout: vi.fn(),
-    getCurrentUser: vi.fn(),
-    getCurrentUserData: vi.fn(),
-    getAuthToken: vi.fn(),
-    isAuthenticated: vi.fn(),
-  },
+vi.mock('@/api/auth', () => ({
+  authApi: { login: vi.fn(), refresh: vi.fn(), logout: vi.fn() },
 }))
 
-describe('AuthStore', () => {
+vi.mock('@/api/http', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/api/http')>()
+  return { ...actual, http: { setAuthHooks: vi.fn() } }
+})
+
+const user = { id: 7, username: 'dada', email: 'dada@test.local', fullName: 'Dada', role: 'Admin' }
+const session = (accessToken: string) => ({ accessToken, expiresAt: '2030-01-01T00:00:00Z', user })
+
+/** store 交給 http 層的 hooks（http 用來取得 token、續期、通知過期）。 */
+function hooks(): AuthHooks {
+  return vi.mocked(http.setAuthHooks).mock.calls.at(-1)![0]
+}
+
+describe('auth store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
   })
 
-  describe('初始狀態', () => {
-    it('應該有正確的初始狀態', () => {
-      const store = useAuthStore()
+  it('starts signed out', () => {
+    const store = useAuthStore()
 
-      expect(store.user).toBeNull()
-      expect(store.token).toBeNull()
-      expect(store.isAuthenticated).toBe(false)
-      expect(store.userRole).toBe('guest')
-      expect(store.isLoading).toBe(false)
-      expect(store.error).toBeNull()
-    })
+    expect(store.isAuthenticated).toBe(false)
   })
 
-  describe('getters', () => {
-    it('isAuthenticated 應該基於 token 和 user 狀態', () => {
-      const store = useAuthStore()
+  it('signs in and gives the access token to the http layer', async () => {
+    vi.mocked(authApi.login).mockResolvedValue(session('token-1'))
+    const store = useAuthStore()
 
-      // 初始狀態
-      expect(store.isAuthenticated).toBe(false)
+    const success = await store.login({ username: 'dada', password: 'secret123' })
 
-      // 設定 token 和 user
-      store.token = 'test-token'
-      store.user = {
-        id: 1,
-        username: 'testuser',
-        email: 'test@example.com',
-        role: 'user',
-        isActive: true,
-        createdAt: '2024-01-01',
-        fullName: 'Test User',
-      }
-      expect(store.isAuthenticated).toBe(true)
-
-      // 只有 token
-      store.user = null
-      expect(store.isAuthenticated).toBe(false)
-    })
-
-    it('userRole 應該返回使用者角色', () => {
-      const store = useAuthStore()
-
-      expect(store.userRole).toBe('guest')
-
-      store.user = {
-        id: 1,
-        username: 'admin',
-        email: 'admin@example.com',
-        role: 'admin',
-        isActive: true,
-        createdAt: '2024-01-01',
-        fullName: 'Test User',
-      }
-      expect(store.userRole).toBe('admin')
-    })
-
-    it('userDisplayName 應該返回使用者名稱', () => {
-      const store = useAuthStore()
-
-      expect(store.userDisplayName).toBe('Guest')
-
-      store.user = {
-        id: 1,
-        username: 'testuser',
-        email: 'test@example.com',
-        role: 'user',
-        isActive: true,
-        createdAt: '2024-01-01',
-        fullName: 'Test User',
-      }
-      expect(store.userDisplayName).toBe('testuser')
-    })
-
-    it('hasPermission 應該檢查權限', () => {
-      const store = useAuthStore()
-
-      // 無使用者
-      expect(store.hasPermission('test')).toBe(false)
-
-      // 一般使用者
-      store.user = {
-        id: 1,
-        username: 'user',
-        email: 'user@example.com',
-        role: 'user',
-        isActive: true,
-        createdAt: '2024-01-01',
-        fullName: 'Test User',
-      }
-      expect(store.hasPermission('test')).toBe(false)
-
-      // 管理員
-      store.user = {
-        id: 1,
-        username: 'admin',
-        email: 'admin@example.com',
-        role: 'admin',
-        isActive: true,
-        createdAt: '2024-01-01',
-        fullName: 'Test User',
-      }
-      expect(store.hasPermission('test')).toBe(true)
-    })
+    expect(success).toBe(true)
+    expect(store.user?.username).toBe('dada')
+    expect(hooks().getAccessToken()).toBe('token-1')
   })
 
-  describe('actions', () => {
-    it('clearError 應該清除錯誤訊息', () => {
-      const store = useAuthStore()
+  it('shows the server message when sign in fails', async () => {
+    vi.mocked(authApi.login).mockRejectedValue(new ApiError('帳號或密碼錯誤', 401))
+    const store = useAuthStore()
 
-      store.error = 'some error'
-      store.clearError()
+    const success = await store.login({ username: 'dada', password: 'wrong' })
 
-      expect(store.error).toBeNull()
-    })
+    expect(success).toBe(false)
+    expect(store.error).toBe('帳號或密碼錯誤')
+  })
 
-    it('logout 應該清除認證資料', async () => {
-      const store = useAuthStore()
+  it('restores the session from the refresh cookie when the app starts', async () => {
+    vi.mocked(authApi.refresh).mockResolvedValue(session('token-2'))
+    const store = useAuthStore()
 
-      // 設定一些資料
-      store.user = {
-        id: 1,
-        username: 'testuser',
-        email: 'test@example.com',
-        role: 'user',
-        isActive: true,
-        createdAt: '2024-01-01',
-        fullName: 'Test User',
-      }
-      store.token = 'test-token'
-      store.error = 'some error'
+    await store.restoreSession()
 
-      await store.logout()
+    expect(store.isAuthenticated).toBe(true)
+  })
 
-      expect(store.user).toBeNull()
-      expect(store.token).toBeNull()
-      expect(store.error).toBeNull()
-      expect(store.isLoading).toBe(false)
-    })
+  it('stays signed out without an error when there is no session to restore', async () => {
+    vi.mocked(authApi.refresh).mockRejectedValue(new ApiError('請重新登入', 401))
+    const store = useAuthStore()
+
+    await store.restoreSession()
+
+    expect([store.isAuthenticated, store.error]).toEqual([false, null])
+  })
+
+  it('restores the session only once even when asked repeatedly', async () => {
+    vi.mocked(authApi.refresh).mockResolvedValue(session('token-2'))
+    const store = useAuthStore()
+
+    await Promise.all([store.restoreSession(), store.restoreSession()])
+
+    expect(authApi.refresh).toHaveBeenCalledTimes(1)
+  })
+
+  it('renews the access token for the http layer', async () => {
+    vi.mocked(authApi.refresh).mockResolvedValue(session('token-3'))
+    useAuthStore()
+
+    await expect(hooks().refreshAccessToken()).resolves.toBe('token-3')
+    expect(hooks().getAccessToken()).toBe('token-3')
+  })
+
+  it('signs out locally even when the server cannot be reached', async () => {
+    vi.mocked(authApi.login).mockResolvedValue(session('token-1'))
+    vi.mocked(authApi.logout).mockRejectedValue(new ApiError('無法連線到伺服器，請稍後再試', 0))
+    const store = useAuthStore()
+    await store.login({ username: 'dada', password: 'secret123' })
+
+    await store.logout()
+
+    expect([store.isAuthenticated, hooks().getAccessToken()]).toEqual([false, null])
+  })
+
+  it('clears the session and notifies the app when the session expires', async () => {
+    vi.mocked(authApi.login).mockResolvedValue(session('token-1'))
+    const store = useAuthStore()
+    const onExpired = vi.fn()
+    store.onSessionExpired(onExpired)
+    await store.login({ username: 'dada', password: 'secret123' })
+
+    hooks().onSessionExpired()
+
+    expect([store.isAuthenticated, onExpired.mock.calls.length]).toEqual([false, 1])
   })
 })

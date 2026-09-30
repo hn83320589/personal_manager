@@ -152,16 +152,10 @@
     <!-- System Info -->
     <div class="mt-8">
       <BaseCard title="系統資訊">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h4 class="text-sm font-medium text-gray-500">使用者角色</h4>
             <p class="text-lg font-semibold text-gray-900">{{ authStore.userRole }}</p>
-          </div>
-          <div>
-            <h4 class="text-sm font-medium text-gray-500">帳號建立日期</h4>
-            <p class="text-lg font-semibold text-gray-900">
-              {{ formatDate(authStore.user?.createdAt) }}
-            </p>
           </div>
           <div>
             <h4 class="text-sm font-medium text-gray-500">帳號狀態</h4>
@@ -231,15 +225,6 @@ function relativeTime(dateStr?: string): string {
   if (diff < 7) return `${diff} 天前`
   if (diff < 30) return `${Math.floor(diff / 7)} 週前`
   return new Date(dateStr).toLocaleDateString('zh-TW', { month: 'numeric', day: 'numeric' })
-}
-
-function formatDate(dateStr?: string): string {
-  if (!dateStr) return '—'
-  return new Date(dateStr).toLocaleDateString('zh-TW', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
 }
 
 onMounted(async () => {

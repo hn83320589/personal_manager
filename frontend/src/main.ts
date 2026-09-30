@@ -2,7 +2,6 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 import App from './App.vue'
 import router from './router'
@@ -10,14 +9,14 @@ import { useAuthStore } from '@/stores/auth'
 
 const app = createApp(App)
 
-const pinia = createPinia()
-pinia.use(piniaPluginPersistedstate)
-
-app.use(pinia)
+app.use(createPinia())
 app.use(router)
 
-// Initialize auth state on app start
+// 以 refresh cookie 還原登入狀態；需要登入的路由會在守衛中等待這一步完成
 const authStore = useAuthStore()
-authStore.initializeAuth()
+authStore.onSessionExpired(() => {
+  router.push({ name: 'login', query: { redirect: router.currentRoute.value.fullPath } })
+})
+void authStore.restoreSession()
 
 app.mount('#app')

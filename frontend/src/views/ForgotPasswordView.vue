@@ -73,7 +73,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { CheckIcon } from '@heroicons/vue/24/outline'
-import authService from '@/services/authService'
+import { authApi } from '@/api/auth'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import BaseForm from '@/components/ui/BaseForm.vue'
@@ -90,7 +90,7 @@ async function handleSubmit() {
   errorMsg.value = ''
 
   try {
-    await authService.forgotPassword(email.value.trim())
+    await authApi.forgotPassword({ email: email.value.trim() })
     submitted.value = true
   } catch {
     errorMsg.value = '操作失敗，請稍後再試'

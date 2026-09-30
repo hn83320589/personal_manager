@@ -22,7 +22,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-vue': ['vue', 'vue-router', 'pinia', 'pinia-plugin-persistedstate'],
+          'vendor-vue': ['vue', 'vue-router', 'pinia'],
           'vendor-ui': ['@heroicons/vue'],
           'vendor-http': ['axios'],
         },
@@ -42,7 +42,6 @@ export default defineConfig({
       'vue',
       'vue-router',
       'pinia',
-      'pinia-plugin-persistedstate',
       'axios',
       '@heroicons/vue/24/outline',
       '@heroicons/vue/24/solid',

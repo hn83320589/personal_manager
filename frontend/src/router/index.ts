@@ -205,11 +205,13 @@ const router = createRouter({
 })
 
 // Navigation guards
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  // Initialize auth state
-  authStore.initializeAuth()
+  // 需要判斷登入狀態的路由，先等待 refresh cookie 還原完成，重新整理頁面時才不會被誤導到登入頁
+  if (to.meta.requiresAuth || to.meta.requiresGuest) {
+    await authStore.restoreSession()
+  }
 
   // Set page title
   if (to.meta.title) {

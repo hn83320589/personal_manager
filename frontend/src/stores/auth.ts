@@ -1,86 +1,89 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import authService from '@/services/authService'
-import type { User } from '@/types/api'
+import { authApi } from '@/api/auth'
+import { ApiError, http } from '@/api/http'
+import type { Schemas } from '@/api/types'
 
+type AuthUser = Schemas['AuthUserDto']
+
+/**
+ * 登入狀態只存在這個 store（記憶體），不寫入 localStorage；重新整理頁面後以 refresh cookie 還原（ADR-010）。
+ * 長效的 refresh token 是 httpOnly cookie，頁面上的腳本讀不到；access token 只有 15 分鐘效期。
+ */
 export const useAuthStore = defineStore('auth', () => {
-  // State
-  const user = ref<User | null>(null)
-  const isLoading = ref(false)
+  const user = ref<AuthUser | null>(null)
+  const accessToken = ref<string | null>(null)
   const error = ref<string | null>(null)
-  const token = ref<string | null>(null)
+  const isLoading = ref(false)
+  let restoring: Promise<void> | null = null
+  let expiredHandler: (() => void) | null = null
 
-  // Getters
-  const isAuthenticated = computed(() => !!(user.value && token.value))
-  const userDisplayName = computed(() => user.value?.username || 'Guest')
-  const userRole = computed(() => user.value?.role || 'guest')
-  const hasPermission = computed(() => (_permission: string) => {
-    return userRole.value === 'admin' || userRole.value === 'owner'
+  const isAuthenticated = computed(() => user.value !== null && accessToken.value !== null)
+  const isAdmin = computed(() => user.value?.role === 'Admin')
+  const userDisplayName = computed(() => user.value?.fullName || user.value?.username || '')
+  const userRole = computed(() => user.value?.role ?? '')
+
+  function startSession(session: Schemas['AccessTokenDto']) {
+    accessToken.value = session.accessToken
+    user.value = session.user
+  }
+
+  function clearSession() {
+    accessToken.value = null
+    user.value = null
+  }
+
+  async function refreshAccessToken(): Promise<string> {
+    const session = await authApi.refresh()
+    startSession(session)
+    return session.accessToken
+  }
+
+  http.setAuthHooks({
+    getAccessToken: () => accessToken.value,
+    refreshAccessToken,
+    onSessionExpired: () => {
+      clearSession()
+      expiredHandler?.()
+    },
   })
 
-  // Actions
-  async function login(credentials: { username: string; password: string }) {
+  async function login(credentials: Schemas['LoginRequest']): Promise<boolean> {
     isLoading.value = true
     error.value = null
-
     try {
-      const response = await authService.login(credentials)
-
-      if (response.success && response.data) {
-        token.value = response.data.token
-        // Fetch full user profile after login
-        await fetchCurrentUser()
-        return true
-      } else {
-        error.value = response.message || 'Login failed'
-        return false
-      }
-    } catch (err) {
-      console.error('Login error:', err)
-      error.value = 'Network error occurred'
+      startSession(await authApi.login(credentials))
+      return true
+    } catch (e) {
+      error.value = e instanceof ApiError ? e.message : '登入失敗，請稍後再試'
       return false
     } finally {
       isLoading.value = false
     }
   }
 
+  /** 伺服器端撤銷 refresh token；即使連不上伺服器，本機也一律登出。 */
   async function logout() {
-    isLoading.value = true
-
     try {
-      await authService.logout()
-    } catch (err) {
-      console.error('Logout error:', err)
+      await authApi.logout()
+    } catch {
+      // 本機狀態照樣清除；伺服器端的 token 會在到期後失效
     } finally {
-      user.value = null
-      token.value = null
-      error.value = null
-      isLoading.value = false
+      clearSession()
     }
   }
 
-  async function fetchCurrentUser() {
-    try {
-      const response = await authService.getCurrentUser()
-      if (response.success && response.data) {
-        user.value = response.data
-      }
-    } catch (err) {
-      console.error('Failed to fetch current user:', err)
-    }
+  /** App 啟動時呼叫；沒有有效的 refresh cookie 就維持登出，不視為錯誤。多次呼叫只會 refresh 一次。 */
+  function restoreSession(): Promise<void> {
+    restoring ??= refreshAccessToken().then(
+      () => undefined,
+      () => clearSession(),
+    )
+    return restoring
   }
 
-  function initializeAuth() {
-    const currentToken = authService.getAuthToken()
-
-    if (currentToken && authService.isAuthenticated()) {
-      token.value = currentToken
-      // Restore user data from localStorage
-      const userData = authService.getCurrentUserData()
-      if (userData) {
-        user.value = userData as User
-      }
-    }
+  function onSessionExpired(handler: () => void) {
+    expiredHandler = handler
   }
 
   function clearError() {
@@ -88,21 +91,20 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   return {
-    // State
     user,
-    isLoading,
+    accessToken,
     error,
-    token,
-    // Getters
+    isLoading,
     isAuthenticated,
+    isAdmin,
     userDisplayName,
     userRole,
-    hasPermission,
-    // Actions
     login,
     logout,
-    fetchCurrentUser,
-    initializeAuth,
+    restoreSession,
+    refreshAccessToken,
+    onSessionExpired,
+    clearSession,
     clearError,
   }
 })

@@ -206,6 +206,13 @@ const isFormValid = computed(() => {
   return form.username.trim() && form.password.trim()
 })
 
+/** 只接受站內路徑，避免登入後被導向外部網站（例如 //evil.com 這類開放重導向）。 */
+function safeRedirect(target: unknown): string {
+  return typeof target === 'string' && target.startsWith('/') && !target.startsWith('//')
+    ? target
+    : '/admin/dashboard'
+}
+
 // Methods
 async function handleLogin() {
   if (!isFormValid.value || isLoading.value) return
@@ -221,7 +228,7 @@ async function handleLogin() {
 
     if (success) {
       // Redirect to intended page or dashboard
-      const redirectTo = (route.query.redirect as string) || '/admin/dashboard'
+      const redirectTo = safeRedirect(route.query.redirect)
       router.push(redirectTo)
     }
   } catch (error) {
@@ -261,7 +268,7 @@ onMounted(() => {
 
   // Check if already authenticated
   if (authStore.isAuthenticated) {
-    const redirectTo = (route.query.redirect as string) || '/admin/dashboard'
+    const redirectTo = safeRedirect(route.query.redirect)
     router.push(redirectTo)
   }
 })
