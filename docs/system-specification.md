@@ -877,6 +877,38 @@ npm run dev
 **原因**：支援 EF/JSON 雙 Repository 實作切換；業務邏輯測試不依賴 DB
 **取捨**：對簡單 CRUD 操作略為冗餘，增加檔案數量
 
+> **2026-09 重構說明**：ADR-001、003、004、007 已被下列 ADR 取代。
+
+### ADR-008：移除 JSON fallback，改用 SQLite（取代 ADR-001）
+**決策**：資料庫 provider 由設定檔決定（`Sqlite` 預設 / `MySql`），本地與暫時的執行環境一律使用 SQLite；保留 Pomelo 套件以便日後切換到 MySQL/MariaDB。兩種 provider 各有一組 migration
+**原因**：JSON 模式在 Linux 上檔名對不到、不支援 Tag 關聯、沒有寫入鎖，且迫使 repository 介面接收 `Func<T,bool>`，導致每次查詢都把整張表讀進記憶體；DB 斷線時還會無聲改用 JSON 啟動。目前沒有雲端環境，也不使用 Docker
+**取捨**：每次 schema 異動需產生兩組 migration；SQLite 與 MySQL 的型別與排序規則有差異，需以測試覆蓋
+
+### ADR-009：Monorepo（取代 ADR-003）
+**決策**：前後端合併至主 repo 的 `backend/`、`frontend/`，以 `git subtree` 保留歷史
+**原因**：一個功能原本要在三個 repo 各 commit 一次且互不引用；規則文件重複三份；主 repo 只有文件，而文件過時最快
+**取捨**：CI 需依路徑區分；未來部署平台需設定各自的 root directory
+
+### ADR-010：Refresh token 改用 httpOnly cookie（取代 ADR-004）
+**決策**：refresh token 以 httpOnly + Secure + SameSite cookie 傳遞並以雜湊值儲存；access token 只放在前端記憶體
+**原因**：token 放 localStorage 時，任何 XSS 都能竊取 refresh token
+**取捨**：後端 CORS 需允許 credentials；重新整理頁面時需先呼叫 refresh 取得 access token
+
+### ADR-011：API 分為 public / me / admin，移除泛型 Repository（取代 ADR-007）
+**決策**：
+- `/api/public/...` 只回傳公開資料（已發佈、IsPublic、已審核，且不含 Email 等私人欄位）
+- `/api/me/...` 只能操作目前登入者自己的資料
+- `/api/admin/...` 限 Admin 角色
+- 移除 `IRepository<T>` 與 `CrudService`，feature service 直接使用 EF Core `DbContext`
+- 程式碼改為 feature folder，整合測試使用 SQLite in-memory
+**原因**：原本公開與私人資料混在同一組端點，每個端點各自把關，已造成草稿、非公開資料與訪客 Email 外洩；泛型 repository 是為了 JSON 模式而存在，移除 JSON 後只剩阻礙（無法在 DB 端篩選、分頁、投影）
+**取捨**：前端呼叫的 API 全部改變（前端同步重寫）；服務層測試改依賴 SQLite，而非 mock
+
+### ADR-012：作品集改為區塊式內容
+**決策**：作品由封面、專案資訊（角色、期間、工具、連結）與依序排列的內容區塊組成，區塊類型為文字、單張圖片、圖庫、影片／嵌入；每張圖片都有說明與替代文字
+**原因**：原模型只有一個手動貼網址的 `ImageUrl`，附件另外管理且沒有說明欄位，無法讓文字與圖片交錯呈現，也無法對個別圖片說明；區塊式是多數作品集平台採用的做法
+**取捨**：後台需要區塊編輯器（新增、排序、刪除區塊）；舊的 `ImageUrl` 與 `PortfolioAttachment` 需要遷移
+
 ---
 
 *文件維護：每次重大架構異動後更新對應章節，並記錄於 CLAUDE.md「最新異動記錄」區塊*
