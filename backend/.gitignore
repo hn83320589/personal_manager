@@ -461,3 +461,8 @@ full-license-report.md
 vulnerability-report.txt
 deprecated-report.txt
 security-report.md
+# 本地 SQLite 資料庫（ADR-008）
+App_Data/
+*.db
+*.db-shm
+*.db-wal

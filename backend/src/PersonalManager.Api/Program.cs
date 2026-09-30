@@ -11,8 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 using PersonalManager.Api.Auth;
 using PersonalManager.Api.Data;
 using PersonalManager.Api.Middleware;
-using PersonalManager.Api.Models;
-using PersonalManager.Api.Repositories;
 using PersonalManager.Api.Services;
 using PersonalManager.Api.Settings;
 
@@ -149,76 +147,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-// --- Database connectivity probe ---
-// Try to detect server version (which opens a real connection).
-// If this fails, fall back to local JSON files so development can continue.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-bool useDatabase = false;
-ServerVersion? serverVersion = null;
-
-if (!string.IsNullOrEmpty(connectionString))
-{
-    try
-    {
-        serverVersion = ServerVersion.AutoDetect(connectionString);
-        useDatabase = true;
-    }
-    catch
-    {
-        // DB unreachable — will use JSON fallback
-    }
-}
-
-if (useDatabase)
-{
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseMySql(connectionString!, serverVersion!));
-
-    // Repositories — EF Core (read/write to database)
-    builder.Services.AddScoped<IRepository<User>, EfRepository<User>>();
-    builder.Services.AddScoped<IRepository<PersonalProfile>, EfRepository<PersonalProfile>>();
-    builder.Services.AddScoped<IRepository<Education>, EfRepository<Education>>();
-    builder.Services.AddScoped<IRepository<WorkExperience>, EfRepository<WorkExperience>>();
-    builder.Services.AddScoped<IRepository<Skill>, EfRepository<Skill>>();
-    builder.Services.AddScoped<IRepository<Portfolio>, EfRepository<Portfolio>>();
-    builder.Services.AddScoped<IRepository<CalendarEvent>, EfRepository<CalendarEvent>>();
-    builder.Services.AddScoped<IRepository<TodoItem>, EfRepository<TodoItem>>();
-    builder.Services.AddScoped<IRepository<WorkTask>, EfRepository<WorkTask>>();
-    builder.Services.AddScoped<BlogPostRepository>();
-    builder.Services.AddScoped<IRepository<BlogPost>>(sp => sp.GetRequiredService<BlogPostRepository>());
-    builder.Services.AddScoped<IRepository<GuestBookEntry>, EfRepository<GuestBookEntry>>();
-    builder.Services.AddScoped<IRepository<ContactMethod>, EfRepository<ContactMethod>>();
-    builder.Services.AddScoped<IRepository<FileUpload>, EfRepository<FileUpload>>();
-    builder.Services.AddScoped<IRepository<PortfolioAttachment>, EfRepository<PortfolioAttachment>>();
-    builder.Services.AddScoped<IRepository<TimeEntry>, EfRepository<TimeEntry>>();
-    builder.Services.AddScoped<IRepository<RefreshToken>, EfRepository<RefreshToken>>();
-    builder.Services.AddScoped<IRepository<Project>, EfRepository<Project>>();
-    builder.Services.AddScoped<IRepository<Tag>, EfRepository<Tag>>();
-    builder.Services.AddScoped<IRepository<PasswordResetToken>, EfRepository<PasswordResetToken>>();
-}
-else
-{
-    // Repositories — JSON fallback (reads/writes to Data/JsonData/*.json)
-    builder.Services.AddScoped<IRepository<User>, JsonRepository<User>>();
-    builder.Services.AddScoped<IRepository<PersonalProfile>, JsonRepository<PersonalProfile>>();
-    builder.Services.AddScoped<IRepository<Education>, JsonRepository<Education>>();
-    builder.Services.AddScoped<IRepository<WorkExperience>, JsonRepository<WorkExperience>>();
-    builder.Services.AddScoped<IRepository<Skill>, JsonRepository<Skill>>();
-    builder.Services.AddScoped<IRepository<Portfolio>, JsonRepository<Portfolio>>();
-    builder.Services.AddScoped<IRepository<CalendarEvent>, JsonRepository<CalendarEvent>>();
-    builder.Services.AddScoped<IRepository<TodoItem>, JsonRepository<TodoItem>>();
-    builder.Services.AddScoped<IRepository<WorkTask>, JsonRepository<WorkTask>>();
-    builder.Services.AddScoped<IRepository<BlogPost>, JsonRepository<BlogPost>>();
-    builder.Services.AddScoped<IRepository<GuestBookEntry>, JsonRepository<GuestBookEntry>>();
-    builder.Services.AddScoped<IRepository<ContactMethod>, JsonRepository<ContactMethod>>();
-    builder.Services.AddScoped<IRepository<FileUpload>, JsonRepository<FileUpload>>();
-    builder.Services.AddScoped<IRepository<PortfolioAttachment>, JsonRepository<PortfolioAttachment>>();
-    builder.Services.AddScoped<IRepository<TimeEntry>, JsonRepository<TimeEntry>>();
-    builder.Services.AddScoped<IRepository<RefreshToken>, JsonRepository<RefreshToken>>();
-    builder.Services.AddScoped<IRepository<Project>, JsonRepository<Project>>();
-    builder.Services.AddScoped<IRepository<Tag>, JsonRepository<Tag>>();
-    builder.Services.AddScoped<IRepository<PasswordResetToken>, JsonRepository<PasswordResetToken>>();
-}
+// Database（ADR-008：預設 SQLite，可由 Database:Provider 切換為 MySql）
+builder.Services.AddPersistence(builder.Configuration, builder.Environment);
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -246,22 +176,14 @@ builder.Services.AddHealthChecks()
 
 var app = builder.Build();
 
-// Startup: migrate/seed when DB is available; log mode when using JSON fallback
-if (useDatabase)
+// Startup: 套用 migration 並建立初始資料
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
     await DatabaseSeeder.CreateIndexesAsync(db);
     await DatabaseSeeder.SeedAsync(db);
-
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    logger.LogInformation("啟動模式: 資料庫 (MariaDB)");
-}
-else
-{
-    var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogWarning("啟動模式: JSON Fallback — 資料庫無法連線，使用本地 JSON 資料 (Data/JsonData/)");
+    app.Logger.LogInformation("資料庫 provider: {Provider}", db.Database.ProviderName);
 }
 
 // Middleware pipeline
@@ -305,3 +227,4 @@ app.MapHealthChecks("/api/health", new Microsoft.AspNetCore.Diagnostics.HealthCh
 });
 
 app.Run();
+public partial class Program { }

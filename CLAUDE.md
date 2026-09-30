@@ -74,7 +74,7 @@ npm run dev
 # → http://localhost:5173
 ```
 
-> 重構進行中：後端將改為預設使用 SQLite（ADR-008），完成前仍沿用 MariaDB／JSON fallback 的舊行為。
+> 後端預設使用 SQLite，資料庫檔在 `backend/src/PersonalManager.Api/App_Data/`，刪除後重新啟動即可重建（ADR-008）。
 
 ---
 
@@ -85,7 +85,7 @@ npm run dev
 | 後端 | C# .NET 9.0 Web API + EF Core 9 + MariaDB |
 | 前端 | Vue 3 + TypeScript + Pinia + Axios + Tailwind CSS |
 | 部署 | 暫無（Zeabur 已停用，目前僅本地開發） |
-| 資料庫 | SQLite（本地，重構中）；保留 MySQL/MariaDB 支援 |
+| 資料庫 | SQLite（預設）；可由 `Database:Provider` 切換為 MySQL/MariaDB |
 | 認證 | JWT Bearer Token |
 
 ---

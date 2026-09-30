@@ -32,8 +32,13 @@ dotnet test PersonalManager.sln                # 執行測試
   ```bash
   DOTNET_ROLL_FORWARD=LatestMajor dotnet run --project src/PersonalManager.Api
   ```
-- **DB 連線**：若 `appsettings.json` 的 `ConnectionStrings.DefaultConnection` 可連線，自動使用 MariaDB（EF Core）；無法連線時自動 fallback 至 `Data/JsonData/*.json`。
-- **Schema 由 EF Core Migrations 管理**：啟動時 `db.Database.Migrate()` 自動套用未執行的 migration（只在 DB 模式有效）。Model 異動後需執行 `dotnet ef migrations add <Name>`。
+- **資料庫**：由 `Database:Provider` 決定，預設 `Sqlite`，資料庫檔在 `src/PersonalManager.Api/App_Data/personal_manager.db`（git-ignored）。改為 `MySql` 時必須設定 `ConnectionStrings:DefaultConnection`。設定值無法辨識時會直接中止啟動。
+- **Schema 由 EF Core Migrations 管理**：啟動時 `db.Database.Migrate()` 自動套用。兩種 provider 各有一組 migration，Model 異動後兩組都要產生（在 `src/PersonalManager.Api` 下執行）：
+  ```bash
+  dotnet ef migrations add <Name> --context SqliteApplicationDbContext --output-dir Migrations/Sqlite
+  dotnet ef migrations add <Name> --context MySqlApplicationDbContext --output-dir Migrations/MySql
+  ```
+- **重設本地資料庫**：刪除 `App_Data/` 後重新啟動即可。
 
 ---
 
@@ -44,8 +49,8 @@ dotnet test PersonalManager.sln                # 執行測試
 | 項目 | 版本/工具 |
 |------|-----------|
 | 框架 | .NET 9.0 Web API |
-| ORM | Entity Framework Core 9 + Pomelo.EntityFrameworkCore.MySql 9.0 |
-| 資料庫 | MariaDB（生產）/ 本地 JSON 檔案（開發 fallback） |
+| ORM | Entity Framework Core 9（Sqlite provider + Pomelo MySQL provider） |
+| 資料庫 | SQLite（預設）/ MySQL、MariaDB（`Database:Provider` 切換） |
 | 認證 | JWT Bearer Token |
 | API 文件 | Swagger / OpenAPI |
 | 密碼雜湊 | BCrypt.Net-Next |
@@ -58,20 +63,14 @@ HTTP 請求
   → JWT 認證/授權
   → Controller（接收請求，回傳 ApiResponse<T>）
   → Service（業務邏輯，使用 DTO）
-  → IRepository<T>（資料存取介面）
-      ├── EfRepository<T>（有 DB 時：EF Core → MariaDB）
-      └── JsonRepository<T>（無 DB 時：讀寫 Data/JsonData/*.json）
+  → IRepository<T> → EfRepository<T>（重構中：Phase 2 將改為 service 直接使用 DbContext，見 ADR-011）
 ```
 
-### DB 自動偵測機制（`Program.cs`）
+### 資料庫設定（`Data/PersistenceSetup.cs`）
 
-啟動時嘗試 `ServerVersion.AutoDetect(connectionString)`：
-- **成功** → 使用 `EfRepository<T>`，執行 `Migrate()` + `DatabaseSeeder`
-- **失敗** → 使用 `JsonRepository<T>`，讀寫本地 JSON 檔案
-
-啟動 log 會顯示：
-- `啟動模式: 資料庫 (MariaDB)` — DB 模式
-- `啟動模式: JSON Fallback` — JSON 模式
+- `AddPersistence()` 依 `Database:Provider` 註冊 `SqliteApplicationDbContext` 或 `MySqlApplicationDbContext`，兩者都以 `ApplicationDbContext` 注入使用
+- 兩個子類別只負責區分 migration 目錄，模型定義全部在 `ApplicationDbContext`
+- SQLite 的相對路徑一律以專案根目錄為基準
 
 ### JSON 序列化規則
 
@@ -151,10 +150,10 @@ backend/
 │   └── EntityDtos.cs             # 所有實體的 Create/Update/Response DTOs
 │
 ├── Data/
-│   ├── ApplicationDbContext.cs   # EF Core DbContext
-│   ├── DesignTimeDbContextFactory.cs # dotnet ef 工具的 design-time 支援
-│   ├── DatabaseSeeder.cs         # 初始資料種子 + 索引建立
-│   └── JsonData/                 # JSON fallback 資料檔案（*.json）
+│   ├── ApplicationDbContext.cs   # EF Core 資料模型
+│   ├── ProviderDbContexts.cs     # Sqlite／MySql 子類別與 design-time factory
+│   ├── PersistenceSetup.cs       # AddPersistence()：依設定選擇 provider
+│   └── DatabaseSeeder.cs         # 初始資料種子 + 索引建立
 │
 ├── Mappings/
 │   └── MappingExtensions.cs      # Model ↔ DTO 手動映射擴展方法
@@ -162,14 +161,13 @@ backend/
 ├── Middleware/
 │   └── ErrorHandlingMiddleware.cs # 全域例外處理，統一回傳 ApiResponse
 │
-├── Migrations/                   # EF Core migrations（啟動時自動套用）
+├── Migrations/Sqlite、Migrations/MySql # 各 provider 的 migration（啟動時自動套用）
 │
 ├── Models/                       # EF Core 實體（以資料夾內容為準）
 │
 ├── Repositories/
 │   ├── IRepository.cs            # 通用 CRUD 介面
-│   ├── EfRepository.cs           # EF Core 實作（DB 模式）
-│   ├── JsonRepository.cs         # JSON 檔案實作（fallback 模式）
+│   ├── EfRepository.cs           # EF Core 實作（以 open generic 註冊）
 │   └── BlogPostRepository.cs     # BlogPost 專用（含 Tag 關聯同步）
 │
 ├── Services/
@@ -263,7 +261,7 @@ Jwt__SecretKey = <隨機密鑰>
 ```
 
 - JWT 設定區段名稱為 `Jwt`（非 `JwtSettings`）
-- `DefaultConnection` 為空字串時，後端自動 fallback 至 JSON 模式
+- `DefaultConnection` 為空字串且 provider 為 Sqlite 時，使用 `App_Data/personal_manager.db`
 
 ---
 
@@ -299,12 +297,7 @@ Jwt__SecretKey = <隨機密鑰>
    public DbSet<NewEntity> NewEntities { get; set; }
    ```
 
-5. **新增 JSON 資料檔**（`Data/JsonData/NewEntities.json`）：
-   ```json
-   []
-   ```
-
-6. **新增 Service**（`Services/EntityServices.cs`）：
+5. **新增 Service**（`Services/EntityServices.cs`）：
    ```csharp
    public interface INewEntityService : ICrudService<NewEntity, CreateNewEntityDto, UpdateNewEntityDto, NewEntityResponseDto> { }
    public class NewEntityService : CrudService<NewEntity, CreateNewEntityDto, UpdateNewEntityDto, NewEntityResponseDto>, INewEntityService
@@ -316,20 +309,16 @@ Jwt__SecretKey = <隨機密鑰>
    }
    ```
 
-7. **在 `Program.cs` 中 DI 兩次**（EF 和 JSON 兩個 if 區塊各加一行）：
+6. **在 `Program.cs` 註冊 Service**（repository 已由 open generic 自動註冊）：
    ```csharp
-   builder.Services.AddScoped<IRepository<NewEntity>, EfRepository<NewEntity>>();
-   // 以及
-   builder.Services.AddScoped<IRepository<NewEntity>, JsonRepository<NewEntity>>();
-   // Service 只加一次（共用）：
    builder.Services.AddScoped<INewEntityService, NewEntityService>();
    ```
 
-8. **新增 Controller**（`Controllers/NewEntitiesController.cs`）：
+7. **新增 Controller**（`Controllers/NewEntitiesController.cs`）：
    參考 `SkillsController.cs` 的結構，繼承 `BaseApiController`，注入 `INewEntityService`。
    以 `GetCurrentUserId()`（回傳 `int?`）取得目前使用者：Create 時強制寫入 `dto.UserId`，Update/Delete 先驗證資源擁有者。
 
-9. **新增 migration**：`dotnet ef migrations add AddNewEntity`，並 commit `Migrations/` 下產生的檔案。
+8. **新增 migration**：Sqlite 與 MySql 各產生一次（指令見「注意事項」），並 commit 產生的檔案。
 
 ---
 
@@ -338,7 +327,6 @@ Jwt__SecretKey = <隨機密鑰>
 - **永遠不要使用 `--no-verify`** 繞過 commit hooks
 - **不要 disable 測試**，修復它
 - **commit 前先確認 `dotnet build` 通過**
-- **Model 屬性異動後**，JSON fallback 的 `.json` 資料可能需要更新欄位
 - **Model 異動後**需新增 migration（`dotnet ef migrations add <Name>`），並 commit `Migrations/` 下產生的檔案
 
 ---

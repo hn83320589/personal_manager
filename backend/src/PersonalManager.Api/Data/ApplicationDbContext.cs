@@ -3,9 +3,16 @@ using PersonalManager.Api.Models;
 
 namespace PersonalManager.Api.Data;
 
+/// <summary>
+/// 共用的資料模型。實際使用時透過 provider 專屬的子類別
+/// （<see cref="SqliteApplicationDbContext"/>、<see cref="MySqlApplicationDbContext"/>）建立，
+/// 讓兩種資料庫各自維護一組 migration。
+/// </summary>
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+    protected ApplicationDbContext(DbContextOptions options) : base(options) { }
 
     public DbSet<User> Users => Set<User>();
     public DbSet<PersonalProfile> PersonalProfiles => Set<PersonalProfile>();

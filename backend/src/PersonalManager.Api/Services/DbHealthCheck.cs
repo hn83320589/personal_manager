@@ -17,9 +17,7 @@ public class DbHealthCheck : IHealthCheck
         try
         {
             using var scope = _services.CreateScope();
-            var db = scope.ServiceProvider.GetService<ApplicationDbContext>();
-            if (db == null)
-                return HealthCheckResult.Degraded("Running in JSON fallback mode (no database)");
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             var canConnect = await db.Database.CanConnectAsync(cancellationToken);
             return canConnect

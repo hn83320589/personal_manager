@@ -8,10 +8,10 @@ using PersonalManager.Api.Data;
 
 #nullable disable
 
-namespace PersonalManager.Api.Migrations
+namespace PersonalManager.Api.Migrations.MySql
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MySqlApplicationDbContext))]
+    partial class MySqlApplicationDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
