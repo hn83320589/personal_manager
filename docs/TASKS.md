@@ -54,18 +54,21 @@
 - [x] 移除 `PortfolioAttachment`；migration 保留既有作品的標題並產生不重複的 slug（含資料遷移測試）
 
 ### Phase 4 — 前端基礎
-- [ ] 刪除死碼與未使用的套件
-- [ ] TypeScript 恢復 `strict`
-- [ ] ESLint + Prettier、`lint` script，納入 CI
-- [ ] openapi-typescript：由後端 OpenAPI 文件產生型別（`npm run api:types`）
-- [ ] 新 HTTP 層：access token 只放記憶體、refresh token 走 httpOnly cookie、多個 401 共用同一次 refresh、只有 GET 會重試
-- [ ] 依 public／me／admin 分組的 API 模組（使用產生的型別）；auth store 與登入、忘記密碼、重設密碼頁改接新 API
-- [ ] `v-html` 一律經過 DOMPurify
-- 說明：其他舊頁面在 Phase 5 依新設計重寫時，才改用新 API 並刪除對應的舊 service／store，避免為即將淘汰的畫面做轉接
+- [x] 刪除死碼與未使用的套件（7 個元件／頁面／store、8 個套件、未使用的測試輔助與腳本）
+- [x] TypeScript 恢復 `strict`
+- [x] ESLint + Prettier、`lint`／`format` script，納入 CI（順帶修正按逗號無法新增標籤的 bug）
+- [x] openapi-typescript：後端提交 `backend/openapi.json`（測試檢查與 API 一致），前端 `npm run api:types` 產生型別（CI 檢查是否最新）
+- [x] 新 HTTP 層：access token 只放記憶體、refresh token 走 httpOnly cookie、多個 401 共用同一次 refresh、只有 GET 會重試
+- [x] auth store 與登入、忘記密碼、重設密碼頁改接新 API（瀏覽器實測：登入、重新整理後還原、登出後需重新登入）
+- [-] 其他資源的 API 模組 → 移到 Phase 5，與使用它的畫面一起建立
+- [x] `v-html` 一律經過 DOMPurify
+- 說明：其他舊頁面在 Phase 5 依新設計重寫時，才改用新 API 並刪除對應的舊 service／store，避免為即將淘汰的畫面做轉接；
+  重寫時同步從 `eslint.config.js` 的 legacy 清單移除，最後刪除 `services/`、`types/api.ts`
+- 部落格編輯器要用的 Tiptap 套件（code-block-lowlight、character-count、suggestion）在 Phase 5 升級編輯器時才安裝
 
 ### 技術債（重構期間發現）
 - [x] 第一位管理員以 `Admin:BootstrapEmails` 建立
-- [x] 【Bug】部落格「特色圖片」從未被儲存 → 後端已新增 `CoverImageUrl`（前端於 Phase 4 串接）
+- [x] 【Bug】部落格「特色圖片」從未被儲存 → 後端已新增 `CoverImageUrl`（前端於 Phase 5 重寫部落格編輯器時串接）
 - [x] 移除 `WorkTask.Tags` 字串欄位
 - [x] `dotnet-ef` 以 local tool 鎖定 9.0.13；CI 檢查兩組 migration 是否都已產生
 - [ ] 刪除仍被作品引用的上傳檔案時，作品中的圖片或附件會失效 → 刪除前檢查引用或提示使用者（Phase 5 後台檔案管理時處理）

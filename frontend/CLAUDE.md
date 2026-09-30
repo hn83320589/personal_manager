@@ -64,16 +64,17 @@ npm run type-check
 
 ### 環境變數
 
-開發環境：`.env.development`（已存在，**不提交至 git**）
+`VITE_API_BASE_URL`：API 位址，未設定時為 `/api`。本機開發在 `.env.development` 設為 `http://localhost:5037/api`（後端 port 5037）。
+前端與 API 必須是同一個 site（相同的註冊網域，port 可不同），refresh token cookie 才會送出（ADR-010）。
 
+### 其他指令
+
+```bash
+npm run lint          # ESLint（CI 會跑）
+npm run format        # Prettier 格式化；CI 以 format:check 檢查
+npm run api:types     # 由 ../backend/openapi.json 產生 src/api/schema.ts（CI 檢查是否最新）
+npx vitest run        # 單元測試
 ```
-VITE_API_BASE_URL=http://localhost:5037/api
-VITE_APP_TITLE=Personal Manager
-```
-
-生產環境：Zeabur 環境變數設定 `VITE_API_BASE_URL`。
-
-> 後端 API port 為 `5037`
 
 ---
 
@@ -84,58 +85,45 @@ VITE_APP_TITLE=Personal Manager
 | 項目     | 工具/版本                                  |
 | -------- | ------------------------------------------ |
 | 框架     | Vue 3.5 Composition API + `<script setup>` |
-| 語言     | TypeScript（嚴格模式）                     |
+| 語言     | TypeScript（strict）                       |
 | 路由     | Vue Router 4                               |
-| 狀態管理 | Pinia + pinia-plugin-persistedstate v4     |
-| HTTP     | Axios（含攔截器）                          |
+| 狀態管理 | Pinia（不做持久化）                        |
+| HTTP     | Axios，型別由 openapi-typescript 產生      |
 | 樣式     | Tailwind CSS 3                             |
 | 圖示     | Heroicons v2                               |
 | 建置     | Vite 7                                     |
 | 測試     | Vitest（單元）+ Playwright（E2E）          |
 
-### 資料流
+### 資料流（新架構，Phase 4 起）
 
 ```
 View（.vue）
-  → Store（Pinia）
-  → Service（API calls）
-  → HttpService（Axios + 攔截器）
-  → 後端 API（http://localhost:5037/api）
+  → Store（Pinia，需要共用狀態時）
+  → src/api/<資源>.ts（依 public／me／admin 分組的 API 模組，型別取自 Schemas）
+  → src/api/http.ts（Axios：token、refresh、重試、錯誤轉換）
+  → 後端 API
 ```
 
-### HTTP 攔截器（`src/services/http.ts`）
+舊頁面仍走 `src/services/*` → `src/services/http.ts`（已改由 auth store 取得 token）。
+Phase 5 重寫每個畫面時改用 `src/api`，並刪除對應的舊 service／store；全部完成後刪除 `services/` 與 `types/api.ts`。
 
-- **請求**：自動從 `authStore` 取得 JWT token，加入 `Authorization: Bearer ...` header
-- **回應**：解包 `ApiResponse<T>` wrapper，回傳 `.data`
-- **錯誤**：401 時先以 `refresh_token` 呼叫 `/auth/refresh` 並重試原請求；refresh 失敗才登出並導向 `/login`
+### HTTP 層（`src/api/http.ts`）
 
-### API 回應格式
+- 成功時回傳 `ApiResponse<T>` 裡的 `data`；失敗一律丟 `ApiError`（`status`、後端 `message`、驗證錯誤 `errors`；連不到伺服器時 status 為 0）
+- access token 由 auth store 提供（只在記憶體），refresh token 是 httpOnly cookie，請求一律帶 credentials
+- 401 時以 refresh cookie 續期後重試一次；同時多個 401 共用同一次 refresh；`/auth/*` 本身的 401 不續期
+- 只重試 GET（網路錯誤、5xx，最多 2 次），寫入請求不重送
 
-後端統一回傳 camelCase JSON：
+### 登入狀態（`src/stores/auth.ts`）
 
-```typescript
-interface ApiResponse<T> {
-  success: boolean
-  message: string
-  data: T
-  errors: string[] | null
-}
-```
+- 不寫入 localStorage；App 啟動時 `restoreSession()` 以 refresh cookie 還原
+- 路由 `meta.requiresAuth`／`requiresGuest` 的守衛會等待還原完成
+- session 過期時清除狀態並導向 `/login?redirect=…`；登入後只接受站內 redirect 路徑
 
-### Store 持久化
+### 安全規則
 
-目前沒有 store 使用持久化（時間記錄已改由 `/api/timeentries` 儲存）。若需要持久化，`pinia-plugin-persistedstate` v4 的 composition store 語法為三參數形式：
-
-```typescript
-export const useExampleStore = defineStore(
-  'example',
-  () => {
-    // ...
-    return { draft }
-  },
-  { persist: { pick: ['draft'] } },
-) // 只持久化指定欄位
-```
+- `v-html` 一律寫成 `v-html="sanitizeHtml(...)"`（`src/lib/sanitizeHtml.ts`，DOMPurify）
+- 不在 localStorage／sessionStorage 存放 token
 
 ---
 
@@ -144,16 +132,24 @@ export const useExampleStore = defineStore(
 ```
 PersonalManagerFrontend/
 ├── src/
-│   ├── main.ts                       # 進入點（Pinia + persistedstate + Router 掛載）
+│   ├── main.ts                       # 進入點（Pinia、Router、還原登入狀態）
 │   ├── App.vue                       # 根元件
 │   │
+│   ├── api/
+│   │   ├── http.ts                   # 新的 HTTP 層（見上方說明）
+│   │   ├── schema.ts                 # 產生的型別，勿手動修改（npm run api:types）
+│   │   ├── types.ts                  # Schemas = components['schemas']
+│   │   └── auth.ts                   # /api/auth、/api/me/password
+│   │
+│   ├── lib/
+│   │   └── sanitizeHtml.ts           # DOMPurify
+│   │
 │   ├── types/
-│   │   ├── api.ts                    # 所有 API 介面定義（ApiResponse、實體介面）
+│   │   ├── api.ts                    # 舊的手寫型別（舊頁面使用，Phase 5 移除）
 │   │   └── experience.ts             # 學經歷相關型別
 │   │
 │   ├── services/
-│   │   ├── http.ts                   # Axios 封裝，HttpService 單例
-│   │   ├── authService.ts            # /api/auth（login、register、logout）
+│   │   ├── http.ts                   # 舊的 HttpService（過渡用，Phase 5 移除）
 │   │   ├── profileService.ts         # /api/profiles
 │   │   ├── experienceService.ts      # /api/educations、/api/workexperiences
 │   │   ├── skillService.ts           # /api/skills
@@ -164,15 +160,13 @@ PersonalManagerFrontend/
 │   │   ├── projectService.ts         # /api/projects
 │   │   ├── timeEntryService.ts       # /api/timeentries
 │   │   ├── fileUploadService.ts      # /api/fileuploads
-│   │   ├── portfolioAttachmentService.ts # /api/portfolioattachments
 │   │   ├── blogService.ts            # /api/blogposts
 │   │   ├── commentService.ts         # /api/guestbookentries
 │   │   ├── contactMethodService.ts   # /api/contactmethods
 │   │   └── userDirectoryService.ts   # /api/profiles/directory、/api/users/public
 │   │
 │   ├── stores/
-│   │   ├── auth.ts                   # 認證狀態（token、user info、isLoggedIn）
-│   │   ├── user.ts                   # 使用者資料
+│   │   ├── auth.ts                   # 登入狀態（記憶體 + refresh cookie）
 │   │   ├── profile.ts                # 個人資料
 │   │   ├── experience.ts             # 學歷 + 工作經歷
 │   │   ├── skill.ts                  # 技能
@@ -220,8 +214,6 @@ PersonalManagerFrontend/
 │   │
 │   ├── components/
 │   │   ├── layout/
-│   │   │   ├── AppHeader.vue         # 公開頁首（首頁 + 登入頁使用）
-│   │   │   ├── AppFooter.vue
 │   │   │   ├── AdminLayout.vue       # 管理後台版面（側欄 + 頂列）
 │   │   │   └── UserLayout.vue        # 個人頁面版面（主題、用戶 Header、水平導覽）
 │   │   ├── ui/                       # BaseButton、BaseCard、BaseInput、BaseModal 等
@@ -289,32 +281,29 @@ PersonalManagerFrontend/
 
 ### 新增一個 API 呼叫
 
-1. 在 `src/types/api.ts` 定義介面（camelCase 欄位）
-2. 在對應的 `src/services/xxxService.ts` 新增方法
-3. 在對應的 `src/stores/xxx.ts` 新增 action
-4. 在 View/Component 中呼叫 store action
+1. 後端 API 有變動時：`backend` 執行 `UPDATE_OPENAPI=1 dotnet test --filter OpenApiDocument`，再到 `frontend` 執行 `npm run api:types`
+2. 在 `src/api/<資源>.ts` 新增函式，型別使用 `Schemas['XxxDto']`，不要手寫 DTO 介面：
+
+```typescript
+import { http } from './http'
+import type { Schemas } from './types'
+
+export const mySkillsApi = {
+  list: () => http.get<Schemas['SkillDto'][]>('/me/skills'),
+  create: (body: Schemas['SaveSkillRequest']) => http.post<Schemas['SkillDto']>('/me/skills', body),
+  update: (id: number, body: Schemas['SaveSkillRequest']) =>
+    http.put<Schemas['SkillDto']>(`/me/skills/${id}`, body),
+  remove: (id: number) => http.delete(`/me/skills/${id}`),
+}
+```
+
+3. 錯誤以 `ApiError` 處理，畫面顯示 `error.message`
 
 ### 新增一個頁面
 
 1. 在 `src/views/` 建立 `.vue` 檔案
 2. 在 `src/router/index.ts` 新增路由（使用懶載入 `() => import(...)`）
 3. 若需要認證，路由 `meta` 加 `{ requiresAuth: true }`
-
-### 新增一個 Service
-
-```typescript
-import httpService from './http'
-import type { ApiResponse, Skill } from '@/types/api'
-
-export const skillService = {
-  getAll: () => httpService.get<Skill[]>('/skills'),
-  getById: (id: number) => httpService.get<Skill>(`/skills/${id}`),
-  create: (dto: CreateSkillDto) => httpService.post<Skill>('/skills', dto),
-  update: (id: number, dto: Partial<CreateSkillDto>) =>
-    httpService.put<Skill>(`/skills/${id}`, dto),
-  delete: (id: number) => httpService.delete<void>(`/skills/${id}`),
-}
-```
 
 ### UserLayout 與 provide/inject
 
@@ -338,17 +327,15 @@ const userId = inject<ComputedRef<number | null>>('userId')
 - **色調**：淺灰、淺藍、白色為主，冷色調
 - **元件**：基礎 UI 元件在 `src/components/ui/`，直接使用，不重複建立
 - **表單樣式**：使用 `src/assets/main.css` 定義的 `.form-input`、`.form-select`、`.form-label`，確保文字顏色可見
-- **TypeScript**：嚴格模式，不使用 `any`，所有 prop 需要型別定義
+- **TypeScript**：strict，不使用 `any`（舊畫面暫時容許，見 `eslint.config.js` 的 legacy 清單），所有 prop 需要型別定義
 - **主題**：個人頁面透過 `useTheme(themeColor)` 取得 CSS 變數，套用至 UserLayout 的 `:style`
 
 ---
 
 ## 開發注意事項
 
-- **不要修改 `http.ts` 的攔截器邏輯**，除非有明確需求
 - **所有 API 欄位用 camelCase**，與後端 JSON 序列化一致
 - **build 前確認 TypeScript 無錯誤**：`npm run type-check`
-- **pinia-plugin-persistedstate v4**：compose store 需用三參數 `defineStore(id, setup, { persist })`，舊版 v3 語法不相容
 - **Admin 頁面取得 userId**：從 `authStore.user?.id` 取得，不可 hardcode `1`
 
 ---
