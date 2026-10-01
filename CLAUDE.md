@@ -51,6 +51,9 @@ personal_manager/
 └── docs/
     ├── TASKS.md                  # 任務清單與技術債
     ├── system-specification.md   # 系統規格與架構決策紀錄（ADR）
+    ├── technical-guide.md        # 技術教學：技術、方法與設計理由
+    ├── test-report.md            # 最新一次完整測試的報告
+    ├── images/screenshots/       # README 與文件使用的畫面截圖
     ├── development-guide.md      # 本地開發流程
     ├── database-design.md        # 資料表
     └── deployment-guide.md       # 部署條件（目前沒有正式環境）

@@ -104,12 +104,16 @@
 - [x] 根目錄與前後端 README 更新
 - [x] 所有文件不再提到 Zeabur 為現行環境
 - [x] 移除 GitHub Actions CI，原本的檢查（migration、API 型別）改列在 `development-guide.md`「測試與檢查」
+- [x] 新增技術教學 `technical-guide.md`（技術、方法、設計理由與實作練習）
+- [x] 完整測試並撰寫 `test-report.md`（自動化 474 項 + 29 個頁面瀏覽器實測）
+- [x] README 加上功能說明與畫面導覽（截圖在 `docs/images/screenshots/`）
 
 ### 技術債（重構期間發現）
 - [x] 第一位管理員以 `Admin:BootstrapEmails` 建立
 - [x] 【Bug】部落格「特色圖片」從未被儲存 → 後端已新增 `CoverImageUrl`，新的部落格編輯器可上傳封面
 - [x] 移除 `WorkTask.Tags` 字串欄位
 - [x] `dotnet-ef` 以 local tool 鎖定 9.0.13；CI 檢查兩組 migration 是否都已產生
+- [ ] 未登入的訪客開啟網站時，還原登入狀態的 `POST /api/auth/refresh` 因沒有 cookie 回 401，每次在 console 留下一筆錯誤（測試報告 F-01）。建議登入時另存不含機密的「曾登入」標記，沒有標記就略過還原
 - [x] 刪除仍被作品引用的上傳檔案時，作品中的圖片或附件會失效 → 新增 `GET /api/me/files/{id}/usages`，後台刪除前列出使用中的作品、文章與個人資料
 
 ---

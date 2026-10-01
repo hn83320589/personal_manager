@@ -13,6 +13,8 @@
 | 前端寫法與路由 | [`frontend/CLAUDE.md`](../frontend/CLAUDE.md) |
 | API 完整定義 | Swagger（`/swagger`，僅 Development）與 [`backend/openapi.json`](../backend/openapi.json) |
 | 待辦與技術債 | [`TASKS.md`](TASKS.md) |
+| 技術教學（設計理由與範例） | [`technical-guide.md`](technical-guide.md) |
+| 測試結果 | [`test-report.md`](test-report.md) |
 
 ---
 
