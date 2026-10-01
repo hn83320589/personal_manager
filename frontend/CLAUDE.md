@@ -64,8 +64,8 @@ npm run type-check
 
 ### 環境變數
 
-`VITE_API_BASE_URL`：API 位址，未設定時為 `/api`。本機開發在 `.env.development` 設為 `http://localhost:5037/api`（後端 port 5037）。
-前端與 API 必須是同一個 site（相同的註冊網域，port 可不同），refresh token cookie 才會送出（ADR-010）。
+`VITE_API_BASE_URL`：API 位址，`.env.development` 與 `.env.production` 都設為 `/api`。開發時由 Vite（`vite.config.ts` 的 proxy）把 `/api` 與 `/files` 轉送到後端 `http://localhost:5037`。
+前端與 API 必須是同一個 site，refresh token cookie（`SameSite=Strict`）才會送出（ADR-010）。
 
 ### 其他指令
 
@@ -108,7 +108,6 @@ View（.vue）
   → 後端 API
 ```
 
-
 ### HTTP 層（`src/api/http.ts`）
 
 - 成功時回傳 `ApiResponse<T>` 裡的 `data`；失敗一律丟 `ApiError`（`status`、後端 `message`、驗證錯誤 `errors`；連不到伺服器時 status 為 0）
@@ -130,7 +129,6 @@ View（.vue）
 ---
 
 ## 專案結構
-
 
 ```
 src/
@@ -155,7 +153,7 @@ src/
 ├── views/
 │   ├── public/                       # 前台：DirectoryView、PublicLayout 與各頁
 │   ├── manage/                       # 新版後台：AdminShell 與各頁
-│   └── LoginView、ForgotPasswordView、ResetPasswordView、NotFoundView
+│   └── LoginView、RegisterView、ForgotPasswordView、ResetPasswordView、NotFoundView
 └── components/
     ├── public/                       # 前台元件（卡片、輪播、區塊、lightbox…）
     └── manage/                       # 後台元件（SidePanel、ManageList、編輯器…）
@@ -171,14 +169,14 @@ src/
 
 ### 公開路由
 
-| 路徑                                            | 說明                                           |
-| ----------------------------------------------- | ---------------------------------------------- |
-| `/`                                             | 使用者目錄                                     |
-| `/login`、`/forgot-password`、`/reset-password` | 登入與密碼                                     |
-| `/@:username`                                   | 個人首頁（介紹、作品、經歷與技能、文章、聯絡） |
-| `/@:username/works`、`/works/:slug`             | 作品列表、作品詳情                             |
-| `/@:username/blog`、`/blog/:slug`               | 文章列表、文章                                 |
-| `/@:username/guestbook`、`/calendar`            | 留言板、公開行事曆                             |
+| 路徑                                                         | 說明                                           |
+| ------------------------------------------------------------ | ---------------------------------------------- |
+| `/`                                                          | 使用者目錄                                     |
+| `/login`、`/register`、`/forgot-password`、`/reset-password` | 登入、註冊與密碼                               |
+| `/@:username`                                                | 個人首頁（介紹、作品、經歷與技能、文章、聯絡） |
+| `/@:username/works`、`/works/:slug`                          | 作品列表、作品詳情                             |
+| `/@:username/blog`、`/blog/:slug`                            | 文章列表、文章                                 |
+| `/@:username/guestbook`、`/calendar`                         | 留言板、公開行事曆                             |
 
 舊網址（`portfolio`、`experience`、`skills`、`contact`、`about`）會導向新頁面或首頁對應區塊。
 

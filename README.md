@@ -1,97 +1,51 @@
 # Personal Manager
 
-多用戶個人展示與管理平台 — 包含公開展示網站（`/@:username` 格式）與個人管理後台的全端應用程式。
-
-## 功能概覽
-
-| 功能 | 公開 | 需登入 |
-|------|------|--------|
-| 個人介紹、學經歷、技能、作品集 | ✅ | — |
-| 部落格、留言板、聯絡方式 | ✅ | — |
-| 公開行事曆 | ✅ | — |
-| 管理後台（所有內容管理） | — | ✅ |
-| 行事曆、工作追蹤、待辦事項 | — | ✅ |
-
-## 技術架構
+多使用者的個人展示與管理平台。每位使用者有一個公開頁面 `/@username`（介紹、作品集、經歷與技能、文章、留言板、行事曆），
+以及管理這些內容和個人待辦、行事曆、工作追蹤的後台。
 
 | 端 | 技術 |
-|----|------|
-| 後端 | C# .NET 9.0 Web API + EF Core 9 + MariaDB |
-| 前端 | Vue 3 + TypeScript + Pinia + Tailwind CSS + Vite |
-| 資料庫 | MariaDB（Zeabur 雲端）/ 本地 JSON 檔案（開發 fallback） |
-| 認證 | JWT Bearer Token |
-| 部署 | Zeabur |
+| --- | --- |
+| 後端 | .NET 9 Web API、EF Core 9；SQLite（預設）或 MySQL／MariaDB |
+| 前端 | Vue 3、TypeScript、Pinia、Tailwind CSS、Vite |
+| 認證 | JWT access token + httpOnly cookie refresh token |
+| 測試 | xUnit、Vitest、Playwright；GitHub Actions CI |
 
-## 倉庫架構（分離倉庫）
+目前沒有正式環境，只在本機開發。
 
-```
-personal_manager/                     # 主專案（本倉庫）
-├── CLAUDE.md
-├── README.md
-├── docs/
-└── local-development/                # 本地開發（不提交至主倉庫）
-    ├── PersonalManagerBackend/       # 後端 clone
-    └── PersonalManagerFrontend/      # 前端 clone
-```
+## 快速開始
 
-| 倉庫 | GitHub |
-|------|--------|
-| 主專案 | [hn83320589/personal_manager](https://github.com/hn83320589/personal_manager) |
-| 後端 | [hn83320589/PersonalManagerBackend](https://github.com/hn83320589/PersonalManagerBackend) |
-| 前端 | [hn83320589/PersonalManagerFrontend](https://github.com/hn83320589/PersonalManagerFrontend) |
-
-## 本地開發
-
-### 前置需求
-
-- .NET 9.0 SDK
-- Node.js 20+ (LTS)
-- Git
-
-### 啟動步驟
+需要 .NET 9 SDK 與 Node.js 20.19+（或 22.12+），不需要安裝資料庫。
 
 ```bash
-# 1. Clone 前後端到 local-development/
-cd local-development
-git clone https://github.com/hn83320589/PersonalManagerBackend.git
-git clone https://github.com/hn83320589/PersonalManagerFrontend.git
+# 終端 1：後端 → http://localhost:5037（Swagger：/swagger）
+cd backend
+dotnet run --project src/PersonalManager.Api
 
-# 2. 啟動後端（終端 1）
-cd PersonalManagerBackend
-dotnet run
-# → http://localhost:5037
-# → Swagger: http://localhost:5037/swagger
-
-# 3. 啟動前端（終端 2）
-cd PersonalManagerFrontend
+# 終端 2：前端 → http://localhost:5173
+cd frontend
 npm install
 npm run dev
-# → http://localhost:5173
 ```
 
-> **Demo 登入**：帳號 `admin`，密碼 `demo123`
+開啟 `http://localhost:5173/@admin` 看公開頁面，或到 `/login` 以示範帳號 `admin` / `password123` 登入後台。
+第一次啟動會自動建立 SQLite 資料庫與示範資料。
 
-### 無 DB 連線時
+## 倉庫結構
 
-後端啟動時自動偵測 MariaDB 連線：
-- **有 DB**：使用 EF Core + MariaDB，自動建表
-- **無 DB**：自動 fallback 至 `Data/JsonData/*.json`，不影響開發
+```
+backend/    .NET 方案（API、測試、openapi.json）
+frontend/   Vue SPA（含 E2E）
+docs/       規格與指南
+```
 
-## 部署（Zeabur）
+## 文件
 
-1. 後端：連接 `PersonalManagerBackend` 倉庫至 Zeabur，設定環境變數：
-   ```
-   ConnectionStrings__DefaultConnection=<MariaDB 連線字串>
-   Jwt__SecretKey=<至少 32 字元的密鑰>
-   ```
-
-2. 前端：連接 `PersonalManagerFrontend` 倉庫至 Zeabur，設定：
-   ```
-   VITE_API_BASE_URL=https://<後端網域>/api
-   ```
-
-## 相關連結
-
-- [主專案](https://github.com/hn83320589/personal_manager)
-- [後端](https://github.com/hn83320589/PersonalManagerBackend)
-- [前端](https://github.com/hn83320589/PersonalManagerFrontend)
+| 文件 | 內容 |
+| --- | --- |
+| [開發指南](docs/development-guide.md) | 本地開發、測試、修改資料表與 API |
+| [系統規格書](docs/system-specification.md) | 功能範圍、架構、安全設計、架構決策紀錄（ADR） |
+| [資料庫設計](docs/database-design.md) | 資料表與關係 |
+| [部署指南](docs/deployment-guide.md) | 日後部署時必須滿足的條件 |
+| [任務清單](docs/TASKS.md) | 進行中的工作與技術債 |
+| [異動記錄](CHANGELOG.md) | 重要的功能與架構變更 |
+| [`backend/CLAUDE.md`](backend/CLAUDE.md)、[`frontend/CLAUDE.md`](frontend/CLAUDE.md) | 各端的程式寫法與慣例 |

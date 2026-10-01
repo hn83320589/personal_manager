@@ -1,72 +1,33 @@
-# Personal Manager Frontend
+# Personal Manager — 前端
 
-個人展示與管理平台前端 UI，使用 Vue 3 + TypeScript + Vite 開發。
+Vue 3 + TypeScript SPA。專案說明與文件索引見[根目錄 README](../README.md)。
 
-## 如何執行
+## 執行
 
-### 前置需求
-
-- Node.js `^20.19.0 || >=22.12.0`
-
-### 開發模式
+需要 Node.js `^20.19.0 || >=22.12.0`，以及執行中的後端（`http://localhost:5037`）。
 
 ```bash
-npm install   # 首次或 package.json 有變動時
-npm run dev
+cd frontend
+npm install
+npm run dev     # → http://localhost:5173
 ```
 
-- 前端：`http://localhost:5173`
-- 需後端 API 同時運行於 `http://localhost:5037`
-- Demo 登入：帳號 `admin`，密碼 `demo123`
+`/api` 與 `/files` 由 Vite 轉送到後端，瀏覽器看到的是同一個網站，登入狀態（refresh token cookie）才能保存。
+`.env.development` 與 `.env.production` 都將 `VITE_API_BASE_URL` 設為 `/api`。
 
-## 環境變數
+## 指令
 
-### `.env.development`（已存在，不提交至 git）
+| 指令                              | 用途                                                  |
+| --------------------------------- | ----------------------------------------------------- |
+| `npm run dev`                     | 開發伺服器                                            |
+| `npm run build`                   | 型別檢查 + 建置到 `dist/`                             |
+| `npm run preview`                 | 預覽建置結果（同樣轉送 `/api`）                       |
+| `npm run lint` / `npm run format` | ESLint / Prettier                                     |
+| `npm run api:types`               | 由 `../backend/openapi.json` 產生 `src/api/schema.ts` |
+| `npx vitest run`                  | 單元測試                                              |
+| `npx playwright test`             | E2E：自動啟動後端與前端，使用暫存的 SQLite            |
 
-```env
-VITE_API_BASE_URL=http://localhost:5037/api
-VITE_APP_TITLE=Personal Manager
-VITE_DEBUG=true
-```
+## 延伸閱讀
 
-### `.env.production`（部署時設定）
-
-```env
-VITE_API_BASE_URL=https://your-api-domain.com/api
-VITE_DEBUG=false
-```
-
-> 所有變數須以 `VITE_` 為前綴，才可在程式碼中透過 `import.meta.env.VITE_XXX` 存取。
-
-## 建置與部署（Zeabur）
-
-```bash
-# 生產建置
-npm run build
-
-# 預覽建置結果
-npm run preview
-```
-
-建置產出在 `dist/` 目錄，為純靜態檔案。
-
-在 Zeabur 連接 `PersonalManagerFrontend` 倉庫，設定環境變數 `VITE_API_BASE_URL`，推送 `main` branch 即自動部署。
-
-## 測試
-
-```bash
-# 型別檢查
-npm run type-check
-
-# 單元測試（Vitest）
-npm run test:unit
-
-# E2E 測試（Playwright）
-npx playwright install   # 首次安裝瀏覽器
-npm run test:e2e
-```
-
-## 相關連結
-
-- [主專案](https://github.com/hn83320589/personal_manager)
-- [後端專案](https://github.com/hn83320589/PersonalManagerBackend)
+- 架構、路由與寫法：[`CLAUDE.md`](CLAUDE.md)
+- 本地開發與測試：[`docs/development-guide.md`](../docs/development-guide.md)

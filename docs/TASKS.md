@@ -95,14 +95,14 @@
 - 完成條件：沒有超過 400 行的 .vue（最大 285 行）；每個 store 都有單元測試（auth、toast）——已達成
 
 ### Phase 6 — 文件
-- [ ] 新增根目錄 `CHANGELOG.md`，三份 CLAUDE.md 的「最新異動記錄」移過去，CLAUDE.md 只保留規則與指引
-- [ ] 刪除過時的 Postman collection 與 `api-quick-reference.md`（API 以 Swagger 與 `backend/openapi.json` 為準）
-- [ ] `development-guide.md` 改寫為實際的本地開發流程
-- [ ] `deployment-guide.md` 改寫：目前沒有正式環境，列出部署時的必要條件（同網站、環境變數、資料庫切換）
-- [ ] `database-design.md` 改寫為目前的資料表
-- [ ] `system-specification.md` 改寫第 1–11 章為目前的架構，移除 Zeabur 與已不存在的設計；保留第 12 章 ADR
-- [ ] 根目錄與前後端 README 更新
-- [ ] 所有文件不再提到 Zeabur 為現行環境
+- [x] 新增根目錄 `CHANGELOG.md`，三份 CLAUDE.md 的「最新異動記錄」移過去，CLAUDE.md 只保留規則與指引
+- [x] 刪除過時的 Postman collection 與 `api-quick-reference.md`（API 以 Swagger 與 `backend/openapi.json` 為準）
+- [x] `development-guide.md` 改寫為實際的本地開發流程
+- [x] `deployment-guide.md` 改寫：目前沒有正式環境，列出部署時的必要條件（同網站、環境變數、資料庫切換）
+- [x] `database-design.md` 改寫為目前的資料表
+- [x] `system-specification.md` 改寫第 1–11 章為目前的架構，移除 Zeabur 與已不存在的設計；保留第 12 章 ADR
+- [x] 根目錄與前後端 README 更新
+- [x] 所有文件不再提到 Zeabur 為現行環境
 
 ### 技術債（重構期間發現）
 - [x] 第一位管理員以 `Admin:BootstrapEmails` 建立

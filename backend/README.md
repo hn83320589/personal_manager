@@ -1,109 +1,43 @@
-# Personal Manager Backend
+# Personal Manager — 後端
 
-個人展示與管理平台後端 API，使用 .NET 9.0 Web API 開發。
+.NET 9 Web API。專案說明與文件索引見[根目錄 README](../README.md)。
 
-## 如何執行
-
-### 前置需求
-
-- .NET 9.0 SDK
-
-### 開發模式
+## 執行
 
 ```bash
-dotnet run
+cd backend
+dotnet run --project src/PersonalManager.Api
 ```
 
 - API：`http://localhost:5037`
-- Swagger UI：`http://localhost:5037/swagger`（僅開發模式）
-- Demo 帳號：`admin` / `demo123`
+- Swagger：`http://localhost:5037/swagger`（僅 Development）
+- 預設使用 SQLite（`src/PersonalManager.Api/App_Data/`），首次啟動自動套用 migration 並建立示範資料（帳號 `admin` / `password123`）
 
-啟動時自動偵測 MariaDB 連線。連線失敗則自動切換至本地 JSON 資料（`Data/JsonData/*.json`），不影響開發。
+本機開發需要一份 `src/PersonalManager.Api/appsettings.Development.json`（不提交），至少設定 JWT 金鑰。範例見 [`CLAUDE.md`](CLAUDE.md#設定檔架構)。
 
-## 設定
+## 測試
 
-### appsettings.json（提交至 git，只含占位符）
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": ""
-  },
-  "Jwt": {
-    "SecretKey": "CHANGE_THIS_TO_A_RANDOM_SECRET_KEY_AT_LEAST_32_CHARACTERS",
-    "Issuer": "PersonalManagerAPI",
-    "Audience": "PersonalManagerClient",
-    "ExpiryHours": 24
-  }
-}
+```bash
+dotnet test PersonalManager.sln
 ```
 
-### appsettings.Development.json（gitignored，本機自行建立）
+整合測試以 WebApplicationFactory 啟動 API，每個 `ApiFactory` 使用獨立的暫存 SQLite 檔案。
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=...;Database=personal_manager;User=...;Password=...;"
-  },
-  "Jwt": {
-    "SecretKey": "your_local_secret_key_at_least_32_chars"
-  }
-}
-```
-
-## 專案結構
+## 結構
 
 ```
-PersonalManagerBackend/
-├── Program.cs                    # 進入點、DI 註冊、Middleware 管線
-├── appsettings.json
-├── Auth/                         # JWT 認證服務
-├── Controllers/                  # 13 個 API Controller
-├── DTOs/                         # 資料傳輸物件
-├── Mappings/                     # DTO ↔ Model 映射
-├── Middleware/                   # 全域錯誤處理
-├── Models/                       # 12 個實體模型
-├── Repositories/                 # IRepository + EF/JSON 兩種實作
-├── Services/                     # 業務邏輯層（CrudService + 12 個實體服務）
-└── Data/
-    ├── ApplicationDbContext.cs
-    ├── DatabaseSeeder.cs
-    └── JsonData/                 # JSON fallback 資料檔
+src/PersonalManager.Api/
+├── Features/<名稱>/    # 各功能的 Controller、Service、DTO
+├── Common/            # 共用的例外、目前使用者、分頁、HTML 清洗…
+├── Models/ Data/      # EF Core 實體與 DbContext
+├── Migrations/        # Sqlite 與 MySql 各一組
+└── Setup/             # DI 與 middleware 設定
+tests/PersonalManager.Tests/
+openapi.json           # API 定義（測試確保與程式一致，前端由此產生型別）
 ```
 
-## API 端點總覽
+## 延伸閱讀
 
-| 前綴 | 說明 | 認證 |
-|------|------|------|
-| `POST /api/auth/login` | 登入，回傳 JWT | 否 |
-| `POST /api/auth/register` | 註冊 | 否 |
-| `GET /api/users/public` | 所有用戶公開資訊 | 否 |
-| `GET /api/users/public/{username}` | 依 username 查詢用戶 | 否 |
-| `GET /api/profiles/directory` | 所有 Profile + User 合併清單 | 否 |
-| `GET /api/profiles/user/{userId}` | 依 userId 查詢 Profile | 否 |
-| `PUT /api/profiles/{id}` | 更新 Profile | 是 |
-| `GET /api/blogposts/user/{userId}/public` | 已發布文章列表 | 否 |
-| `GET /api/guestbookentries/user/{targetUserId}` | 已審核留言列表 | 否 |
-| `PUT /api/guestbookentries/{id}` | 審核/回覆留言 | 是 |
-| `GET /api/skills/user/{userId}` | 技能列表 | 否 |
-| `GET /api/portfolios/user/{userId}` | 作品集 | 否 |
-
-> 其餘各實體均提供完整 CRUD，受保護端點需帶 `Authorization: Bearer <token>`。
-
-## 部署（Zeabur）
-
-在 Zeabur 環境變數中設定：
-
-```
-ConnectionStrings__DefaultConnection = <MariaDB 連線字串>
-Jwt__SecretKey = <至少 32 字元的隨機密鑰>
-```
-
-推送 `main` branch 即自動部署。
-
-> DB schema 變更時，若使用 EF 模式需 DROP 資料庫後讓 `EnsureCreated()` 重建，或執行 `ALTER TABLE`。
-
-## 相關連結
-
-- [主專案](https://github.com/hn83320589/personal_manager)
-- [前端專案](https://github.com/hn83320589/PersonalManagerFrontend)
+- 寫法、設定與 API 路由：[`CLAUDE.md`](CLAUDE.md)
+- 修改資料表或 API 的步驟：[`docs/development-guide.md`](../docs/development-guide.md)
+- 正式環境的設定：[`docs/deployment-guide.md`](../docs/deployment-guide.md)
