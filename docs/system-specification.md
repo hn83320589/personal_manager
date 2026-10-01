@@ -53,7 +53,6 @@
 | 文章編輯器 | Tiptap（「/」選單、圖片說明、嵌入、程式碼區塊） |
 | 內容安全 | 後端 HtmlSanitizer、前端 DOMPurify |
 | 測試 | xUnit + WebApplicationFactory（後端）、Vitest（前端單元）、Playwright（E2E） |
-| CI | GitHub Actions |
 
 ### 倉庫結構（monorepo，ADR-009）
 
@@ -62,7 +61,6 @@ personal_manager/
 ├── backend/            # .NET 方案：src/PersonalManager.Api、tests/PersonalManager.Tests、openapi.json
 ├── frontend/           # Vue SPA：src/、e2e/
 ├── docs/               # 本文件與其他文件
-├── .github/workflows/  # CI
 └── CHANGELOG.md
 ```
 
@@ -226,7 +224,7 @@ View → composable（useAsyncData／useAsyncAction／useOwnedList）→ src/api
 ```
 
 - 頁面資料由 composable 取得，**不**放進全域 store；store 只保存跨頁共用的登入狀態與提示訊息
-- API 型別一律取自產生的 `Schemas`，不手寫 DTO；後端 API 變更時重新產生，CI 檢查是否最新
+- API 型別一律取自產生的 `Schemas`，不手寫 DTO；後端 API 變更時重新產生
 
 ### 6.3 HTTP 層與登入狀態
 
@@ -334,7 +332,7 @@ API 分為三組（ADR-011），完整清單見 Swagger 或 `backend/openapi.jso
 
 - 本機啟動見 [`development-guide.md`](development-guide.md)
 - 日後部署的必要條件（同一個網站、HTTPS、環境變數、資料與檔案持久化）見 [`deployment-guide.md`](deployment-guide.md)
-- CI（GitHub Actions）：後端建置與測試、migration 檢查；前端 API 型別是否最新、lint、格式、單元測試、建置；E2E
+- 沒有 CI：提交前在本機執行測試與檢查（清單見 [`development-guide.md`](development-guide.md#測試與檢查)）
 
 ---
 

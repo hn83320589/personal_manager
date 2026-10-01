@@ -33,7 +33,7 @@ dotnet test PersonalManager.sln                # 執行測試
   DOTNET_ROLL_FORWARD=LatestMajor dotnet run --project src/PersonalManager.Api
   ```
 - **資料庫**：由 `Database:Provider` 決定，預設 `Sqlite`，資料庫檔在 `src/PersonalManager.Api/App_Data/personal_manager.db`（git-ignored）。改為 `MySql` 時必須設定 `ConnectionStrings:DefaultConnection`。設定值無法辨識時會直接中止啟動。
-- **Schema 由 EF Core Migrations 管理**：啟動時自動套用。兩種 provider 各有一組 migration，Model 異動後兩組都要產生，CI 會以 `has-pending-model-changes` 檢查（`dotnet-ef` 版本鎖在 `.config/dotnet-tools.json`，首次請先 `dotnet tool restore`；在 `src/PersonalManager.Api` 下執行）：
+- **Schema 由 EF Core Migrations 管理**：啟動時自動套用。兩種 provider 各有一組 migration，Model 異動後兩組都要產生，提交前以 `dotnet ef migrations has-pending-model-changes --context <兩種 context>` 檢查（`dotnet-ef` 版本鎖在 `.config/dotnet-tools.json`，首次請先 `dotnet tool restore`；在 `src/PersonalManager.Api` 下執行）：
   ```bash
   dotnet ef migrations add <Name> --context SqliteApplicationDbContext --output-dir Migrations/Sqlite
   dotnet ef migrations add <Name> --context MySqlApplicationDbContext --output-dir Migrations/MySql

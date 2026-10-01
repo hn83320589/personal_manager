@@ -103,6 +103,7 @@
 - [x] `system-specification.md` 改寫第 1–11 章為目前的架構，移除 Zeabur 與已不存在的設計；保留第 12 章 ADR
 - [x] 根目錄與前後端 README 更新
 - [x] 所有文件不再提到 Zeabur 為現行環境
+- [x] 移除 GitHub Actions CI，原本的檢查（migration、API 型別）改列在 `development-guide.md`「測試與檢查」
 
 ### 技術債（重構期間發現）
 - [x] 第一位管理員以 `Admin:BootstrapEmails` 建立

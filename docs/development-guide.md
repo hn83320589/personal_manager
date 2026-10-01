@@ -9,7 +9,7 @@
 | --- | --- | --- |
 | .NET SDK | 9.0 | 後端 |
 | Node.js | 20.19+ 或 22.12+ | 前端 |
-| Google Chrome | 任一近期版本 | 本機執行 E2E（CI 使用 Playwright 內建的 Chromium） |
+| Google Chrome | 任一近期版本 | 執行 E2E |
 
 不需要安裝資料庫：後端預設使用 SQLite，第一次啟動時自動建立並寫入示範資料。
 
@@ -47,18 +47,23 @@ npm run dev
 
 ## 測試與檢查
 
-提交前這些檢查都必須通過（CI 也會執行）。
+專案沒有 CI，提交前請在本機執行這些檢查，全部通過才提交。
 
 ```bash
 # 後端
 cd backend
 dotnet test PersonalManager.sln
 
+# 兩組 migration 都已產生（在 backend/src/PersonalManager.Api）
+dotnet ef migrations has-pending-model-changes --context SqliteApplicationDbContext
+dotnet ef migrations has-pending-model-changes --context MySqlApplicationDbContext
+
 # 前端
 cd frontend
 npm run lint           # ESLint
 npm run format:check   # Prettier（npm run format 可自動修正）
 npx vitest run         # 單元測試
+npm run api:types      # 重新產生 API 型別，git diff 應該沒有變化
 npm run build          # 型別檢查 + 建置
 npx playwright test    # E2E：自動啟動後端與前端，使用暫存的 SQLite
 ```
@@ -93,7 +98,7 @@ npx playwright test    # E2E：自動啟動後端與前端，使用暫存的 SQL
    npm run api:types
    ```
 
-   沒有更新時，後端的 `OpenApiDocumentTests` 與 CI 的「API types up to date」會失敗
+   沒有更新 `openapi.json` 時，後端的 `OpenApiDocumentTests` 會失敗
 
 ### 新增後台清單頁
 

@@ -8,7 +8,7 @@
 | 後端 | .NET 9 Web API、EF Core 9；SQLite（預設）或 MySQL／MariaDB |
 | 前端 | Vue 3、TypeScript、Pinia、Tailwind CSS、Vite |
 | 認證 | JWT access token + httpOnly cookie refresh token |
-| 測試 | xUnit、Vitest、Playwright；GitHub Actions CI |
+| 測試 | xUnit、Vitest、Playwright（本機執行，沒有 CI） |
 
 目前沒有正式環境，只在本機開發。
 

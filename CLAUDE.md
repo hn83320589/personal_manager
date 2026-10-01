@@ -43,7 +43,6 @@ This file provides guidance to Claude Code when working in this repository.
 personal_manager/
 ├── CLAUDE.md                     # 本檔案
 ├── CHANGELOG.md                  # 重要變更
-├── .github/workflows/ci.yml      # 後端 build/test/migration 檢查、前端 lint/test/build、E2E
 ├── backend/
 │   ├── PersonalManager.sln
 │   ├── src/PersonalManager.Api/  # .NET 9 Web API

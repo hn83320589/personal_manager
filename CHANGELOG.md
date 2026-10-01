@@ -29,6 +29,7 @@
 
 ### 文件（Phase 6）
 - 文件改寫為目前的架構；刪除過時的 Postman collection 與 API 快速參考；異動記錄集中到本檔
+- 移除 GitHub Actions CI（個人作業，直接推到 main）；原本由 CI 執行的檢查改列在開發指南，提交前於本機執行
 
 ## 2026-03
 
