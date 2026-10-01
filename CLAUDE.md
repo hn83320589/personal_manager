@@ -56,8 +56,6 @@ personal_manager/
     └── deployment-guide.md       # 部署條件（目前沒有正式環境）
 ```
 
-`local-development/` 是合併前的舊 repo clone，已不再使用（git-ignored）。
-
 ---
 
 ## 快速啟動（本地開發）

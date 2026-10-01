@@ -1,6 +1,3 @@
-# 舊的獨立 repo clone（已合併進 backend/ 與 frontend/，保留供對照，不納入版控）
-local-development/
-
 # 常見系統檔案
 .DS_Store
 Thumbs.db
