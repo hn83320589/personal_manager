@@ -1,7 +1,10 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import type { RouteLocationRaw } from 'vue-router'
 import router from '../index'
+
+// 標題測試只關心路由，不載入真正的頁面元件（冷啟動時編譯整個頁面可能超過測試時限）
+vi.mock('../../views/public/DirectoryView.vue', () => ({ default: {} }))
 
 const nameOf = (path: string) => router.resolve(path).name
 
