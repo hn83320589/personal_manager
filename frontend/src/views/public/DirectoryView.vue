@@ -63,10 +63,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { publicApi } from '@/api/public'
 import type { Schemas } from '@/api/types'
 import { ApiError } from '@/api/http'
+import { useDebouncedSearch } from '@/composables/useDebouncedSearch'
 import { useAuthStore } from '@/stores/auth'
 import ColorSchemeToggle from '@/components/public/ColorSchemeToggle.vue'
 import PageState from '@/components/public/PageState.vue'
@@ -74,8 +75,6 @@ import PageState from '@/components/public/PageState.vue'
 const pageSize = 24
 
 const auth = useAuthStore()
-const search = ref('')
-const query = ref('')
 const people = ref<Schemas['DirectoryCardDto'][]>([])
 const page = ref(1)
 const hasMore = ref(false)
@@ -104,15 +103,7 @@ async function load(reset: boolean) {
 const reload = () => load(true)
 const loadMore = () => load(false)
 
-// 輸入停頓 300ms 後才查詢，避免每打一個字就送出請求
-let debounce: ReturnType<typeof setTimeout> | undefined
-watch(search, (value) => {
-  clearTimeout(debounce)
-  debounce = setTimeout(() => {
-    query.value = value.trim()
-    void load(true)
-  }, 300)
-})
+const { search, query } = useDebouncedSearch(() => void load(true))
 
 onMounted(() => {
   void load(true)

@@ -77,11 +77,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { adminUsersApi } from '@/api/admin'
 import type { Schemas } from '@/api/types'
 import { useAsyncAction } from '@/composables/useAsyncAction'
 import { useAsyncData } from '@/composables/useAsyncData'
+import { useDebouncedSearch } from '@/composables/useDebouncedSearch'
 import { formatDate } from '@/lib/format'
 import { useAuthStore } from '@/stores/auth'
 import AdminPage from '@/components/manage/AdminPage.vue'
@@ -91,18 +92,8 @@ import PaginationNav from '@/components/public/PaginationNav.vue'
 type User = Schemas['AdminUserDto']
 
 const auth = useAuthStore()
-const search = ref('')
-const query = ref('')
 const page = ref(1)
-
-let debounce: ReturnType<typeof setTimeout> | undefined
-watch(search, (value) => {
-  clearTimeout(debounce)
-  debounce = setTimeout(() => {
-    query.value = value.trim()
-    page.value = 1
-  }, 300)
-})
+const { search, query } = useDebouncedSearch(() => (page.value = 1))
 
 const {
   data: result,

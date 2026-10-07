@@ -83,6 +83,7 @@ import { postsApi } from '@/api/posts'
 import type { Schemas } from '@/api/types'
 import { useAsyncAction } from '@/composables/useAsyncAction'
 import { useAsyncData } from '@/composables/useAsyncData'
+import { useDebouncedSearch } from '@/composables/useDebouncedSearch'
 import { formatDate } from '@/lib/format'
 import AdminPage from '@/components/manage/AdminPage.vue'
 import DeleteButton from '@/components/manage/DeleteButton.vue'
@@ -101,18 +102,8 @@ const filters: { value: Filter; label: string }[] = [
 
 const router = useRouter()
 const filter = ref<Filter>('all')
-const search = ref('')
-const query = ref('')
 const page = ref(1)
-
-let debounce: ReturnType<typeof setTimeout> | undefined
-watch(search, (value) => {
-  clearTimeout(debounce)
-  debounce = setTimeout(() => {
-    query.value = value.trim()
-    page.value = 1
-  }, 300)
-})
+const { search, query } = useDebouncedSearch(() => (page.value = 1))
 watch(filter, () => (page.value = 1))
 
 const {
