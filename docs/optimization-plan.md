@@ -55,7 +55,7 @@
 
 ### 已知問題
 
-- **F-01**（測試報告）：訪客開頁面時 refresh 回 401 留下 console 錯誤，已記錄於 [`TASKS.md`](TASKS.md) 技術債。
+- **F-01**（測試報告）：訪客開頁面時 refresh 回 401 留下 console 錯誤 → 已修正：沒有 refresh cookie 時回 204（2026-10-07）。
 
 ## 不建議做的
 

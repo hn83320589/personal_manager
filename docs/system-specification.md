@@ -290,6 +290,7 @@ API 分為三組（ADR-011），完整清單見 Swagger 或 `backend/openapi.jso
 | access token | JWT（HS256），15 分鐘，放在 `Authorization: Bearer` |
 | refresh token | 隨機值，14 天；以 httpOnly、Secure、`SameSite=Strict` cookie 傳遞，只限 `/api/auth` 路徑；資料庫只存 SHA-256 雜湊 |
 | 輪換 | 每次 refresh 發新的 token 並撤銷舊的；已撤銷的 token 再被使用時，撤銷該使用者所有 refresh token |
+| 還原登入 | 開頁面時前端呼叫 refresh 還原登入；沒有 cookie（訪客）回 204 表示未登入，cookie 無效或過期才回 401 |
 | 登出 | 撤銷目前的 refresh token 並清除 cookie |
 | 重設／變更密碼 | 重設密碼使用一次性連結（雜湊儲存、有效期限），不透露 Email 是否存在；重設或變更密碼後撤銷所有 refresh token |
 | 停用帳號 | 無法登入，refresh 失敗 |
