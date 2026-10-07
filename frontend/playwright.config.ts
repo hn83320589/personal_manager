@@ -6,7 +6,8 @@ import { defineConfig, devices } from '@playwright/test'
 /**
  * E2E：同時啟動後端（Development 環境，會寫入示範資料）與前端，以真實的 API 測試。
  * 每次執行使用新的 SQLite 檔案，測試之間不受上次資料影響。
- * CI 以建置後的前端（vite preview）執行；本機開發用 dev server，已在執行時直接沿用。
+ * 預設使用 dev server（已在執行時直接沿用）；設定 CI=1 時改測建置後的前端（vite preview），
+ * 並重新啟動前後端、失敗時重試一次。專案沒有 CI 服務，這個模式用來在提交前確認正式建置。
  */
 const isCI = !!process.env.CI
 const database = path.join(os.tmpdir(), `personal-manager-e2e-${Date.now()}.db`)
@@ -27,11 +28,11 @@ export default defineConfig({
     locale: 'zh-TW',
     timezoneId: 'Asia/Taipei',
   },
-  // CI 使用 Playwright 內建的 Chromium；本機直接使用已安裝的 Google Chrome，不必另外下載瀏覽器
+  // 使用本機安裝的 Google Chrome，不必另外下載瀏覽器
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'], channel: isCI ? undefined : 'chrome' },
+      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     },
   ],
   webServer: [
