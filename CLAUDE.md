@@ -52,7 +52,6 @@ personal_manager/
     ├── system-specification.md   # 系統規格與架構決策紀錄（ADR）
     ├── technical-guide.md        # 技術教學：技術、方法與設計理由
     ├── test-report.md            # 最新一次完整測試的報告
-    ├── optimization-plan.md      # 優化計畫（重複程式碼、待決定的清理）
     ├── images/screenshots/       # README 與文件使用的畫面截圖
     ├── development-guide.md      # 本地開發流程
     ├── database-design.md        # 資料表

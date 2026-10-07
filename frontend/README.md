@@ -13,7 +13,7 @@ npm run dev     # → http://localhost:5173
 ```
 
 `/api` 與 `/files` 由 Vite 轉送到後端，瀏覽器看到的是同一個網站，登入狀態（refresh token cookie）才能保存。
-`.env.development` 與 `.env.production` 都將 `VITE_API_BASE_URL` 設為 `/api`。
+API 位址預設為 `/api`，不需要 `.env` 檔；要指向其他位址時可設定環境變數 `VITE_API_BASE_URL`。
 
 ## 指令
 

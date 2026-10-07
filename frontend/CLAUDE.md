@@ -25,7 +25,7 @@ npm run type-check
 
 ### 環境變數
 
-`VITE_API_BASE_URL`：API 位址，`.env.development` 與 `.env.production` 都設為 `/api`。開發時由 Vite（`vite.config.ts` 的 proxy）把 `/api` 與 `/files` 轉送到後端 `http://localhost:5037`。
+`VITE_API_BASE_URL`：API 位址，沒有設定時為 `/api`（專案沒有 `.env` 檔，開發與正式環境都用預設值）。開發時由 Vite（`vite.config.ts` 的 proxy）把 `/api` 與 `/files` 轉送到後端 `http://localhost:5037`，瀏覽器看到的是同一個網站，refresh token cookie 與 `/files` 圖片才能正常使用。
 前端與 API 必須是同一個 site，refresh token cookie（`SameSite=Strict`）才會送出（ADR-010）。
 
 ### 其他指令
