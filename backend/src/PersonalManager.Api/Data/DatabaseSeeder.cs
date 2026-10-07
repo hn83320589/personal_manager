@@ -17,10 +17,7 @@ public static class DatabaseSeeder
             Email = "admin@example.com",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123"),
             FullName = "管理員",
-            Role = "Admin",
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            Role = Roles.Admin,
         };
         var john = new User
         {
@@ -28,10 +25,7 @@ public static class DatabaseSeeder
             Email = "john.doe@example.com",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123"),
             FullName = "John Doe",
-            Role = "User",
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            Role = Roles.User,
         };
         db.Users.AddRange(admin, john);
         await db.SaveChangesAsync();
@@ -43,12 +37,9 @@ public static class DatabaseSeeder
             Title = "全端開發工程師",
             Summary = "專精於 .NET Core 與 Vue.js 開發",
             Description = "擁有5年以上全端開發經驗，熟悉現代化網頁開發技術棧，包括後端 API 設計、前端 SPA 開發與雲端部署。",
-            ProfileImageUrl = "",
             Website = "https://example.com",
             Location = "台灣 台北",
             ThemeColor = "blue",
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
         });
 
         // ── 學歷 ─────────────────────────────────────────────────────
@@ -64,8 +55,6 @@ public static class DatabaseSeeder
                 Description = "主修軟體工程與資料庫系統",
                 IsPublic = true,
                 SortOrder = 1,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             },
             new Education
             {
@@ -78,8 +67,6 @@ public static class DatabaseSeeder
                 Description = "主修程式設計與演算法",
                 IsPublic = true,
                 SortOrder = 2,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             }
         );
 
@@ -95,8 +82,6 @@ public static class DatabaseSeeder
                 Description = "負責企業級應用系統開發與維護，主導多項核心功能設計與重構",
                 IsPublic = true,
                 SortOrder = 1,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             },
             new WorkExperience
             {
@@ -109,17 +94,15 @@ public static class DatabaseSeeder
                 Description = "開發 RESTful API 與資料庫設計，負責系統效能優化",
                 IsPublic = true,
                 SortOrder = 2,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             }
         );
 
         // ── 技能 ─────────────────────────────────────────────────────
         db.Skills.AddRange(
-            new Skill { UserId = admin.Id, Name = "C# .NET Core", Category = "後端開發", Level = SkillLevel.Expert, YearsOfExperience = 5, IsPublic = true, SortOrder = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-            new Skill { UserId = admin.Id, Name = "Vue.js", Category = "前端開發", Level = SkillLevel.Advanced, YearsOfExperience = 3, IsPublic = true, SortOrder = 2, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-            new Skill { UserId = admin.Id, Name = "MariaDB/MySQL", Category = "資料庫", Level = SkillLevel.Advanced, YearsOfExperience = 4, IsPublic = true, SortOrder = 3, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-            new Skill { UserId = admin.Id, Name = "Docker", Category = "DevOps", Level = SkillLevel.Intermediate, YearsOfExperience = 2, IsPublic = true, SortOrder = 4, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+            new Skill { UserId = admin.Id, Name = "C# .NET Core", Category = "後端開發", Level = SkillLevel.Expert, YearsOfExperience = 5, IsPublic = true, SortOrder = 1 },
+            new Skill { UserId = admin.Id, Name = "Vue.js", Category = "前端開發", Level = SkillLevel.Advanced, YearsOfExperience = 3, IsPublic = true, SortOrder = 2 },
+            new Skill { UserId = admin.Id, Name = "MariaDB/MySQL", Category = "資料庫", Level = SkillLevel.Advanced, YearsOfExperience = 4, IsPublic = true, SortOrder = 3 },
+            new Skill { UserId = admin.Id, Name = "Docker", Category = "DevOps", Level = SkillLevel.Intermediate, YearsOfExperience = 2, IsPublic = true, SortOrder = 4 }
         );
 
         // ── 作品集 ───────────────────────────────────────────────────
@@ -145,8 +128,6 @@ public static class DatabaseSeeder
                 IsFeatured = true,
                 IsPublic = true,
                 SortOrder = 1,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             },
             new Portfolio
             {
@@ -160,8 +141,6 @@ public static class DatabaseSeeder
                 Blocks = [new TextBlock("", "<p>商品、訂單與金流串接的 REST API，以 Redis 快取熱門商品。</p>")],
                 IsPublic = true,
                 SortOrder = 2,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             }
         );
 
@@ -177,8 +156,6 @@ public static class DatabaseSeeder
                 IsAllDay = false,
                 IsPublic = false,
                 Color = "#3B82F6",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             },
             new CalendarEvent
             {
@@ -190,8 +167,6 @@ public static class DatabaseSeeder
                 IsAllDay = true,
                 IsPublic = true,
                 Color = "#10B981",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             }
         );
 
@@ -207,8 +182,6 @@ public static class DatabaseSeeder
                 DueDate = new DateTime(2025, 8, 13, 18, 0, 0),
                 CompletedAt = null,
                 EstimatedHours = 8.0,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             },
             new WorkTask
             {
@@ -220,16 +193,14 @@ public static class DatabaseSeeder
                 DueDate = new DateTime(2025, 8, 16, 18, 0, 0),
                 CompletedAt = null,
                 EstimatedHours = 16.0,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             }
         );
 
         // ── 待辦事項 ─────────────────────────────────────────────────
         db.TodoItems.AddRange(
-            new TodoItem { UserId = admin.Id, Title = "完成資料庫設計文檔", Description = "撰寫詳細的資料庫設計說明文檔", Priority = TodoPriority.High, Status = TodoStatus.Pending, DueDate = new DateTime(2025, 8, 13, 18, 0, 0), CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-            new TodoItem { UserId = admin.Id, Title = "購買開發用伺服器", Description = "評估並購買適合的雲端伺服器方案", Priority = TodoPriority.Medium, Status = TodoStatus.Pending, DueDate = new DateTime(2025, 8, 20, 12, 0, 0), CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-            new TodoItem { UserId = admin.Id, Title = "學習新技術", Description = "研讀 Docker Kubernetes 相關文檔", Priority = TodoPriority.Low, Status = TodoStatus.Pending, DueDate = new DateTime(2025, 8, 30, 23, 59, 0), CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+            new TodoItem { UserId = admin.Id, Title = "完成資料庫設計文檔", Description = "撰寫詳細的資料庫設計說明文檔", Priority = TodoPriority.High, Status = TodoStatus.Pending, DueDate = new DateTime(2025, 8, 13, 18, 0, 0) },
+            new TodoItem { UserId = admin.Id, Title = "購買開發用伺服器", Description = "評估並購買適合的雲端伺服器方案", Priority = TodoPriority.Medium, Status = TodoStatus.Pending, DueDate = new DateTime(2025, 8, 20, 12, 0, 0) },
+            new TodoItem { UserId = admin.Id, Title = "學習新技術", Description = "研讀 Docker Kubernetes 相關文檔", Priority = TodoPriority.Low, Status = TodoStatus.Pending, DueDate = new DateTime(2025, 8, 30, 23, 59, 0) }
         );
 
         // ── 部落格 ───────────────────────────────────────────────────
@@ -245,8 +216,6 @@ public static class DatabaseSeeder
                 ViewCount = 0,
                 PublishedAt = new DateTime(2025, 8, 10, 10, 0, 0),
                 Category = "技術分享",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             },
             new BlogPost
             {
@@ -258,23 +227,21 @@ public static class DatabaseSeeder
                 Status = BlogPostStatus.Draft,
                 ViewCount = 0,
                 Category = "前端開發",
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             }
         );
 
         // ── 留言板 ───────────────────────────────────────────────────
         db.GuestBookEntries.AddRange(
-            new GuestBookEntry { TargetUserId = admin.Id, Name = "訪客A", Email = "visitor@example.com", Message = "很棒的個人網站！期待看到更多技術分享。", IsApproved = true, AdminReply = "", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-            new GuestBookEntry { TargetUserId = admin.Id, Name = "John Smith", Email = "john@example.com", Message = "感謝分享這些實用的開發經驗，對我很有幫助！", IsApproved = true, AdminReply = "", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+            new GuestBookEntry { TargetUserId = admin.Id, Name = "訪客A", Email = "visitor@example.com", Message = "很棒的個人網站！期待看到更多技術分享。", IsApproved = true },
+            new GuestBookEntry { TargetUserId = admin.Id, Name = "John Smith", Email = "john@example.com", Message = "感謝分享這些實用的開發經驗，對我很有幫助！", IsApproved = true }
         );
 
         // ── 聯絡方式 ─────────────────────────────────────────────────
         db.ContactMethods.AddRange(
-            new ContactMethod { UserId = admin.Id, Type = ContactType.Email, Value = "admin@example.com", Label = "工作信箱", Icon = "email", IsPublic = true, SortOrder = 1, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-            new ContactMethod { UserId = admin.Id, Type = ContactType.Phone, Value = "0912345678", Label = "手機", Icon = "phone", IsPublic = true, SortOrder = 2, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-            new ContactMethod { UserId = admin.Id, Type = ContactType.GitHub, Value = "https://github.com/example", Label = "GitHub", Icon = "github", IsPublic = true, SortOrder = 3, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-            new ContactMethod { UserId = admin.Id, Type = ContactType.LinkedIn, Value = "https://linkedin.com/in/example", Label = "LinkedIn", Icon = "linkedin", IsPublic = true, SortOrder = 4, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+            new ContactMethod { UserId = admin.Id, Type = ContactType.Email, Value = "admin@example.com", Label = "工作信箱", Icon = "email", IsPublic = true, SortOrder = 1 },
+            new ContactMethod { UserId = admin.Id, Type = ContactType.Phone, Value = "0912345678", Label = "手機", Icon = "phone", IsPublic = true, SortOrder = 2 },
+            new ContactMethod { UserId = admin.Id, Type = ContactType.GitHub, Value = "https://github.com/example", Label = "GitHub", Icon = "github", IsPublic = true, SortOrder = 3 },
+            new ContactMethod { UserId = admin.Id, Type = ContactType.LinkedIn, Value = "https://linkedin.com/in/example", Label = "LinkedIn", Icon = "linkedin", IsPublic = true, SortOrder = 4 }
         );
 
         await db.SaveChangesAsync();

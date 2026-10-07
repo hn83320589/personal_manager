@@ -19,7 +19,7 @@ public class User
     public string FullName { get; set; } = string.Empty;
 
     [StringLength(20)]
-    public string Role { get; set; } = "User";
+    public string Role { get; set; } = Roles.User;
 
     public bool IsActive { get; set; } = true;
 
