@@ -1,4 +1,5 @@
 import type { Schemas } from '@/api/types'
+import { formatTime, localDate } from './format'
 
 /** 編輯器中的發佈狀態。「排程」在後端是「已發佈且發佈時間在未來」。 */
 export type PublishMode = 'draft' | 'published' | 'scheduled'
@@ -18,11 +19,9 @@ export interface EditablePost {
   publishedAt: string | null
 }
 
-const pad = (n: number) => String(n).padStart(2, '0')
-
 /** Date → datetime-local 的值（當地時間，精確到分鐘）。 */
 function toLocalInput(date: Date): string {
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+  return `${localDate(date)}T${formatTime(date)}`
 }
 
 export function toEditablePost(post: Schemas['MyPostDto'], now = new Date()): EditablePost {

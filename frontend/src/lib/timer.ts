@@ -1,5 +1,5 @@
 import type { Schemas } from '@/api/types'
-import { localDate } from './format'
+import { formatTime, localDate } from './format'
 
 export interface RunningTimer {
   workTaskId: number | null
@@ -7,9 +7,6 @@ export interface RunningTimer {
   /** ISO 時間 */
   startedAt: string
 }
-
-const pad = (n: number) => String(n).padStart(2, '0')
-const clock = (date: Date) => `${pad(date.getHours())}:${pad(date.getMinutes())}`
 
 /**
  * 停止計時後轉成時間紀錄。同一天內記錄起訖時間；跨過午夜或不滿一分鐘時只記錄時長
@@ -25,11 +22,11 @@ export function timerToEntry(timer: RunningTimer, now: Date): Schemas['SaveTimeE
     date: localDate(start),
     description: '',
   }
-  if (sameDay && clock(now) > clock(start)) {
+  if (sameDay && formatTime(now) > formatTime(start)) {
     return {
       ...base,
-      startTime: `${clock(start)}:00`,
-      endTime: `${clock(now)}:00`,
+      startTime: `${formatTime(start)}:00`,
+      endTime: `${formatTime(now)}:00`,
       durationMinutes: null,
     }
   }

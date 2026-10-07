@@ -1,4 +1,5 @@
-const pad = (n: number) => String(n).padStart(2, '0')
+/** 補零到兩位數，例如 5 → '05'。 */
+export const pad = (n: number) => String(n).padStart(2, '0')
 
 /** 'YYYY-MM-DD' 或年份 → '2024.07'／'2014'。 */
 function periodPart(value: string | number | null | undefined): string {
@@ -24,6 +25,11 @@ export function formatPeriod(period: {
 export function formatDate(iso: string): string {
   const date = new Date(iso)
   return `${date.getFullYear()}.${pad(date.getMonth() + 1)}.${pad(date.getDate())}`
+}
+
+/** 當地時間的時與分，例如「09:05」。 */
+export function formatTime(date: Date): string {
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`
 }
 
 export function formatFileSize(bytes: number): string {

@@ -1,5 +1,5 @@
 import type { Schemas } from '@/api/types'
-import { localDate } from './format'
+import { formatTime, localDate } from './format'
 
 /** 行程表單：日期與時間分開編輯（當地時間），送出時轉成 UTC。 */
 export interface EventForm {
@@ -15,9 +15,6 @@ export interface EventForm {
   recurrence: Schemas['Recurrence']
   recurrenceUntil: string
 }
-
-const pad = (n: number) => String(n).padStart(2, '0')
-const timeOf = (date: Date) => `${pad(date.getHours())}:${pad(date.getMinutes())}`
 
 /** 在指定日期新增一小時的行程（預設上午九點）。 */
 export function newEventForm(date: string): EventForm {
@@ -46,9 +43,9 @@ export function toEventForm(event: Schemas['EventDto']): EventForm {
     description: event.description,
     isAllDay: event.isAllDay,
     startDate: localDate(start),
-    startTime: timeOf(start),
+    startTime: formatTime(start),
     endDate: localDate(lastDay),
-    endTime: timeOf(end),
+    endTime: formatTime(end),
     isPublic: event.isPublic,
     color: event.color,
     recurrence: event.recurrence,

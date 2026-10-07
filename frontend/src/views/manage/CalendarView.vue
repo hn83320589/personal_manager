@@ -79,18 +79,15 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { calendarApi } from '@/api/tools'
-import type { Schemas } from '@/api/types'
 import { useAsyncAction } from '@/composables/useAsyncAction'
 import { useAsyncData } from '@/composables/useAsyncData'
-import { groupByDay } from '@/lib/calendar'
+import { groupByDay, timeRange, WEEKDAYS } from '@/lib/calendar'
 import { newEventForm, toEventForm, toEventRequest, type EventForm } from '@/lib/eventForm'
 import { localDate } from '@/lib/format'
 import AdminPage from '@/components/manage/AdminPage.vue'
 import EventPanel from '@/components/manage/calendar/EventPanel.vue'
 import MonthGrid from '@/components/manage/calendar/MonthGrid.vue'
 import PageState from '@/components/public/PageState.vue'
-
-type Occurrence = Schemas['OccurrenceDto']
 
 const now = new Date()
 const year = ref(now.getFullYear())
@@ -130,16 +127,8 @@ const selectedEvents = computed(() => groupByDay(events.value ?? []).get(selecte
 const selectedLabel = computed(() => {
   const [y, m, d] = selected.value.split('-').map(Number)
   const date = new Date(y!, m! - 1, d!)
-  return `${m} 月 ${d} 日（${'日一二三四五六'[date.getDay()]}）`
+  return `${m} 月 ${d} 日（${WEEKDAYS[date.getDay()]}）`
 })
-
-const pad = (n: number) => String(n).padStart(2, '0')
-function timeRange(event: Occurrence) {
-  if (event.isAllDay) return '全天'
-  const time = (iso: string) =>
-    `${pad(new Date(iso).getHours())}:${pad(new Date(iso).getMinutes())}`
-  return `${time(event.start)}–${time(event.end)}`
-}
 
 const form = ref<EventForm | null>(null)
 const editingId = ref<number | null>(null)

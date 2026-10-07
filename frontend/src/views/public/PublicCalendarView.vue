@@ -21,7 +21,7 @@
             <i class="mt-2 h-2 w-2 shrink-0 rounded-full" :style="{ background: event.color || 'rgb(var(--accent))' }" />
             <div>
               <b class="font-medium">{{ event.title }}</b>
-              <span class="ml-2 text-sm text-muted">{{ timeRange(event) }}</span>
+              <span class="ml-2 text-sm text-muted">{{ timeRange(event, ' – ') }}</span>
               <p v-if="event.description" class="text-sm text-muted">{{ event.description }}</p>
             </div>
           </li>
@@ -37,6 +37,8 @@ import { publicApi } from '@/api/public'
 import type { Schemas } from '@/api/types'
 import { useAsyncData } from '@/composables/useAsyncData'
 import { setPageSeo } from '@/composables/useSeo'
+import { timeRange, WEEKDAYS } from '@/lib/calendar'
+import { pad } from '@/lib/format'
 import PageHead from '@/components/public/PageHead.vue'
 import PageState from '@/components/public/PageState.vue'
 import { usePublicContext } from '@/components/public/publicContext'
@@ -67,8 +69,6 @@ const {
   { watch: [username, month] },
 )
 
-const weekday = ['日', '一', '二', '三', '四', '五', '六']
-const pad = (n: number) => String(n).padStart(2, '0')
 
 /** 依訪客當地日期分組；後端已展開重複行程並排序。 */
 const days = computed(() => {
@@ -76,7 +76,7 @@ const days = computed(() => {
   for (const event of events.value ?? []) {
     const start = new Date(event.start)
     const key = `${start.getFullYear()}-${start.getMonth()}-${start.getDate()}`
-    const label = `${pad(start.getMonth() + 1)}/${pad(start.getDate())}（${weekday[start.getDay()]}）`
+    const label = `${pad(start.getMonth() + 1)}/${pad(start.getDate())}（${WEEKDAYS[start.getDay()]}）`
     const group = groups.get(key) ?? { key, label, events: [] }
     group.events.push(event)
     groups.set(key, group)
@@ -84,14 +84,6 @@ const days = computed(() => {
   return [...groups.values()]
 })
 
-function timeRange(event: Occurrence) {
-  if (event.isAllDay) return '全天'
-  const time = (iso: string) => {
-    const d = new Date(iso)
-    return `${pad(d.getHours())}:${pad(d.getMinutes())}`
-  }
-  return `${time(event.start)} – ${time(event.end)}`
-}
 
 watchEffect(() => setPageSeo({ title: `行事曆 · ${profile.value?.fullName || username.value}` }))
 </script>

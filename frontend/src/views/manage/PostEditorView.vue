@@ -74,6 +74,7 @@ import { tagsApi } from '@/api/portfolios'
 import { useAsyncData } from '@/composables/useAsyncData'
 import { useAutosave } from '@/composables/useAutosave'
 import { setPageSeo } from '@/composables/useSeo'
+import { formatTime } from '@/lib/format'
 import { toEditablePost, toPostRequest } from '@/lib/postDocument'
 import { useAuthStore } from '@/stores/auth'
 import PostContentEditor from '@/components/manage/blog/PostContentEditor.vue'
@@ -113,13 +114,11 @@ const categories = computed(() => [
   ...new Set((recent.value?.items ?? []).map((p) => p.category).filter(Boolean)),
 ])
 
-const pad = (n: number) => String(n).padStart(2, '0')
 const statusText = computed(() => {
   if (status.value === 'saving') return '儲存中…'
   if (status.value === 'error') return `儲存失敗：${error.value}`
   if (dirty.value) return '有尚未儲存的修改'
-  if (savedAt.value)
-    return `已自動儲存 ${pad(savedAt.value.getHours())}:${pad(savedAt.value.getMinutes())}`
+  if (savedAt.value) return `已自動儲存 ${formatTime(savedAt.value)}`
   return '修改會自動儲存'
 })
 

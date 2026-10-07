@@ -1,4 +1,6 @@
-import { localDate } from './format'
+import { formatTime, localDate } from './format'
+
+export const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'] as const
 
 /** 月曆的格子：從該月第一天所在那週的週日開始，固定 6 週 42 天，月份切換時高度不跳動。 */
 export function monthGrid(year: number, month: number): Date[] {
@@ -26,4 +28,13 @@ export function groupByDay<T extends { start: string; end: string }>(items: T[])
     } while (cursor <= last)
   }
   return days
+}
+
+/** 行程的時間範圍，例如「09:00–10:30」；全天行程顯示「全天」。 */
+export function timeRange(
+  event: { isAllDay: boolean; start: string; end: string },
+  separator = '–',
+): string {
+  if (event.isAllDay) return '全天'
+  return `${formatTime(new Date(event.start))}${separator}${formatTime(new Date(event.end))}`
 }

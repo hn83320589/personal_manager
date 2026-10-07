@@ -81,7 +81,7 @@ import { postsApi } from '@/api/posts'
 import { calendarApi, timeEntriesApi, todosApi } from '@/api/tools'
 import type { Schemas } from '@/api/types'
 import { useAsyncData } from '@/composables/useAsyncData'
-import { localDate } from '@/lib/format'
+import { formatTime, localDate } from '@/lib/format'
 import { formatMinutes } from '@/lib/timer'
 import { useAuthStore } from '@/stores/auth'
 import AdminPage from '@/components/manage/AdminPage.vue'
@@ -136,12 +136,9 @@ const actions = [
   { label: '新增行程', to: '/admin/calendar' },
 ]
 
-const pad = (n: number) => String(n).padStart(2, '0')
 function when(event: Schemas['OccurrenceDto']) {
   const start = new Date(event.start)
   const day = `${start.getMonth() + 1}/${start.getDate()}`
-  return event.isAllDay
-    ? `${day} 全天`
-    : `${day} ${pad(start.getHours())}:${pad(start.getMinutes())}`
+  return event.isAllDay ? `${day} 全天` : `${day} ${formatTime(start)}`
 }
 </script>

@@ -41,6 +41,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { timeEntriesApi } from '@/api/tools'
 import type { Schemas } from '@/api/types'
 import { useAsyncAction } from '@/composables/useAsyncAction'
+import { pad } from '@/lib/format'
 import { timerToEntry, type RunningTimer } from '@/lib/timer'
 
 const props = defineProps<{ tasks: Schemas['WorkTaskDto'][] }>()
@@ -85,7 +86,6 @@ const timerLabel = computed(() => {
   return props.tasks.find((t) => t.id === timer.value!.workTaskId)?.title ?? timer.value.title
 })
 
-const pad = (n: number) => String(n).padStart(2, '0')
 const elapsed = computed(() => {
   if (!timer.value) return ''
   const seconds = Math.max(

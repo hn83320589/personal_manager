@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatDate, formatFileSize, formatPeriod, localDate } from '../format'
+import { formatDate, formatFileSize, formatPeriod, formatTime, localDate } from '../format'
 
 describe('formatPeriod', () => {
   it('shows year and month for a finished job', () => {
@@ -39,5 +39,11 @@ describe('localDate', () => {
   it('uses the local calendar date, not the UTC one', () => {
     // 台北時間 2026-10-01 07:00 在 UTC 仍是 9 月 30 日
     expect(localDate(new Date('2026-09-30T23:00:00Z'))).toBe('2026-10-01')
+  })
+})
+
+describe('formatTime', () => {
+  it('shows local hours and minutes with leading zeros', () => {
+    expect(formatTime(new Date(2026, 9, 7, 9, 5))).toBe('09:05')
   })
 })

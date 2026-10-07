@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { localDate } from '../format'
-import { groupByDay, monthGrid } from '../calendar'
+import { groupByDay, monthGrid, timeRange } from '../calendar'
 
 describe('monthGrid', () => {
   it('starts on the Sunday before the first day and always shows six weeks', () => {
@@ -31,5 +31,21 @@ describe('groupByDay', () => {
     const days = groupByDay([{ start: '2026-10-01T01:00:00Z', end: '2026-10-01T16:00:00Z' }])
 
     expect([...days.keys()]).toEqual(['2026-10-01'])
+  })
+})
+
+describe('timeRange', () => {
+  const event = { isAllDay: false, start: '2026-10-07T01:00:00Z', end: '2026-10-07T02:30:00Z' }
+
+  it('shows local start and end times', () => {
+    expect(timeRange(event)).toBe('09:00–10:30')
+  })
+
+  it('accepts a separator', () => {
+    expect(timeRange(event, ' – ')).toBe('09:00 – 10:30')
+  })
+
+  it('shows all-day events as such', () => {
+    expect(timeRange({ ...event, isAllDay: true })).toBe('全天')
   })
 })

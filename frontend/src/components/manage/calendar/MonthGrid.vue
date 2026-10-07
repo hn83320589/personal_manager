@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-hidden rounded-xl border border-rule bg-surface">
     <div class="grid grid-cols-7 border-b border-rule bg-paper text-center text-xs text-muted">
-      <span v-for="name in weekdays" :key="name" class="py-2">{{ name }}</span>
+      <span v-for="name in WEEKDAYS" :key="name" class="py-2">{{ name }}</span>
     </div>
     <div class="grid grid-cols-7">
       <button
@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { Schemas } from '@/api/types'
-import { groupByDay, monthGrid } from '@/lib/calendar'
+import { groupByDay, monthGrid, WEEKDAYS } from '@/lib/calendar'
 import { localDate } from '@/lib/format'
 
 type Occurrence = Schemas['OccurrenceDto']
@@ -61,7 +61,6 @@ type Occurrence = Schemas['OccurrenceDto']
 const props = defineProps<{ year: number; month: number; events: Occurrence[]; selected: string }>()
 defineEmits<{ select: [day: string] }>()
 
-const weekdays = ['日', '一', '二', '三', '四', '五', '六']
 const today = localDate()
 
 interface DayCell {
