@@ -9,10 +9,3 @@
     </div>
   </main>
 </template>
-
-<script setup lang="ts">
-import { onMounted } from 'vue'
-import { setPageSeo } from '@/composables/useSeo'
-
-onMounted(() => setPageSeo({ title: '找不到頁面' }))
-</script>

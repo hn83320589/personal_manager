@@ -35,7 +35,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { setPageSeo } from '@/composables/useSeo'
 import { safeRedirect } from '@/lib/safeRedirect'
 import { useAuthStore } from '@/stores/auth'
 import FormField from '@/components/manage/FormField.vue'
@@ -55,6 +54,5 @@ async function submit() {
 
 onMounted(() => {
   auth.clearError()
-  setPageSeo({ title: '登入' })
 })
 </script>

@@ -62,12 +62,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { portfoliosApi, tagsApi } from '@/api/portfolios'
 import { profileApi } from '@/api/profile'
 import { useAsyncData } from '@/composables/useAsyncData'
-import { setPageSeo } from '@/composables/useSeo'
 import { useUnsavedChangesGuard } from '@/composables/useUnsavedChangesGuard'
 import { useWorkEditor } from '@/composables/useWorkEditor'
 import { useAuthStore } from '@/stores/auth'
@@ -89,5 +88,4 @@ const categories = computed(() => [
 ])
 
 useUnsavedChangesGuard(dirty, flush)
-onMounted(() => setPageSeo({ title: '編輯作品' }))
 </script>

@@ -26,10 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { authApi } from '@/api/auth'
 import { errorMessage } from '@/composables/useAsyncAction'
-import { setPageSeo } from '@/composables/useSeo'
 import FormField from '@/components/manage/FormField.vue'
 import AuthCard from '@/components/public/AuthCard.vue'
 
@@ -51,6 +50,4 @@ async function submit() {
     running.value = false
   }
 }
-
-onMounted(() => setPageSeo({ title: '忘記密碼' }))
 </script>

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { setPageSeo } from '@/composables/useSeo'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -218,7 +219,7 @@ const router = createRouter({
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('../views/NotFoundView.vue'),
-      meta: { title: '頁面不存在' },
+      meta: { title: '找不到頁面' },
     },
   ],
 })
@@ -230,11 +231,6 @@ router.beforeEach(async (to, from, next) => {
   // 需要判斷登入狀態的路由，先等待 refresh cookie 還原完成，重新整理頁面時才不會被誤導到登入頁
   if (to.meta.requiresAuth || to.meta.requiresGuest) {
     await authStore.restoreSession()
-  }
-
-  // Set page title
-  if (to.meta.title) {
-    document.title = `${to.meta.title} - ${import.meta.env.VITE_APP_TITLE || 'Personal Manager'}`
   }
 
   // Check auth requirements
@@ -255,6 +251,11 @@ router.beforeEach(async (to, from, next) => {
   }
 
   next()
+})
+
+// 固定標題的頁面由路由設定；個人頁面、文章、作品等依內容在頁面內呼叫 setPageSeo（掛載後執行，會覆蓋這裡）
+router.afterEach((to) => {
+  if (typeof to.meta.title === 'string') setPageSeo({ title: to.meta.title })
 })
 
 export default router

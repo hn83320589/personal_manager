@@ -67,7 +67,6 @@ import { onMounted, ref, watch } from 'vue'
 import { publicApi } from '@/api/public'
 import type { Schemas } from '@/api/types'
 import { ApiError } from '@/api/http'
-import { setPageSeo } from '@/composables/useSeo'
 import { useAuthStore } from '@/stores/auth'
 import ColorSchemeToggle from '@/components/public/ColorSchemeToggle.vue'
 import PageState from '@/components/public/PageState.vue'
@@ -116,7 +115,6 @@ watch(search, (value) => {
 })
 
 onMounted(() => {
-  setPageSeo({ title: '探索個人頁面' })
   void load(true)
 })
 </script>

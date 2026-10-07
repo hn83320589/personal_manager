@@ -47,11 +47,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { authApi } from '@/api/auth'
 import { errorMessage } from '@/composables/useAsyncAction'
-import { setPageSeo } from '@/composables/useSeo'
 import FormField from '@/components/manage/FormField.vue'
 import AuthCard from '@/components/public/AuthCard.vue'
 
@@ -76,6 +75,4 @@ async function submit() {
     running.value = false
   }
 }
-
-onMounted(() => setPageSeo({ title: '重設密碼' }))
 </script>

@@ -67,14 +67,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { postsApi } from '@/api/posts'
 import { tagsApi } from '@/api/portfolios'
 import { useAsyncData } from '@/composables/useAsyncData'
 import { useAutosave } from '@/composables/useAutosave'
 import { useUnsavedChangesGuard } from '@/composables/useUnsavedChangesGuard'
-import { setPageSeo } from '@/composables/useSeo'
 import { toEditablePost, toPostRequest } from '@/lib/postDocument'
 import { useAuthStore } from '@/stores/auth'
 import PostContentEditor from '@/components/manage/blog/PostContentEditor.vue'
@@ -120,5 +119,4 @@ async function publish() {
 }
 
 useUnsavedChangesGuard(dirty, flush)
-onMounted(() => setPageSeo({ title: '編輯文章' }))
 </script>

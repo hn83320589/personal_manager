@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
 import type { RouteLocationRaw } from 'vue-router'
 import router from '../index'
 
@@ -37,5 +38,13 @@ describe('routes', () => {
     ['/admin/blog/editor/7', '/admin/blog/7'],
   ])('redirects the old address %s to %s', (from, to) => {
     expect(redirectOf(from)).toBe(to)
+  })
+})
+
+describe('page title', () => {
+  it('uses the route title with the site name', async () => {
+    setActivePinia(createPinia())
+    await router.push('/')
+    expect(document.title).toBe('探索個人頁面 | Personal Manager')
   })
 })
