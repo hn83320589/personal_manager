@@ -53,8 +53,7 @@ public sealed class WorkExperienceService(ApplicationDbContext db, ICurrentUser 
 
     public async Task ReorderAsync(ReorderRequest request)
     {
-        var items = await db.WorkExperiences.OwnedBy(currentUser.RequireUserId()).ToListAsync();
-        items.ApplyOrder(request);
+        await db.WorkExperiences.OwnedBy(currentUser.RequireUserId()).ApplyOrderAsync(request);
         await db.SaveChangesAsync();
     }
 

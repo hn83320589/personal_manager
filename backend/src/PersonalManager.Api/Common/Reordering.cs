@@ -24,4 +24,8 @@ public static class Reordering
         foreach (var item in ownedItems)
             item.SortOrder = position[item.Id];
     }
+
+    /// <summary>載入使用者的全部項目並依 <paramref name="request"/> 重新編號；呼叫端負責存檔。</summary>
+    public static async Task ApplyOrderAsync<T>(this IQueryable<T> ownedItems, ReorderRequest request) where T : class, ISortable =>
+        (await ownedItems.ToListAsync()).ApplyOrder(request);
 }

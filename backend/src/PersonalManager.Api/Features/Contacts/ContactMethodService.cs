@@ -50,8 +50,7 @@ public sealed class ContactMethodService(ApplicationDbContext db, ICurrentUser c
 
     public async Task ReorderAsync(ReorderRequest request)
     {
-        var items = await db.ContactMethods.OwnedBy(currentUser.RequireUserId()).ToListAsync();
-        items.ApplyOrder(request);
+        await db.ContactMethods.OwnedBy(currentUser.RequireUserId()).ApplyOrderAsync(request);
         await db.SaveChangesAsync();
     }
 

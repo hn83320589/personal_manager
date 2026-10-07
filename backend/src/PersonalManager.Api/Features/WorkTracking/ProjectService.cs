@@ -41,8 +41,7 @@ public sealed class ProjectService(ApplicationDbContext db, ICurrentUser current
 
     public async Task ReorderAsync(ReorderRequest request)
     {
-        var projects = await db.Projects.OwnedBy(currentUser.RequireUserId()).ToListAsync();
-        projects.ApplyOrder(request);
+        await db.Projects.OwnedBy(currentUser.RequireUserId()).ApplyOrderAsync(request);
         await db.SaveChangesAsync();
     }
 

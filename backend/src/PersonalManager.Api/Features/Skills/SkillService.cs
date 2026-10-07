@@ -52,8 +52,7 @@ public sealed class SkillService(ApplicationDbContext db, ICurrentUser currentUs
 
     public async Task ReorderAsync(ReorderRequest request)
     {
-        var skills = await db.Skills.OwnedBy(currentUser.RequireUserId()).ToListAsync();
-        skills.ApplyOrder(request);
+        await db.Skills.OwnedBy(currentUser.RequireUserId()).ApplyOrderAsync(request);
         await db.SaveChangesAsync();
     }
 

@@ -50,8 +50,7 @@ public sealed class EducationService(ApplicationDbContext db, ICurrentUser curre
 
     public async Task ReorderAsync(ReorderRequest request)
     {
-        var items = await db.Educations.OwnedBy(currentUser.RequireUserId()).ToListAsync();
-        items.ApplyOrder(request);
+        await db.Educations.OwnedBy(currentUser.RequireUserId()).ApplyOrderAsync(request);
         await db.SaveChangesAsync();
     }
 

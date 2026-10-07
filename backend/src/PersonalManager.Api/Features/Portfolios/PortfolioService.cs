@@ -97,8 +97,7 @@ public sealed class PortfolioService(
 
     public async Task ReorderAsync(ReorderRequest request)
     {
-        var portfolios = await db.Portfolios.OwnedBy(currentUser.RequireUserId()).ToListAsync();
-        portfolios.ApplyOrder(request);
+        await db.Portfolios.OwnedBy(currentUser.RequireUserId()).ApplyOrderAsync(request);
         await db.SaveChangesAsync();
     }
 
