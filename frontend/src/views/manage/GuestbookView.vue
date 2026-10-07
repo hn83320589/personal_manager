@@ -24,31 +24,13 @@
             @remove="remove(entry)"
           />
         </div>
-        <nav
-          v-if="result.totalPages > 1"
-          class="flex items-center justify-between gap-4"
-          aria-label="分頁"
-        >
-          <button
-            type="button"
-            class="btn btn-small"
-            :disabled="!result.hasPreviousPage"
-            @click="page--"
-          >
-            ← 較新
-          </button>
-          <span class="font-mono text-sm text-muted"
-            >{{ result.page }} / {{ result.totalPages }}</span
-          >
-          <button
-            type="button"
-            class="btn btn-small"
-            :disabled="!result.hasNextPage"
-            @click="page++"
-          >
-            較舊 →
-          </button>
-        </nav>
+        <PaginationNav
+          v-model:page="page"
+          :result="result"
+          prev-label="← 較新"
+          next-label="較舊 →"
+          small
+        />
       </template>
     </PageState>
   </AdminPage>
@@ -64,6 +46,7 @@ import AdminPage from '@/components/manage/AdminPage.vue'
 import GuestbookEntryCard from '@/components/manage/GuestbookEntryCard.vue'
 import SegmentedControl from '@/components/manage/SegmentedControl.vue'
 import PageState from '@/components/public/PageState.vue'
+import PaginationNav from '@/components/public/PaginationNav.vue'
 
 type Entry = Schemas['GuestbookEntryDto']
 

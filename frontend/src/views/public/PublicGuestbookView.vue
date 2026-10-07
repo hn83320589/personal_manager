@@ -18,11 +18,13 @@
             </div>
           </li>
         </ol>
-        <nav v-if="result.totalPages > 1" class="mt-8 flex items-center justify-between gap-4" aria-label="分頁">
-          <button type="button" class="btn" :disabled="!result.hasPreviousPage" @click="page--">← 較新</button>
-          <span class="font-mono text-sm text-muted">{{ result.page }} / {{ result.totalPages }}</span>
-          <button type="button" class="btn" :disabled="!result.hasNextPage" @click="page++">較舊 →</button>
-        </nav>
+        <PaginationNav
+          v-model:page="page"
+          class="mt-8"
+          :result="result"
+          prev-label="← 較新"
+          next-label="較舊 →"
+        />
       </template>
     </PageState>
 
@@ -39,6 +41,7 @@ import { formatDate } from '@/lib/format'
 import GuestbookForm from '@/components/public/GuestbookForm.vue'
 import PageHead from '@/components/public/PageHead.vue'
 import PageState from '@/components/public/PageState.vue'
+import PaginationNav from '@/components/public/PaginationNav.vue'
 import { usePublicContext } from '@/components/public/publicContext'
 
 const { username, profile } = usePublicContext()

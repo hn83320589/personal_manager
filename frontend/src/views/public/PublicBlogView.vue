@@ -10,15 +10,13 @@
       </p>
       <PostList v-else class="mt-6" :posts="result.items" :username="username" />
 
-      <nav v-if="result.totalPages > 1" class="mt-10 flex items-center justify-between gap-4" aria-label="分頁">
-        <button type="button" class="btn" :disabled="!result.hasPreviousPage" @click="page = result.page - 1">
-          ← 較新的文章
-        </button>
-        <span class="font-mono text-sm text-muted">{{ result.page }} / {{ result.totalPages }}</span>
-        <button type="button" class="btn" :disabled="!result.hasNextPage" @click="page = result.page + 1">
-          較舊的文章 →
-        </button>
-      </nav>
+      <PaginationNav
+        v-model:page="page"
+        class="mt-10"
+        :result="result"
+        prev-label="← 較新的文章"
+        next-label="較舊的文章 →"
+      />
     </template>
   </PageState>
 </template>
@@ -32,6 +30,7 @@ import { setPageSeo } from '@/composables/useSeo'
 import FilterChips from '@/components/public/FilterChips.vue'
 import PageHead from '@/components/public/PageHead.vue'
 import PageState from '@/components/public/PageState.vue'
+import PaginationNav from '@/components/public/PaginationNav.vue'
 import PostList from '@/components/public/PostList.vue'
 import { usePublicContext } from '@/components/public/publicContext'
 

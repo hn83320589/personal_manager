@@ -30,31 +30,13 @@
         <div v-else class="grid grid-cols-[repeat(auto-fill,minmax(11rem,1fr))] gap-3">
           <FileCard v-for="file in visible" :key="file.id" :file="file" @remove="remove(file.id)" />
         </div>
-        <nav
-          v-if="result.totalPages > 1"
-          class="flex items-center justify-between gap-4"
-          aria-label="分頁"
-        >
-          <button
-            type="button"
-            class="btn btn-small"
-            :disabled="!result.hasPreviousPage"
-            @click="page--"
-          >
-            ← 較新
-          </button>
-          <span class="font-mono text-sm text-muted"
-            >{{ result.page }} / {{ result.totalPages }}</span
-          >
-          <button
-            type="button"
-            class="btn btn-small"
-            :disabled="!result.hasNextPage"
-            @click="page++"
-          >
-            較舊 →
-          </button>
-        </nav>
+        <PaginationNav
+          v-model:page="page"
+          :result="result"
+          prev-label="← 較新"
+          next-label="較舊 →"
+          small
+        />
       </template>
     </PageState>
   </AdminPage>
@@ -71,6 +53,7 @@ import FileCard from '@/components/manage/FileCard.vue'
 import SegmentedControl from '@/components/manage/SegmentedControl.vue'
 import UploadDropzone from '@/components/manage/UploadDropzone.vue'
 import PageState from '@/components/public/PageState.vue'
+import PaginationNav from '@/components/public/PaginationNav.vue'
 
 type Filter = 'all' | 'images' | 'documents'
 

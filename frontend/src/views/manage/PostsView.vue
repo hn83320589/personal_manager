@@ -64,31 +64,13 @@
             <DeleteButton :item-name="post.title" @confirm="remove(post.id)" />
           </li>
         </ul>
-        <nav
-          v-if="result.totalPages > 1"
-          class="flex items-center justify-between gap-4"
-          aria-label="分頁"
-        >
-          <button
-            type="button"
-            class="btn btn-small"
-            :disabled="!result.hasPreviousPage"
-            @click="page--"
-          >
-            ← 上一頁
-          </button>
-          <span class="font-mono text-sm text-muted"
-            >{{ result.page }} / {{ result.totalPages }}</span
-          >
-          <button
-            type="button"
-            class="btn btn-small"
-            :disabled="!result.hasNextPage"
-            @click="page++"
-          >
-            下一頁 →
-          </button>
-        </nav>
+        <PaginationNav
+          v-model:page="page"
+          :result="result"
+          prev-label="← 上一頁"
+          next-label="下一頁 →"
+          small
+        />
       </template>
     </PageState>
   </AdminPage>
@@ -106,6 +88,7 @@ import AdminPage from '@/components/manage/AdminPage.vue'
 import DeleteButton from '@/components/manage/DeleteButton.vue'
 import SegmentedControl from '@/components/manage/SegmentedControl.vue'
 import PageState from '@/components/public/PageState.vue'
+import PaginationNav from '@/components/public/PaginationNav.vue'
 
 type Summary = Schemas['MyPostSummaryDto']
 type Filter = 'all' | 'Draft' | 'Published'
