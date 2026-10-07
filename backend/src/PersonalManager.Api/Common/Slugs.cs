@@ -9,8 +9,6 @@ public static partial class Slugs
     public const string Pattern = "^[a-z0-9]+(?:-[a-z0-9]+)*$";
     private const int MaxLength = 80;
 
-    public static bool IsValid(string slug) => ValidSlug().IsMatch(slug);
-
     /// <summary>由標題中的英數字組成；標題沒有英數字（例如全中文）時產生「前綴-隨機字元」。</summary>
     public static string FromTitle(string title, string fallbackPrefix = "post")
     {
@@ -38,9 +36,6 @@ public static partial class Slugs
                 chars[i] = alphabet[RandomNumberGenerator.GetInt32(alphabet.Length)];
         });
     }
-
-    [GeneratedRegex(Pattern)]
-    private static partial Regex ValidSlug();
 
     [GeneratedRegex("[^a-z0-9]+")]
     private static partial Regex NonSlugCharacters();

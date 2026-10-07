@@ -39,8 +39,6 @@ public static class FileInspector
         [".zip"] = new(FileKind.Archive, "application/zip", Signature.Zip),
     };
 
-    public static IReadOnlyCollection<string> AllowedExtensions => ByExtension.Keys;
-
     public static FileInspection Inspect(string fileName, ReadOnlySpan<byte> header)
     {
         var extension = Path.GetExtension(fileName);
