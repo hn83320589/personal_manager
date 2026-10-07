@@ -29,11 +29,13 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, watch } from 'vue'
+import { onBeforeUnmount } from 'vue'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
+import { useToastStore } from '@/stores/toast'
+import { editLink, editorHtml, syncEditorContent } from './editorCommands'
 
 const props = withDefaults(
   defineProps<{ modelValue: string; label: string; placeholder?: string }>(),
@@ -42,6 +44,7 @@ const props = withDefaults(
   },
 )
 const emit = defineEmits<{ 'update:modelValue': [html: string] }>()
+const toasts = useToastStore()
 
 const editor = useEditor({
   content: props.modelValue,
@@ -59,30 +62,18 @@ const editor = useEditor({
       class: 'min-h-24 outline-none',
     },
   },
-  onUpdate: ({ editor }) => emit('update:modelValue', editor.isEmpty ? '' : editor.getHTML()),
+  onUpdate: ({ editor }) => emit('update:modelValue', editorHtml(editor)),
 })
 
-// 外部換成另一份內容時（例如切換作品）才同步，避免打字時游標跳動
-watch(
+syncEditorContent(
+  () => editor.value,
   () => props.modelValue,
-  (value) => {
-    const current = editor.value
-    if (current && value !== (current.isEmpty ? '' : current.getHTML()))
-      current.commands.setContent(value, false)
-  },
 )
 
 onBeforeUnmount(() => editor.value?.destroy())
 
 function setLink() {
-  const current = editor.value
-  if (!current) return
-  const previous = current.getAttributes('link').href as string | undefined
-  const url = window.prompt('連結網址（留空則移除連結）', previous ?? 'https://')
-  if (url === null) return
-  if (!url.trim()) current.chain().focus().unsetLink().run()
-  else if (/^https?:\/\//i.test(url.trim()))
-    current.chain().focus().setLink({ href: url.trim() }).run()
+  if (editor.value) editLink(editor.value, toasts.error)
 }
 
 const tools = [

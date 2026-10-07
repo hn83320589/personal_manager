@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import type { Editor } from '@tiptap/core'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
@@ -68,6 +68,7 @@ import { imageAccept } from '@/lib/fileTypes'
 import { lowlight } from '@/lib/highlight'
 import { countWords, readingMinutes } from '@/lib/readingTime'
 import { useToastStore } from '@/stores/toast'
+import { editLink, editorHtml, syncEditorContent } from '../editorCommands'
 import { Embed } from './extensions/Embed'
 import { Figure } from './extensions/Figure'
 import { SlashCommand } from './extensions/SlashCommand'
@@ -112,18 +113,13 @@ const editor = useEditor({
   onCreate: ({ editor }) => (text.value = editor.getText()),
   onUpdate: ({ editor }) => {
     text.value = editor.getText()
-    emit('update:modelValue', editor.isEmpty ? '' : editor.getHTML())
+    emit('update:modelValue', editorHtml(editor))
   },
 })
 
-// 載入另一篇文章時同步內容；自己打字觸發的更新不重設，避免游標跳動
-watch(
+syncEditorContent(
+  () => editor.value,
   () => props.modelValue,
-  (value) => {
-    const current = editor.value
-    if (current && value !== (current.isEmpty ? '' : current.getHTML()))
-      current.commands.setContent(value, false)
-  },
 )
 onBeforeUnmount(() => editor.value?.destroy())
 
@@ -180,15 +176,7 @@ function insertCode(target: Editor | null = editor.value ?? null) {
 }
 
 function setLink() {
-  const current = editor.value
-  if (!current) return
-  const previous = current.getAttributes('link').href as string | undefined
-  const url = window.prompt('連結網址（留空則移除連結）', previous ?? 'https://')
-  if (url === null) return
-  if (!url.trim()) current.chain().focus().unsetLink().run()
-  else if (/^(https?:|mailto:)/i.test(url.trim()))
-    current.chain().focus().setLink({ href: url.trim() }).run()
-  else toasts.error('連結需為 http、https 或 mailto 開頭')
+  if (editor.value) editLink(editor.value, toasts.error)
 }
 
 interface Tool {
