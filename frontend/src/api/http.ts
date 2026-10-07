@@ -123,8 +123,6 @@ export function createHttpClient({
   }
 }
 
-export type HttpClient = ReturnType<typeof createHttpClient>
-
 /** 登入、refresh 等請求本身回 401 代表帳密或 cookie 無效，不能再用 refresh 處理。 */
 function isAuthRequest(config: InternalAxiosRequestConfig) {
   return config.url?.startsWith('/auth/') ?? false

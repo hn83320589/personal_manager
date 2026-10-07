@@ -105,7 +105,7 @@ const router = createRouter({
       ],
     },
 
-    // 管理後台（新版）：AdminShell 提供側欄；尚未重寫的頁面仍是下方各自獨立的舊路由
+    // 管理後台：所有頁面都是 AdminShell 的子路由，AdminShell 提供側欄
     {
       path: '/admin',
       component: () => import('../views/manage/AdminShell.vue'),

@@ -26,11 +26,8 @@ export const publicApi = {
   contactMethods: (username: string) =>
     http.get<Schemas['PublicContactMethodDto'][]>(`${user(username)}/contact-methods`),
 
-  portfolios: (username: string, filter: { category?: string; tag?: string } = {}) =>
-    http.get<Schemas['PortfolioCardDto'][]>(`${user(username)}/portfolios`, filter),
-
-  portfolioFacets: (username: string) =>
-    http.get<Schemas['PortfolioFacetsDto']>(`${user(username)}/portfolios/facets`),
+  portfolios: (username: string) =>
+    http.get<Schemas['PortfolioCardDto'][]>(`${user(username)}/portfolios`),
 
   portfolio: (username: string, slug: string) =>
     http.get<Schemas['PublicPortfolioDto']>(

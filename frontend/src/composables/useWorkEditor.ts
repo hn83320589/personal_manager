@@ -3,8 +3,6 @@ import { portfoliosApi } from '@/api/portfolios'
 import { toEditable, toRequest } from '@/lib/workDocument'
 import { useAutosave } from './useAutosave'
 
-export type { SaveStatus } from './useAutosave'
-
 /** 作品編輯器：載入作品並自動儲存整份作品（見 useAutosave）。 */
 export function useWorkEditor(id: Ref<number>, options: { delay?: number } = {}) {
   const { doc, ...rest } = useAutosave({

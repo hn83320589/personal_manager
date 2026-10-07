@@ -10,14 +10,7 @@ const backendProxy = {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    vue({
-      script: {
-        defineModel: true,
-        propsDestructure: true,
-      },
-    }),
-  ],
+  plugins: [vue()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -34,8 +27,6 @@ export default defineConfig({
         },
       },
     },
-    sourcemap: false,
-    cssCodeSplit: true,
     chunkSizeWarningLimit: 1000,
   },
   server: {
@@ -44,19 +35,12 @@ export default defineConfig({
     hmr: false,
     proxy: backendProxy,
   },
-  // 預覽建置結果（E2E 在 CI 使用）時同樣轉送
+  // 預覽建置結果（npm run preview、CI=1 的 E2E）時同樣轉送
   preview: {
     port: 4173,
     proxy: backendProxy,
   },
   optimizeDeps: {
-    include: [
-      'vue',
-      'vue-router',
-      'pinia',
-      'axios',
-      '@heroicons/vue/24/outline',
-      '@heroicons/vue/24/solid',
-    ],
+    include: ['vue', 'vue-router', 'pinia', 'axios', '@heroicons/vue/24/outline'],
   },
 })

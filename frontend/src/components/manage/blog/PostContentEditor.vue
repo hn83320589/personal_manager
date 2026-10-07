@@ -60,7 +60,6 @@ import Link from '@tiptap/extension-link'
 import Underline from '@tiptap/extension-underline'
 import Image from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
-import CharacterCount from '@tiptap/extension-character-count'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { filesApi } from '@/api/files'
 import { errorMessage } from '@/composables/useAsyncAction'
@@ -95,7 +94,6 @@ const editor = useEditor({
     Figure,
     Embed,
     CodeBlockLowlight.configure({ lowlight }),
-    CharacterCount,
     Placeholder.configure({ placeholder: '開始寫作…輸入 / 可插入圖片、影片、程式碼等' }),
     SlashCommand.configure({
       actions: { insertImage: pickImages, insertEmbed: askEmbed, insertCode: insertCode },

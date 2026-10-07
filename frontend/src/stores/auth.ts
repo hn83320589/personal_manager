@@ -22,7 +22,6 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => user.value !== null && accessToken.value !== null)
   const isAdmin = computed(() => user.value?.role === 'Admin')
   const userDisplayName = computed(() => user.value?.fullName || user.value?.username || '')
-  const userRole = computed(() => user.value?.role ?? '')
 
   function startSession(session: Schemas['AccessTokenDto']) {
     accessToken.value = session.accessToken
@@ -114,7 +113,6 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     isAdmin,
     userDisplayName,
-    userRole,
     login,
     register,
     logout,
