@@ -7,7 +7,8 @@ type AccessToken = Schemas['AccessTokenDto']
 export const authApi = {
   login: (body: Schemas['LoginRequest']) => http.post<AccessToken>('/auth/login', body),
   register: (body: Schemas['RegisterRequest']) => http.post<AccessToken>('/auth/register', body),
-  refresh: () => http.post<AccessToken>('/auth/refresh'),
+  /** 沒有 refresh cookie（從未登入或已登出）時伺服器回 204，結果為 undefined。 */
+  refresh: () => http.post<AccessToken | undefined>('/auth/refresh'),
   logout: () => http.post('/auth/logout'),
   forgotPassword: (body: Schemas['ForgotPasswordRequest']) =>
     http.post('/auth/forgot-password', body),

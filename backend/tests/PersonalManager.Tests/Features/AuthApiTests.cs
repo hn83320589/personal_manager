@@ -128,9 +128,20 @@ public partial class AuthApiTests(ApiFactory factory) : IClassFixture<ApiFactory
     }
 
     [Fact]
-    public async Task Refresh_WithoutCookie_IsUnauthorized()
+    public async Task Refresh_WithoutCookie_ReturnsNoContentBecauseNobodyIsSignedIn()
     {
         var response = await Refresh(Browser());
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Refresh_WithUnknownCookie_IsUnauthorized()
+    {
+        var browser = Browser();
+        browser.DefaultRequestHeaders.Add("Cookie", $"{CookieName}=not-a-real-token");
+
+        var response = await Refresh(browser);
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
@@ -187,14 +198,19 @@ public partial class AuthApiTests(ApiFactory factory) : IClassFixture<ApiFactory
     [Fact]
     public async Task Logout_RevokesRefreshTokenAndClearsCookie()
     {
-        var (browser, _) = await RegisteredBrowser();
+        var browser = Browser();
+        var token = RefreshTokenValue(await Register(browser, NewUsername()));
 
         var logout = await browser.PostAsync("/api/auth/logout", null);
         var refreshAfterLogout = await Refresh(browser);
+        var replay = Browser();
+        replay.DefaultRequestHeaders.Add("Cookie", $"{CookieName}={token}");
+        var replayedToken = await Refresh(replay);
 
         Assert.Equal(HttpStatusCode.OK, logout.StatusCode);
         Assert.Contains("expires=thu, 01 jan 1970", RefreshCookieHeader(logout).ToLowerInvariant());
-        Assert.Equal(HttpStatusCode.Unauthorized, refreshAfterLogout.StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, refreshAfterLogout.StatusCode);   // cookie 已刪除
+        Assert.Equal(HttpStatusCode.Unauthorized, replayedToken.StatusCode);     // token 本身也已撤銷
     }
 
     // ---------- register ----------

@@ -35,6 +35,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function refreshAccessToken(): Promise<string> {
     const session = await authApi.refresh()
+    if (!session) throw new ApiError('請先登入', 401)
     startSession(session)
     return session.accessToken
   }
@@ -88,7 +89,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  /** App 啟動時呼叫；沒有有效的 refresh cookie 就維持登出，不視為錯誤。多次呼叫只會 refresh 一次。 */
+  /** App 啟動時呼叫；沒有 refresh cookie（訪客，伺服器回 204）或 cookie 已失效都維持登出，不視為錯誤。多次呼叫只會 refresh 一次。 */
   function restoreSession(): Promise<void> {
     restoring ??= refreshAccessToken().then(
       () => undefined,

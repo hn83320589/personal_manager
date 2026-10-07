@@ -250,6 +250,13 @@ export interface paths {
                         "text/json": components["schemas"]["AccessTokenDtoApiResponse"];
                     };
                 };
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
             };
         };
         delete?: never;

@@ -25,11 +25,21 @@ public sealed class AuthController(AuthService auth) : ControllerBase
     public async Task<ActionResult<ApiResponse<AccessTokenDto>>> Register(RegisterRequest request) =>
         StatusCode(StatusCodes.Status201Created, ApiResponse<AccessTokenDto>.Ok(IssueCookie(await auth.RegisterAsync(request)), "註冊成功"));
 
+    /// <summary>
+    /// 以 refresh cookie 換發新的 access token。沒有 cookie 代表沒有登入（例如訪客開啟網站時的還原檢查），
+    /// 不是錯誤，回 204；cookie 無效、過期或已撤銷才回 401。
+    /// </summary>
     [AllowAnonymous]
     [HttpPost("refresh")]
     [EnableRateLimiting(RateLimitPolicies.Session)]
-    public async Task<ApiResponse<AccessTokenDto>> Refresh() =>
-        ApiResponse<AccessTokenDto>.Ok(IssueCookie(await auth.RefreshAsync(Request.Cookies[RefreshCookieName])));
+    [ProducesResponseType<ApiResponse<AccessTokenDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult<ApiResponse<AccessTokenDto>>> Refresh()
+    {
+        var token = Request.Cookies[RefreshCookieName];
+        if (string.IsNullOrEmpty(token)) return NoContent();
+        return ApiResponse<AccessTokenDto>.Ok(IssueCookie(await auth.RefreshAsync(token)));
+    }
 
     [AllowAnonymous]
     [HttpPost("logout")]

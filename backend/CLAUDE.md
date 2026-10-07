@@ -219,7 +219,7 @@ Admin__BootstrapEmails__0 = <第一位管理員的 Email>
 - **流量限制**（每個 IP 每分鐘）：`RateLimiting:AuthPermitsPerMinute`（登入、註冊、重設密碼，預設 10）、`RateLimiting:PublicWritePermitsPerMinute`（留言，預設 10）、`RateLimiting:SessionPermitsPerMinute`（refresh、logout，預設 60；前端每次開頁面都會 refresh，不能與登入共用額度）
 - **只在 Development 發生的行為**：示範資料 seeder（含 `admin/password123`）、Swagger、未設定時預設允許 `localhost:5173`／`4173` 的 CORS
 - **`Cors:AllowedOrigins`**：正式環境以 `Cors__AllowedOrigins__0` 等環境變數設定前端網址；`appsettings.json` 刻意留空陣列，避免依索引合併時殘留 localhost
-- **認證（ADR-010）**：登入後回應本文只有 access token（預設 15 分鐘）；refresh token 以 `pm_refresh` cookie 傳遞（httpOnly、Secure、SameSite=Strict、Path=/api/auth，預設 14 天），資料庫只存 SHA-256 雜湊。每次 refresh 輪換；已撤銷的 token 被重用時撤銷該使用者全部工作階段。前端與 API 必須同一個 site（相同的註冊網域），cookie 才會送出
+- **認證（ADR-010）**：登入後回應本文只有 access token（預設 15 分鐘）；refresh token 以 `pm_refresh` cookie 傳遞（httpOnly、Secure、SameSite=Strict、Path=/api/auth，預設 14 天），資料庫只存 SHA-256 雜湊。每次 refresh 輪換；已撤銷的 token 被重用時撤銷該使用者全部工作階段。沒有帶 cookie 的 refresh 回 204（訪客開啟網站時的還原檢查，不是錯誤），cookie 無效或過期才回 401。前端與 API 必須同一個 site（相同的註冊網域），cookie 才會送出
 - **`Jwt:SecretKey` 在啟動時驗證**（`Auth/JwtSetup.cs`）：需至少 32 字元且不可為占位字串。Development 未設定時會產生臨時金鑰（重啟後需重新登入）；其他環境未設定則拒絕啟動。程式碼中沒有預設金鑰
 - `DefaultConnection` 為空字串且 provider 為 Sqlite 時，使用 `App_Data/personal_manager.db`
 

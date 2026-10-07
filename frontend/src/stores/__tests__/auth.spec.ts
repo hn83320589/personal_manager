@@ -93,7 +93,23 @@ describe('auth store', () => {
     expect(store.isAuthenticated).toBe(true)
   })
 
-  it('stays signed out without an error when there is no session to restore', async () => {
+  it('stays signed out when the visitor has never signed in', async () => {
+    vi.mocked(authApi.refresh).mockResolvedValue(undefined) // 沒有 refresh cookie：204
+    const store = useAuthStore()
+
+    await store.restoreSession()
+
+    expect([store.isAuthenticated, store.error]).toEqual([false, null])
+  })
+
+  it('treats a missing session as expired when the http layer needs a new token', async () => {
+    vi.mocked(authApi.refresh).mockResolvedValue(undefined)
+    useAuthStore()
+
+    await expect(hooks().refreshAccessToken()).rejects.toBeInstanceOf(ApiError)
+  })
+
+  it('stays signed out without an error when the saved session is no longer valid', async () => {
     vi.mocked(authApi.refresh).mockRejectedValue(new ApiError('請重新登入', 401))
     const store = useAuthStore()
 
