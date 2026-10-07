@@ -4,7 +4,7 @@ import { useAsyncData } from './useAsyncData'
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
-export interface AutosaveOptions<Dto, Editable, Request> {
+interface AutosaveOptions<Dto, Editable, Request> {
   load: () => Promise<Dto>
   save: (request: Request) => Promise<Dto>
   toEditable: (dto: Dto) => Editable

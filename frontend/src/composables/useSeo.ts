@@ -1,6 +1,6 @@
 const APP_TITLE = 'Personal Manager'
 
-export interface SeoMeta {
+interface SeoMeta {
   title?: string
   description?: string
   ogImage?: string

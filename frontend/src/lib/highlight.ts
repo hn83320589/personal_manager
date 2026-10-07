@@ -20,7 +20,7 @@ const aliases: Record<string, string> = {
   py: 'python',
 }
 
-export function resolveLanguage(language: string): string | null {
+function resolveLanguage(language: string): string | null {
   const key = language.trim().toLowerCase()
   const name = aliases[key] ?? key
   return name && lowlight.registered(name) ? name : null

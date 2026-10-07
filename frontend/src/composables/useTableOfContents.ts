@@ -1,6 +1,6 @@
 import { nextTick, onUnmounted, ref, watch, type Ref } from 'vue'
 
-export interface TocItem {
+interface TocItem {
   id: string
   text: string
   level: 2 | 3

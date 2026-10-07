@@ -21,7 +21,7 @@ export interface EditablePost {
 const pad = (n: number) => String(n).padStart(2, '0')
 
 /** Date → datetime-local 的值（當地時間，精確到分鐘）。 */
-export function toLocalInput(date: Date): string {
+function toLocalInput(date: Date): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
 }
 

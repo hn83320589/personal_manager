@@ -1,7 +1,7 @@
 import { onUnmounted, watchEffect, type Ref } from 'vue'
 
 /** 可選的主題色；blue 為預設，不需要設定屬性（見 src/assets/tokens.css）。 */
-export const accentColors = ['blue', 'green', 'purple', 'rose', 'slate'] as const
+const accentColors = ['blue', 'green', 'purple', 'rose', 'slate'] as const
 export type AccentColor = (typeof accentColors)[number]
 
 function isAccent(value: string | null | undefined): value is AccentColor {

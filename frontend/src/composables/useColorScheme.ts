@@ -1,6 +1,6 @@
 import { readonly, ref } from 'vue'
 
-export type ColorScheme = 'system' | 'light' | 'dark'
+type ColorScheme = 'system' | 'light' | 'dark'
 
 /** 與 index.html 的預載腳本使用同一個 key。 */
 const storageKey = 'pm-color-scheme'
