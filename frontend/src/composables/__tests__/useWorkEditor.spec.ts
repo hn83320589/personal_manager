@@ -140,4 +140,33 @@ describe('useWorkEditor', () => {
 
     expect([editor.work.value!.slug, updateCalls().length]).toEqual(['work-2', 1])
   })
+
+  describe('statusText', () => {
+    it('says changes are saved automatically before anything happens', async () => {
+      const editor = await loaded()
+      expect(editor.statusText.value).toBe('修改會自動儲存')
+    })
+
+    it('mentions unsaved changes while waiting to save', async () => {
+      const editor = await loaded()
+      await edit(editor, '新標題')
+      expect(editor.statusText.value).toBe('有尚未儲存的修改')
+    })
+
+    it('shows when it was last saved', async () => {
+      vi.setSystemTime(new Date(2026, 9, 7, 9, 5))
+      const editor = await loaded()
+      await edit(editor, '新標題')
+      await vi.advanceTimersByTimeAsync(1000)
+      expect(editor.statusText.value).toBe('已自動儲存 09:05')
+    })
+
+    it('shows the reason when saving fails', async () => {
+      vi.mocked(portfoliosApi.update).mockRejectedValue(new ApiError('標題太長', 400))
+      const editor = await loaded()
+      await edit(editor, '新標題')
+      await vi.advanceTimersByTimeAsync(1000)
+      expect(editor.statusText.value).toBe('儲存失敗：標題太長')
+    })
+  })
 })

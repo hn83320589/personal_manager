@@ -62,14 +62,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted } from 'vue'
-import { onBeforeRouteLeave, useRoute } from 'vue-router'
+import { computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { portfoliosApi, tagsApi } from '@/api/portfolios'
 import { profileApi } from '@/api/profile'
 import { useAsyncData } from '@/composables/useAsyncData'
 import { setPageSeo } from '@/composables/useSeo'
+import { useUnsavedChangesGuard } from '@/composables/useUnsavedChangesGuard'
 import { useWorkEditor } from '@/composables/useWorkEditor'
-import { formatTime } from '@/lib/format'
 import { useAuthStore } from '@/stores/auth'
 import BlockList from '@/components/manage/works/BlockList.vue'
 import WorkInfoPanel from '@/components/manage/works/WorkInfoPanel.vue'
@@ -79,7 +79,7 @@ const route = useRoute()
 const auth = useAuthStore()
 const id = computed(() => Number(route.params.id))
 
-const { work, loading, loadError, notFound, reload, status, error, savedAt, dirty, flush } =
+const { work, loading, loadError, notFound, reload, status, statusText, dirty, flush } =
   useWorkEditor(id)
 const { data: profile } = useAsyncData(profileApi.get)
 const { data: tags } = useAsyncData(tagsApi.mine)
@@ -88,26 +88,6 @@ const categories = computed(() => [
   ...new Set((others.value ?? []).map((w) => w.category).filter(Boolean)),
 ])
 
-const statusText = computed(() => {
-  if (status.value === 'saving') return '儲存中…'
-  if (status.value === 'error') return `儲存失敗：${error.value}`
-  if (dirty.value) return '有尚未儲存的修改'
-  if (savedAt.value) return `已自動儲存 ${formatTime(savedAt.value)}`
-  return '修改會自動儲存'
-})
-
-// 離開頁面前先存；存不起來就提醒，避免遺失修改
-onBeforeRouteLeave(async () => {
-  await flush()
-  return !dirty.value || window.confirm('有修改尚未儲存成功，確定要離開嗎？')
-})
-
-function warnBeforeUnload(event: BeforeUnloadEvent) {
-  if (dirty.value) event.preventDefault()
-}
-onMounted(() => {
-  window.addEventListener('beforeunload', warnBeforeUnload)
-  setPageSeo({ title: '編輯作品' })
-})
-onBeforeUnmount(() => window.removeEventListener('beforeunload', warnBeforeUnload))
+useUnsavedChangesGuard(dirty, flush)
+onMounted(() => setPageSeo({ title: '編輯作品' }))
 </script>

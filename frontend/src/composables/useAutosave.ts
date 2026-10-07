@@ -1,6 +1,7 @@
 import { computed, ref, watch, type Ref, type WatchSource } from 'vue'
 import { errorMessage } from './useAsyncAction'
 import { useAsyncData } from './useAsyncData'
+import { formatTime } from '@/lib/format'
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
@@ -101,5 +102,14 @@ export function useAutosave<Dto, Editable extends object, Request>(
     await save()
   }
 
-  return { doc, loading, loadError, notFound, reload, status, error, savedAt, dirty, flush }
+  /** 顯示在編輯器上方的儲存狀態。 */
+  const statusText = computed(() => {
+    if (status.value === 'saving') return '儲存中…'
+    if (status.value === 'error') return `儲存失敗：${error.value}`
+    if (dirty.value) return '有尚未儲存的修改'
+    if (savedAt.value) return `已自動儲存 ${formatTime(savedAt.value)}`
+    return '修改會自動儲存'
+  })
+
+  return { doc, loading, loadError, notFound, reload, status, statusText, error, dirty, flush }
 }
