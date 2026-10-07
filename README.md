@@ -130,6 +130,7 @@ docs/       規格、教學、測試報告與指南
 | [技術教學](docs/technical-guide.md) | 使用的技術與方法、為什麼這樣設計，以及新增功能的實作練習 |
 | [開發指南](docs/development-guide.md) | 本地開發、測試、修改資料表與 API |
 | [測試報告](docs/test-report.md) | 最新一次完整測試的結果與發現 |
+| [優化計畫](docs/optimization-plan.md) | 可精簡的重複程式碼與待決定的清理項目 |
 | [系統規格書](docs/system-specification.md) | 功能範圍、架構、安全設計、架構決策紀錄（ADR） |
 | [資料庫設計](docs/database-design.md) | 資料表與關係 |
 | [部署指南](docs/deployment-guide.md) | 日後部署時必須滿足的條件 |

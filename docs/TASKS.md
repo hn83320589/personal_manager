@@ -109,6 +109,7 @@
 - [x] README 加上功能說明與畫面導覽（截圖在 `docs/images/screenshots/`）
 
 ### 技術債（重構期間發現）
+- [ ] 依 [`optimization-plan.md`](optimization-plan.md) 進行程式碼精簡（階段 1～3）
 - [x] 第一位管理員以 `Admin:BootstrapEmails` 建立
 - [x] 【Bug】部落格「特色圖片」從未被儲存 → 後端已新增 `CoverImageUrl`，新的部落格編輯器可上傳封面
 - [x] 移除 `WorkTask.Tags` 字串欄位
