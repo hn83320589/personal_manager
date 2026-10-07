@@ -68,7 +68,7 @@ npm run build          # 型別檢查 + 建置
 npx playwright test    # E2E：自動啟動後端與前端，使用暫存的 SQLite
 ```
 
-測試的寫法與原則見兩份 CLAUDE.md 的「測試原則」。
+測試的寫法與原則見根目錄 [`CLAUDE.md`](../CLAUDE.md) 的「測試原則」。
 
 ## 常見工作
 
@@ -100,10 +100,9 @@ npx playwright test    # E2E：自動啟動後端與前端，使用暫存的 SQL
 
    沒有更新 `openapi.json` 時，後端的 `OpenApiDocumentTests` 會失敗
 
-### 新增後台清單頁
+### 新增後台頁面或 API 呼叫
 
-參考 `frontend/src/views/manage/SkillsView.vue`：`useOwnedList` 提供清單與寫入，`ManageList` 顯示可排序的列，
-`SidePanel` 為編輯面板。
+見 [`frontend/CLAUDE.md`](../frontend/CLAUDE.md)「如何新增功能」；完整的前後端步驟範例見[技術教學](technical-guide.md#7-實作練習新增一個功能)。
 
 ## Git
 

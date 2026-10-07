@@ -2,15 +2,7 @@
 
 This file provides guidance to Claude Code when working with the backend codebase.
 
----
-
-## 給 AI 的指示
-
-每次任務完成時：
-1. 在主專案的 `docs/TASKS.md` 勾選對應項目的 checkbox
-2. 有新的技術債時，加入主專案 `docs/TASKS.md` 的「技術債」區塊
-3. 做了未預期的架構決策時，記錄到主專案的 `docs/system-specification.md` §12 架構決策紀錄（ADR），附上原因
-4. 回報更新了哪些檔案與區塊
+共通規則（給 AI 的指示、不可以動的東西、測試原則）見根目錄 [`CLAUDE.md`](../CLAUDE.md)。
 
 ---
 
@@ -79,34 +71,6 @@ HTTP 請求
 - **camelCase**：所有 JSON 欄位名稱使用 camelCase（`PropertyNamingPolicy.CamelCase`）
 - **Enum 為字串**：Enum 序列化為字串（如 `"Published"`、`"Expert"`）
 - 前端 TypeScript 介面與此完全對應
-
----
-
-## Constraints（不可以動的東西）
-
-通用限制（所有專案適用）：
-- 未告知不得引入新的 library
-- 不得修改未被要求的現有功能
-- 不得動資料庫 schema，除非任務明確要求
-
----
-
-## 學習現有程式碼的方式
-
-在開始任何新功能前：
-- 找 3 個類似的現有功能或元件作為參考
-- 確認常用的 pattern 和 utility
-- 使用專案已有的 library，不自行發明
-
----
-
-## 測試原則
-
-- 測試行為，不測實作細節
-- 一個 test case 一個 assertion（可能時）
-- test 名稱要能描述情境，看名字就知道在測什麼
-- 使用專案現有的 test utilities / helpers
-- 測試必須是 deterministic，禁止依賴時間或隨機值
 
 ---
 
@@ -279,7 +243,5 @@ Admin__BootstrapEmails__0 = <第一位管理員的 Email>
 
 ## 開發注意事項
 
-- **永遠不要使用 `--no-verify`** 繞過 commit hooks
-- **不要 disable 測試**，修復它
 - **commit 前先確認 `dotnet build` 通過**
 - **Model 異動後**需為兩種資料庫各新增一組 migration（指令見「注意事項」），並 commit `Migrations/` 下產生的檔案

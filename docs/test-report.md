@@ -138,20 +138,4 @@ Playwright 自動啟動後端（Development 環境、新的 SQLite 檔案與示�
 
 ## 9. 如何重現
 
-```bash
-# 後端
-cd backend
-dotnet test PersonalManager.sln
-cd src/PersonalManager.Api
-dotnet ef migrations has-pending-model-changes --context SqliteApplicationDbContext
-dotnet ef migrations has-pending-model-changes --context MySqlApplicationDbContext
-
-# 前端
-cd frontend
-npm run lint
-npm run format:check
-npx vitest run
-npm run build
-npm run api:types && git diff --exit-code src/api/schema.ts
-npx playwright test
-```
+執行 [`development-guide.md`](development-guide.md#測試與檢查)「測試與檢查」的所有指令；瀏覽器實測需同時啟動後端與前端。

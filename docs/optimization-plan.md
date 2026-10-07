@@ -39,19 +39,19 @@
 
 前端單元測試由 169 項增加到 188 項。
 
-### 階段 3：需要先決定
+### 階段 3：已決定並完成（2026-10-07）
 
-| # | 項目 | 需要決定的事 |
-| --- | --- | --- |
-| 3-1 | `ContactMethod.Icon` 欄位只有示範資料寫入，沒有任何地方讀取 | 移除需要兩組 migration（schema 變更） |
-| 3-2 | `ForbiddenException`、`ICurrentUser.IsAdmin` 沒有被使用 | 保留作為錯誤類型的完整詞彙，或移除 |
-| 3-3 | 後端 `GET …/portfolios/facets` 與 `?category`、`?tag` 篩選，前端目前改在用戶端篩選、沒有呼叫 | 保留 API（作品多時改回伺服器端篩選）或移除 |
-| 3-4 | `Services/`、`DTOs/` 兩個資料夾與「依功能分資料夾」的說法不一致（技術教學 3.1） | 移到 `Common/`／`Infrastructure/`，或調整文件說法 |
-| 3-5 | `docs/TASKS.md` 有約 150 行描述舊架構的已完成項目（舊路由、`services/`、JSON fallback、Zeabur） | 刪除（`CHANGELOG.md` 與 git 歷史已保存）或移到封存檔 |
-| 3-6 | 同樣的規則與指令重複出現在多份文件（三份 CLAUDE.md 的「給 AI 的指示」、測試原則；快速開始出現在 7 個檔案；測試數字出現在 3 個檔案） | 每類內容指定一份為主，其他改為連結 |
-| 3-7 | `playwright.config.ts` 的 `CI=1` 分支：CI 已移除，但可用來測建置後的前端 | 保留並改註解，或移除分支 |
-| 3-8 | `e2e/` 沒有被 `npm run build` 型別檢查 | 加入 `tsconfig.json` 的 references |
-| 3-9 | 截圖共 3.5 MB | 轉成 WebP 可縮小約一半 |
+| # | 項目 | 決定 | Commit |
+| --- | --- | --- | --- |
+| 3-1 | `ContactMethod.Icon` 欄位沒有任何地方讀取 | 移除；兩種資料庫各一組 migration，並補資料遷移測試 | `a2145ca` |
+| 3-2 | `ForbiddenException`、`ICurrentUser.IsAdmin` 沒有被使用 | 移除（角色檢查由 `[Authorize(Roles)]` 負責） | `dad948e` |
+| 3-3 | 後端作品分類統計 API 與篩選參數，前端目前沒呼叫 | **保留**：作品變多時改回伺服器端篩選 | — |
+| 3-4 | `Services/`、`DTOs/` 與「依功能分資料夾」的說法不一致 | 調整技術教學的說法，資料夾不動 | `80b04b0` |
+| 3-5 | `TASKS.md` 約 150 行描述舊架構 | 刪除，改為「待辦」＋「2026 重構紀錄」（276 行 → 130 行） | 本次文件 commit |
+| 3-6 | 同樣的內容重複出現在多份文件 | 共通原則只留在根目錄 `CLAUDE.md`；檢查清單只在開發指南；測試數量只在測試報告 | 本次文件 commit |
+| 3-7 | `playwright.config.ts` 的 `CI=1` 分支 | 保留，改為「提交前測建置後的前端」，兩種模式都用本機 Chrome | `697d406` |
+| 3-8 | `e2e/` 沒有被型別檢查 | 納入 `tsconfig.json` 的 references | `697d406` |
+| 3-9 | 截圖共 3.5 MB | **維持 PNG**：總大小可接受，文字較清晰 | — |
 
 ### 已知問題
 

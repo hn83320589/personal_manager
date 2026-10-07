@@ -2,46 +2,7 @@
 
 This file provides guidance to Claude Code when working with the frontend codebase.
 
----
-
-## 給 AI 的指示
-
-每次任務完成時：
-
-1. 在主專案的 `docs/TASKS.md` 勾選對應項目的 checkbox
-2. 有新的技術債時，加入主專案 `docs/TASKS.md` 的「技術債」區塊
-3. 做了未預期的架構決策時，記錄到主專案的 `docs/system-specification.md` §12 架構決策紀錄（ADR），附上原因
-4. 回報更新了哪些檔案與區塊
-
----
-
-## Constraints（不可以動的東西）
-
-通用限制（所有專案適用）：
-
-- 未告知不得引入新的 library
-- 不得修改未被要求的現有功能
-- 不得動資料庫 schema，除非任務明確要求
-
----
-
-## 學習現有程式碼的方式
-
-在開始任何新功能前：
-
-- 找 3 個類似的現有功能或元件作為參考
-- 確認常用的 pattern 和 utility
-- 使用專案已有的 library，不自行發明
-
----
-
-## 測試原則
-
-- 測試行為，不測實作細節
-- 一個 test case 一個 assertion（可能時）
-- test 名稱要能描述情境，看名字就知道在測什麼
-- 使用專案現有的 test utilities / helpers
-- 測試必須是 deterministic，禁止依賴時間或隨機值
+共通規則（給 AI 的指示、不可以動的東西、測試原則）見根目錄 [`CLAUDE.md`](../CLAUDE.md)。
 
 ---
 
@@ -196,18 +157,19 @@ src/
 ### 新增一個 API 呼叫
 
 1. 後端 API 有變動時：`backend` 執行 `UPDATE_OPENAPI=1 dotnet test --filter OpenApiDocument`，再到 `frontend` 執行 `npm run api:types`
-2. 在 `src/api/<資源>.ts` 新增函式，型別使用 `Schemas['XxxDto']`，不要手寫 DTO 介面：
+2. 清單型資源（可排序、`/api/me/<資源>` 加 `order`，例如技能、學歷）在 `src/api/collections.ts` 以 `ownedCollection<Dto, SaveRequest>('/me/<資源>')` 建立即可。
+   其他資源在 `src/api/<資源>.ts` 新增函式，型別使用 `Schemas['XxxDto']`，不要手寫 DTO 介面：
 
 ```typescript
 import { http } from './http'
 import type { Schemas } from './types'
 
-export const mySkillsApi = {
-  list: () => http.get<Schemas['SkillDto'][]>('/me/skills'),
-  create: (body: Schemas['SaveSkillRequest']) => http.post<Schemas['SkillDto']>('/me/skills', body),
-  update: (id: number, body: Schemas['SaveSkillRequest']) =>
-    http.put<Schemas['SkillDto']>(`/me/skills/${id}`, body),
-  remove: (id: number) => http.delete(`/me/skills/${id}`),
+export const todosApi = {
+  list: () => http.get<Schemas['TodoDto'][]>('/me/todos'),
+  create: (body: Schemas['SaveTodoRequest']) => http.post<Schemas['TodoDto']>('/me/todos', body),
+  update: (id: number, body: Schemas['SaveTodoRequest']) =>
+    http.put<Schemas['TodoDto']>(`/me/todos/${id}`, body),
+  remove: (id: number) => http.delete(`/me/todos/${id}`),
 }
 ```
 
