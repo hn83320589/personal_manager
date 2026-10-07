@@ -15,11 +15,6 @@ public sealed class NotFoundException(string message = "找不到指定的資料
     public override int StatusCode => StatusCodes.Status404NotFound;
 }
 
-public sealed class ForbiddenException(string message = "沒有權限執行這個操作") : AppException(message)
-{
-    public override int StatusCode => StatusCodes.Status403Forbidden;
-}
-
 public sealed class UnauthenticatedException(string message = "請先登入") : AppException(message)
 {
     public override int StatusCode => StatusCodes.Status401Unauthorized;

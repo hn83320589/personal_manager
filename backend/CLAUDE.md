@@ -129,7 +129,7 @@ backend/
 │   └── PipelineSetup.cs          # 資料庫初始化、middleware 順序
 │
 ├── Common/
-│   ├── AppExceptions.cs          # NotFound／Forbidden／Unauthenticated／Conflict／DomainValidation
+│   ├── AppExceptions.cs          # NotFound／Unauthenticated／Conflict／DomainValidation
 │   ├── CurrentUser.cs            # ICurrentUser：service 取得目前登入者
 │   ├── QueryExtensions.cs        # OwnedBy()、RequirePublicUserIdAsync()
 │   ├── Reordering.cs Paging.cs   # 排序、分頁

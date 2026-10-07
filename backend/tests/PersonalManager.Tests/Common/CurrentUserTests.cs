@@ -39,14 +39,4 @@ public class CurrentUserTests
         Assert.Null(user.UserId);
         Assert.Throws<UnauthenticatedException>(() => user.RequireUserId());
     }
-
-    [Fact]
-    public void AdminRoleClaim_MakesUserAdmin()
-    {
-        var admin = For(new Claim(ClaimTypes.NameIdentifier, "1"), new Claim(ClaimTypes.Role, "Admin"));
-        var member = For(new Claim(ClaimTypes.NameIdentifier, "2"), new Claim(ClaimTypes.Role, "User"));
-
-        Assert.True(admin.IsAdmin);
-        Assert.False(member.IsAdmin);
-    }
 }

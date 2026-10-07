@@ -8,8 +8,6 @@ public interface ICurrentUser
     /// <summary>未登入時為 null。</summary>
     int? UserId { get; }
 
-    bool IsAdmin { get; }
-
     /// <summary>取得登入者 ID；未登入時丟出 <see cref="UnauthenticatedException"/>。</summary>
     int RequireUserId();
 }
@@ -20,8 +18,6 @@ public sealed class HttpCurrentUser(IHttpContextAccessor accessor) : ICurrentUse
 
     public int? UserId =>
         int.TryParse(Principal?.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : null;
-
-    public bool IsAdmin => Principal?.IsInRole(Models.Roles.Admin) == true;
 
     public int RequireUserId() => UserId ?? throw new UnauthenticatedException();
 }

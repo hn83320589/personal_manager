@@ -169,7 +169,7 @@ src/PersonalManager.Api/
 1. **Controller** 只負責路由、授權屬性與 HTTP 狀態，業務邏輯交給 service
 2. **Service** 直接使用 `ApplicationDbContext`，以 `ICurrentUser` 取得登入者；屬於使用者的資料一律以 `OwnedBy(userId)` 查詢，查不到就是 404，不區分「不存在」與「不是你的」
 3. 回傳 DTO（`record`），不回傳實體
-4. 錯誤以 `AppException` 的子類別丟出（`NotFoundException`、`DomainValidationException`、`ConflictException`、`ForbiddenException`、`UnauthenticatedException`），由 `ErrorHandlingMiddleware` 轉為對應的狀態碼
+4. 錯誤以 `AppException` 的子類別丟出（`NotFoundException`、`DomainValidationException`、`ConflictException`、`UnauthenticatedException`）；角色不足的 403 由 `[Authorize(Roles = …)]` 產生，由 `ErrorHandlingMiddleware` 轉為對應的狀態碼
 
 ### 5.3 回應格式
 

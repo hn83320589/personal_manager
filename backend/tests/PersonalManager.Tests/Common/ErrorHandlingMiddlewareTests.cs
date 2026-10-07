@@ -23,7 +23,6 @@ public class ErrorHandlingMiddlewareTests
 
     [Theory]
     [InlineData(typeof(NotFoundException), 404)]
-    [InlineData(typeof(ForbiddenException), 403)]
     [InlineData(typeof(UnauthenticatedException), 401)]
     [InlineData(typeof(ConflictException), 409)]
     public async Task AppExceptions_MapToTheirStatusCodeAndMessage(Type exceptionType, int expectedStatus)
