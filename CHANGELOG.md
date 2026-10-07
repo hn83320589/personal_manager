@@ -32,6 +32,12 @@
 - 新增技術教學（`docs/technical-guide.md`）、測試報告（`docs/test-report.md`）與 README 畫面導覽（`docs/images/screenshots/`）
 - 移除 GitHub Actions CI（個人作業，直接推到 main）；原本由 CI 執行的檢查改列在開發指南，提交前於本機執行
 
+### 清理與精簡（2026-10-07，見 `docs/optimization-plan.md`）
+- 移除未使用的套件、程式碼、範本殘留設定，以及沒有使用的 `ContactMethod.Icon` 欄位（新增 migration）
+- 前端抽出共用的分頁元件、自動儲存狀態與離開提醒、搜尋防抖、時間格式；兩個富文本編輯器共用連結處理，修正作品編輯器不接受 mailto 連結
+- 頁面標題統一由路由設定；E2E 的 `CI=1` 模式可在本機測建置後的前端，`e2e/` 納入型別檢查
+- 文件去除重複內容，`TASKS.md` 只保留待辦與重構紀錄
+
 ## 2026-03
 
 - 密碼重設（Email 連結）、Refresh Token、時間紀錄 API、文章瀏覽數與分頁搜尋
