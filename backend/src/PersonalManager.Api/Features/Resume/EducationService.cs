@@ -5,7 +5,7 @@ using PersonalManager.Api.Models;
 
 namespace PersonalManager.Api.Features.Resume;
 
-public sealed class EducationService(ApplicationDbContext db, ICurrentUser currentUser)
+public sealed class EducationService(ApplicationDbContext db, ICurrentUser currentUser, TimeProvider clock)
 {
     public async Task<List<PublicEducationDto>> GetPublicAsync(string username)
     {
@@ -37,7 +37,7 @@ public sealed class EducationService(ApplicationDbContext db, ICurrentUser curre
     {
         var education = await FindMineAsync(id);
         Apply(education, request);
-        education.UpdatedAt = DateTime.UtcNow;
+        education.UpdatedAt = clock.GetUtcNow().UtcDateTime;
         await db.SaveChangesAsync();
         return ToDto(education);
     }

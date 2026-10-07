@@ -5,7 +5,7 @@ using PersonalManager.Api.Models;
 
 namespace PersonalManager.Api.Features.Contacts;
 
-public sealed class ContactMethodService(ApplicationDbContext db, ICurrentUser currentUser)
+public sealed class ContactMethodService(ApplicationDbContext db, ICurrentUser currentUser, TimeProvider clock)
 {
     public async Task<List<PublicContactMethodDto>> GetPublicAsync(string username)
     {
@@ -37,7 +37,7 @@ public sealed class ContactMethodService(ApplicationDbContext db, ICurrentUser c
     {
         var contact = await FindMineAsync(id);
         Apply(contact, request);
-        contact.UpdatedAt = DateTime.UtcNow;
+        contact.UpdatedAt = clock.GetUtcNow().UtcDateTime;
         await db.SaveChangesAsync();
         return ToDto(contact);
     }

@@ -6,7 +6,7 @@ using PersonalManager.Api.Models;
 namespace PersonalManager.Api.Features.WorkTracking;
 
 /// <summary>工作追蹤用的專案（與作品集無關）。刪除專案時其下任務保留、改為未分類。</summary>
-public sealed class ProjectService(ApplicationDbContext db, ICurrentUser currentUser)
+public sealed class ProjectService(ApplicationDbContext db, ICurrentUser currentUser, TimeProvider clock)
 {
     public Task<List<ProjectDto>> GetMineAsync() =>
         db.Projects.AsNoTracking().OwnedBy(currentUser.RequireUserId())
@@ -28,7 +28,7 @@ public sealed class ProjectService(ApplicationDbContext db, ICurrentUser current
     {
         var project = await FindMineAsync(id);
         Apply(project, request);
-        project.UpdatedAt = DateTime.UtcNow;
+        project.UpdatedAt = clock.GetUtcNow().UtcDateTime;
         await db.SaveChangesAsync();
         return ToDto(project);
     }

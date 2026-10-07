@@ -5,7 +5,7 @@ using PersonalManager.Api.Models;
 
 namespace PersonalManager.Api.Features.Calendar;
 
-public sealed class CalendarService(ApplicationDbContext db, ICurrentUser currentUser)
+public sealed class CalendarService(ApplicationDbContext db, ICurrentUser currentUser, TimeProvider clock)
 {
     /// <summary>一次查詢的最長區間，避免一次展開、回傳過多資料。</summary>
     public static readonly TimeSpan MaxRange = TimeSpan.FromDays(366);
@@ -38,7 +38,7 @@ public sealed class CalendarService(ApplicationDbContext db, ICurrentUser curren
     {
         var calendarEvent = await FindMineAsync(id);
         Apply(calendarEvent, request);
-        calendarEvent.UpdatedAt = DateTime.UtcNow;
+        calendarEvent.UpdatedAt = clock.GetUtcNow().UtcDateTime;
         await db.SaveChangesAsync();
         return ToDto(calendarEvent);
     }

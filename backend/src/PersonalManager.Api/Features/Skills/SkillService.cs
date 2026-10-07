@@ -5,7 +5,7 @@ using PersonalManager.Api.Models;
 
 namespace PersonalManager.Api.Features.Skills;
 
-public sealed class SkillService(ApplicationDbContext db, ICurrentUser currentUser)
+public sealed class SkillService(ApplicationDbContext db, ICurrentUser currentUser, TimeProvider clock)
 {
     public async Task<List<PublicSkillDto>> GetPublicAsync(string username)
     {
@@ -39,7 +39,7 @@ public sealed class SkillService(ApplicationDbContext db, ICurrentUser currentUs
     {
         var skill = await FindMineAsync(id);
         Apply(skill, request);
-        skill.UpdatedAt = DateTime.UtcNow;
+        skill.UpdatedAt = clock.GetUtcNow().UtcDateTime;
         await db.SaveChangesAsync();
         return ToDto(skill);
     }

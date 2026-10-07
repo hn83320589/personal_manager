@@ -5,7 +5,7 @@ using PersonalManager.Api.Models;
 
 namespace PersonalManager.Api.Features.Resume;
 
-public sealed class WorkExperienceService(ApplicationDbContext db, ICurrentUser currentUser)
+public sealed class WorkExperienceService(ApplicationDbContext db, ICurrentUser currentUser, TimeProvider clock)
 {
     public async Task<List<PublicWorkExperienceDto>> GetPublicAsync(string username)
     {
@@ -40,7 +40,7 @@ public sealed class WorkExperienceService(ApplicationDbContext db, ICurrentUser 
     {
         var experience = await FindMineAsync(id);
         Apply(experience, request);
-        experience.UpdatedAt = DateTime.UtcNow;
+        experience.UpdatedAt = clock.GetUtcNow().UtcDateTime;
         await db.SaveChangesAsync();
         return ToDto(experience);
     }

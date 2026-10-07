@@ -6,7 +6,7 @@ using PersonalManager.Api.Models;
 
 namespace PersonalManager.Api.Features.Profiles;
 
-public sealed class ProfileService(ApplicationDbContext db, ICurrentUser currentUser)
+public sealed class ProfileService(ApplicationDbContext db, ICurrentUser currentUser, TimeProvider clock)
 {
     public const int MaxPageSize = 100;
 
@@ -59,7 +59,7 @@ public sealed class ProfileService(ApplicationDbContext db, ICurrentUser current
         }
 
         user.FullName = request.FullName.Trim();
-        user.UpdatedAt = DateTime.UtcNow;
+        user.UpdatedAt = clock.GetUtcNow().UtcDateTime;
         profile.Title = request.Title?.Trim() ?? "";
         profile.Summary = request.Summary?.Trim() ?? "";
         profile.Description = request.Description ?? "";
@@ -72,7 +72,7 @@ public sealed class ProfileService(ApplicationDbContext db, ICurrentUser current
         profile.CardStyle = request.CardStyle;
         profile.CardRatio = request.CardRatio;
         profile.SkillDisplay = request.SkillDisplay;
-        profile.UpdatedAt = DateTime.UtcNow;
+        profile.UpdatedAt = clock.GetUtcNow().UtcDateTime;
 
         await db.SaveChangesAsync();
         return ToDto(user, profile);

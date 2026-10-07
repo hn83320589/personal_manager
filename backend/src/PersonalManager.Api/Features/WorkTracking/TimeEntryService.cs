@@ -5,7 +5,7 @@ using PersonalManager.Api.Models;
 
 namespace PersonalManager.Api.Features.WorkTracking;
 
-public sealed class TimeEntryService(ApplicationDbContext db, ICurrentUser currentUser)
+public sealed class TimeEntryService(ApplicationDbContext db, ICurrentUser currentUser, TimeProvider clock)
 {
     public async Task<List<TimeEntryDto>> GetMineAsync(DateOnly? from, DateOnly? to, int? workTaskId)
     {
@@ -51,7 +51,7 @@ public sealed class TimeEntryService(ApplicationDbContext db, ICurrentUser curre
     {
         var entry = await FindMineAsync(id);
         await ApplyAsync(entry, request);
-        entry.UpdatedAt = DateTime.UtcNow;
+        entry.UpdatedAt = clock.GetUtcNow().UtcDateTime;
         await db.SaveChangesAsync();
         return await LoadAsync(entry.Id);
     }
