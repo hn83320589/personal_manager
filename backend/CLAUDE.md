@@ -119,7 +119,7 @@ backend/
 └── src/PersonalManager.Api/      # 以下皆位於此目錄
 ├── Program.cs                    # 進入點：只串接 Setup/ 裡的註冊與 pipeline
 ├── appsettings.json              # 設定（包含 DB 連線字串與 JWT）
-├── appsettings.Development.json  # 開發環境補充設定
+├── appsettings.Development.json  # 選用的本機設定（不提交）
 ├── PersonalManager.Api.csproj    # 專案檔
 │
 ├── Setup/                        # 服務註冊與 middleware pipeline（依關注點分檔）
@@ -165,7 +165,7 @@ backend/
 │   ├── FileStorageProviders.cs   # 檔案儲存（本地 / S3 相容 Object Storage）
 │   └── DbHealthCheck.cs          # DB 連線健康檢查
 │
-└── Settings/                     # EmailSettings、FileStorageSettings
+└── Settings/                     # AdminSettings、EmailSettings、FileStorageSettings
 ```
 
 ---
@@ -282,4 +282,4 @@ Admin__BootstrapEmails__0 = <第一位管理員的 Email>
 - **永遠不要使用 `--no-verify`** 繞過 commit hooks
 - **不要 disable 測試**，修復它
 - **commit 前先確認 `dotnet build` 通過**
-- **Model 異動後**需新增 migration（`dotnet ef migrations add <Name>`），並 commit `Migrations/` 下產生的檔案
+- **Model 異動後**需為兩種資料庫各新增一組 migration（指令見「注意事項」），並 commit `Migrations/` 下產生的檔案

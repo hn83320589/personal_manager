@@ -74,7 +74,7 @@ npm run lint          # ESLint
 npm run format        # Prettier 格式化；format:check 只檢查
 npm run api:types     # 由 ../backend/openapi.json 產生 src/api/schema.ts（API 變更後執行）
 npx vitest run        # 單元測試
-npx playwright test   # E2E（會自動啟動後端與前端，首次需 npx playwright install chromium）
+npx playwright test   # E2E（會自動啟動後端與前端，使用本機安裝的 Google Chrome）
 ```
 
 E2E（`e2e/`）以真實後端執行：`playwright.config.ts` 啟動 Development 環境的後端（示範資料，帳號 `admin`／`password123`）
@@ -98,7 +98,7 @@ E2E（`e2e/`）以真實後端執行：`playwright.config.ts` 啟動 Development
 | 建置     | Vite 7                                     |
 | 測試     | Vitest（單元）+ Playwright（E2E）          |
 
-### 資料流（新架構，Phase 4 起）
+### 資料流
 
 ```
 View（.vue）
@@ -136,7 +136,8 @@ src/
 ├── api/                              # 後端 API（型別由 schema.ts 產生）
 │   ├── http.ts                       # HTTP 層（token、refresh、重試、上傳）
 │   ├── public.ts                     # /api/public/users/{username}/…
-│   ├── auth.ts profile.ts files.ts posts.ts portfolios.ts collections.ts
+│   ├── auth.ts profile.ts files.ts posts.ts portfolios.ts guestbook.ts admin.ts tools.ts
+│   ├── collections.ts                # 清單型資源（學歷、技能…）共用的 CRUD 與排序
 │   └── schema.ts / types.ts          # 產生的型別與 Schemas 別名
 ├── lib/                              # 純函式（皆有單元測試）
 │   ├── sanitizeHtml.ts highlight.ts embeds.ts format.ts readingTime.ts fileTypes.ts

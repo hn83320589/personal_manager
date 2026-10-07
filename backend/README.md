@@ -13,7 +13,7 @@ dotnet run --project src/PersonalManager.Api
 - Swagger：`http://localhost:5037/swagger`（僅 Development）
 - 預設使用 SQLite（`src/PersonalManager.Api/App_Data/`），首次啟動自動套用 migration 並建立示範資料（帳號 `admin` / `password123`）
 
-本機開發需要一份 `src/PersonalManager.Api/appsettings.Development.json`（不提交），至少設定 JWT 金鑰。範例見 [`CLAUDE.md`](CLAUDE.md#設定檔架構)。
+本機開發不需要額外設定：Development 環境沒有 JWT 金鑰時會產生臨時金鑰。要覆寫設定時可建立 `src/PersonalManager.Api/appsettings.Development.json`（不提交），範例見 [`CLAUDE.md`](CLAUDE.md#設定檔架構)。
 
 ## 測試
 
