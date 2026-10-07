@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace PersonalManager.Api.Models;
 
@@ -7,7 +6,6 @@ namespace PersonalManager.Api.Models;
 /// 文章狀態。「排程」不是獨立狀態：<see cref="Published"/> 且 <see cref="BlogPost.PublishedAt"/> 在未來即為排程，
 /// 時間到了自動出現在公開頁面。
 /// </summary>
-[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum BlogPostStatus
 {
     Draft,

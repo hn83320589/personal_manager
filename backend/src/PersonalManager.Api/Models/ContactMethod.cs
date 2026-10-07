@@ -1,9 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace PersonalManager.Api.Models;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ContactType
 {
     Email,

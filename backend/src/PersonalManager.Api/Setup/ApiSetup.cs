@@ -53,7 +53,6 @@ public static class ApiSetup
 
     public static IServiceCollection AddApiDocumentation(this IServiceCollection services)
     {
-        services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Personal Manager API", Version = "v1" });
