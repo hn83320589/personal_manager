@@ -2,8 +2,9 @@
 .DS_Store
 Thumbs.db
 
-# IDE 設定檔
+# IDE 設定檔（frontend/.vscode/extensions.json 由 frontend/.gitignore 放行）
 .vscode/
+!frontend/.vscode/
 .idea/
 
 # 本機專用的 AI 工具設定與暫存
@@ -18,7 +19,6 @@ Thumbs.db
 # 環境設定檔 (包含敏感資訊)
 .env
 .env.local
-.env.production
 
 # Node.js
 node_modules/
