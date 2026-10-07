@@ -62,8 +62,7 @@
 personal_manager/
 ├── backend/            # .NET 方案：src/PersonalManager.Api、tests/PersonalManager.Tests、openapi.json
 ├── frontend/           # Vue SPA：src/、e2e/
-├── docs/               # 本文件與其他文件
-└── CHANGELOG.md
+└── docs/               # 本文件與其他文件
 ```
 
 ---
@@ -461,4 +460,4 @@ API 分為三組（ADR-011），完整清單見 Swagger 或 `backend/openapi.jso
 
 ---
 
-*文件維護：架構異動時更新對應章節；做了新的架構決策時在第 12 章新增 ADR，並記錄於根目錄 `CHANGELOG.md`。*
+*文件維護：架構異動時更新對應章節；做了新的架構決策時在第 12 章新增 ADR。變更的細節見 git log。*

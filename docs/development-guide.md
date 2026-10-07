@@ -108,7 +108,7 @@ npx playwright test    # E2E：自動啟動後端與前端，使用暫存的 SQL
 
 - 以可運作的小單位 commit；訊息說明「為什麼」，格式 `<type>(<scope>): <說明>`，例如 `fix(backend): …`
 - 不使用 `--no-verify`，不停用測試
-- 重要的功能或架構變更記錄在 [`CHANGELOG.md`](../CHANGELOG.md)，進行中的工作與技術債在 [`TASKS.md`](TASKS.md)
+- 變更紀錄以 git log 為準，不另外維護異動記錄檔；重大的架構決策記在[規格書](system-specification.md#12-架構決策紀錄adr) §12，進行中的工作與技術債在 [`TASKS.md`](TASKS.md)
 
 ## 疑難排解
 

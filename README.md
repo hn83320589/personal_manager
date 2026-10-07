@@ -135,5 +135,4 @@ docs/       規格、教學、測試報告與指南
 | [資料庫設計](docs/database-design.md) | 資料表與關係 |
 | [部署指南](docs/deployment-guide.md) | 日後部署時必須滿足的條件 |
 | [任務清單](docs/TASKS.md) | 進行中的工作與技術債 |
-| [異動記錄](CHANGELOG.md) | 重要的功能與架構變更 |
 | [`backend/CLAUDE.md`](backend/CLAUDE.md)、[`frontend/CLAUDE.md`](frontend/CLAUDE.md) | 各端的程式寫法與慣例 |

@@ -14,7 +14,7 @@
 
 ## 2026 重構（已完成）
 
-2026-09～10 的全面重構紀錄。之後移除了 GitHub Actions CI（下方提到 CI 的項目為當時狀態），重構前的任務清單已刪除，歷史見 `CHANGELOG.md` 與 git log。
+2026-09～10 的全面重構紀錄。之後移除了 GitHub Actions CI（下方提到 CI 的項目為當時狀態），重構前的任務清單已刪除，歷史見 git log。
 
 完整計畫：重構計畫頁面（claude.ai artifact「Personal Manager 重構計畫」）。已確認的決策：
 - D1 移除 JSON fallback，本地與暫時的執行環境一律使用 SQLite，保留 Pomelo（MySQL/MariaDB）套件以便日後切換
@@ -105,7 +105,7 @@
 - 完成條件：沒有超過 400 行的 .vue（最大 285 行）；每個 store 都有單元測試（auth、toast）——已達成
 
 ### Phase 6 — 文件
-- [x] 新增根目錄 `CHANGELOG.md`，三份 CLAUDE.md 的「最新異動記錄」移過去，CLAUDE.md 只保留規則與指引
+- [x] 三份 CLAUDE.md 的「最新異動記錄」移出，CLAUDE.md 只保留規則與指引（曾集中到 `CHANGELOG.md`，2026-10-07 改以 git log 為準而刪除）
 - [x] 刪除過時的 Postman collection 與 `api-quick-reference.md`（API 以 Swagger 與 `backend/openapi.json` 為準）
 - [x] `development-guide.md` 改寫為實際的本地開發流程
 - [x] `deployment-guide.md` 改寫：目前沒有正式環境，列出部署時的必要條件（同網站、環境變數、資料庫切換）
@@ -129,4 +129,4 @@
 
 ---
 
-*更新方式：新的工作加在「待辦」；完成後將 `[ ]` 改為 `[x]`。重要的功能或架構變更記錄在根目錄 `CHANGELOG.md`*
+*更新方式：新的工作加在「待辦」；完成後將 `[ ]` 改為 `[x]`。變更的細節見 git log*

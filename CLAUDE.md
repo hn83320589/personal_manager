@@ -42,7 +42,6 @@ This file provides guidance to Claude Code when working in this repository.
 ```
 personal_manager/
 ├── CLAUDE.md                     # 本檔案
-├── CHANGELOG.md                  # 重要變更
 ├── backend/
 │   ├── PersonalManager.sln
 │   ├── src/PersonalManager.Api/  # .NET 9 Web API
@@ -129,7 +128,7 @@ npm run dev
 **每次異動後：**
 - 後端有異動 → 更新 `backend/CLAUDE.md`（規則、結構、設定有變時）
 - 前端有異動 → 更新 `frontend/CLAUDE.md`（同上）
-- 重要的功能或架構變更 → 記錄在根目錄 `CHANGELOG.md`；逐次的細節由 git log 承擔，CLAUDE.md 不寫異動記錄
+- 變更紀錄由 git log 承擔：commit message 寫清楚「為什麼」；重大的架構決策另記在 `docs/system-specification.md` §12（ADR）。不另外維護異動記錄檔，CLAUDE.md 也不寫異動記錄
 
 **開發規範：**
 - 不使用 `--no-verify`

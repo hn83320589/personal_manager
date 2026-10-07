@@ -636,7 +636,7 @@ E2E 慢且較不穩定，所以只放「壞了使用者一定會發現」的流�
 **收尾**
 
 13. 執行 [`development-guide.md`](development-guide.md#測試與檢查) 的所有檢查
-14. 更新 `database-design.md`；重要功能記錄在 `CHANGELOG.md`
+14. 更新 `database-design.md`；有新的架構決策時記在規格書 §12（ADR）
 15. 以小步提交：後端一個 commit、前端一個 commit，訊息說明為什麼
 
 ---
