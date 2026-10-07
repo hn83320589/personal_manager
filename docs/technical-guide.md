@@ -94,13 +94,18 @@ src/PersonalManager.Api/
 │   │   └── SkillService.cs       # 業務邏輯
 │   ├── Portfolios/ Blog/ Auth/ …
 ├── Common/      # 跨功能共用：例外、目前使用者、排序、分頁、HTML 清洗
+├── Services/    # 基礎設施：寄信、檔案儲存（本機／S3）、健康檢查
+├── DTOs/        # 所有 API 共用的回應格式 ApiResponse、PagedResult
 ├── Models/      # EF Core 實體
 └── Data/        # DbContext、migration 設定
 ```
 
-**為什麼不是 `Controllers/`、`Services/`、`DTOs/` 三個資料夾？**
+**為什麼功能程式不放進 `Controllers/`、`Services/`、`DTOs/` 這種依技術角色分的資料夾？**
 改一個功能時，需要的檔案都在同一個資料夾裡；刪掉一個功能，就是刪掉一個資料夾。
 依「技術角色」分資料夾時，一個功能散落在三、四個地方，專案變大後很難看出哪些檔案彼此相關（ADR-011）。
+
+`Services/` 與 `DTOs/` 仍然存在，但只放**不屬於任何功能**的東西：寄信、檔案儲存這類基礎設施，以及每個 API 共用的回應外層。
+功能自己的 service 與 DTO 一律放在 `Features/<名稱>/`。
 
 ### 3.2 一個 feature 的寫法
 
