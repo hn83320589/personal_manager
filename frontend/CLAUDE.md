@@ -141,6 +141,7 @@ src/
 │   └── schema.ts / types.ts          # 產生的型別與 Schemas 別名
 ├── lib/                              # 純函式（皆有單元測試）
 │   ├── sanitizeHtml.ts highlight.ts embeds.ts format.ts readingTime.ts fileTypes.ts
+│   ├── calendar.ts                   # 月曆格子、依日分組、時間範圍、星期名稱
 │   └── workDocument.ts postDocument.ts   # 作品／文章：API 資料與編輯器資料的轉換
 ├── composables/
 │   ├── useAsyncData.ts               # 頁面讀取（loading、錯誤、404 分開）
@@ -148,7 +149,9 @@ src/
 │   ├── useOwnedList.ts               # 後台清單頁（新增／更新／刪除／排序）
 │   ├── useAutosave.ts useWorkEditor.ts   # 作品與文章的自動儲存
 │   ├── useColorScheme.ts useAccent.ts    # 深淺色、主題色
-│   └── useTableOfContents.ts useSeo.ts
+│   ├── useUnsavedChangesGuard.ts     # 編輯器離開頁面前先存、未存成功時提醒
+│   ├── useDebouncedSearch.ts         # 搜尋框停頓後才查詢
+│   └── useTableOfContents.ts useSeo.ts   # 頁面標題：固定標題設在路由 meta.title，依內容變動的頁面呼叫 setPageSeo
 ├── stores/                           # auth（登入狀態）、toast（操作提示）
 ├── router/index.ts                   # 路由（見下方）
 ├── views/
@@ -156,8 +159,8 @@ src/
 │   ├── manage/                       # 新版後台：AdminShell 與各頁
 │   └── LoginView、RegisterView、ForgotPasswordView、ResetPasswordView、NotFoundView
 └── components/
-    ├── public/                       # 前台元件（卡片、輪播、區塊、lightbox…）
-    └── manage/                       # 後台元件（SidePanel、ManageList、編輯器…）
+    ├── public/                       # 前台元件（卡片、輪播、區塊、lightbox、分頁 PaginationNav…）
+    └── manage/                       # 後台元件（SidePanel、ManageList、編輯器…；editorCommands.ts 為兩個富文本編輯器共用）
         ├── works/                    # 作品編輯器（區塊、封面、資訊欄位）
         └── blog/                     # 文章編輯器（Tiptap：figure、embed、「/」選單）
 ```

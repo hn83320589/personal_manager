@@ -5,7 +5,7 @@
 掃描結論：專案整體乾淨。所有 `.vue` 都有被使用、每個 CSS class 與 Tailwind token 都有用到，所有 NuGet 與 npm 套件都有用到（下列已移除者除外），文件連結全部有效。
 主要的改善空間是**重複的程式碼**，以及少數**過時的文件與設定**。
 
-## 已完成（2026-10-07）
+## 已清除的未使用內容（2026-10-07）
 
 確定沒有使用、刪除後行為不變的項目已直接清除，每批都通過建置與全部測試：
 
@@ -16,33 +16,28 @@
 | `1d59ca2` | 前端：移除未使用的 `@tiptap/extension-text-align`、`@tiptap/extension-character-count`；移除沒有呼叫端的匯出（`HttpClient`、`SaveStatus` 轉出、`portfolioFacets`、`userRole`）；`vite.config`、`vitest.config` 移除預設值與需要未安裝套件的 coverage 設定 |
 | `2b524d1` | 文件：修正與現況不符的說明（`appsettings.Development.json` 非必要、Settings 清單、migration 指令、E2E 瀏覽器、api 檔案清單） |
 
-## 待辦
+## 優化進度
 
-每項標示**效益**（減少的程式碼或風險）、**工作量**、**風險**。建議依階段順序進行，每項一個 commit，並跑完 [`development-guide.md`](development-guide.md#測試與檢查) 的檢查。
+### 階段 1、2：已完成（2026-10-07）
 
-### 階段 1：小而確定（不改行為）
+每項一個 commit，各自通過建置、全部測試與 E2E。
 
-| # | 項目 | 位置 | 效益 | 工作量 | 風險 |
-| --- | --- | --- | --- | --- | --- |
-| 1-1 | 移除重複的 enum `[JsonConverter(typeof(JsonStringEnumConverter))]` 屬性：全域已註冊轉換器 | `Models/BlogPost.cs`、`ContactMethod.cs`、`Skill.cs`、`TodoItem.cs`、`WorkTask.cs` | 少 7 個屬性與 5 個 `using` | 小 | 低：`OpenApiDocumentTests` 會確認輸出不變 |
-| 1-2 | `DatabaseSeeder` 移除與實體預設值重複的 `CreatedAt`／`UpdatedAt`／`IsActive`，角色改用 `Roles.Admin`／`Roles.User` 常數（`Models/User.cs` 同理） | `Data/DatabaseSeeder.cs` | 約 45 行 | 小 | 低 |
-| 1-3 | 移除 `services.AddEndpointsApiExplorer()`：`AddControllers()` 已註冊 | `Setup/ApiSetup.cs` | 1 行 | 小 | 低：合約測試確認 |
-| 1-4 | 測試共用 helper：`Paged<T>` 重複宣告 4 次、`Id(JsonElement)` 5 次、「POST 後確認 201 再讀 data」7 次、`FilesApiTests.UploadOk` 與 `TestFiles.UploadAsync` 重複 | `tests/…/Features/*.cs`、`Infrastructure/` | 約 60 行 | 小 | 低 |
-| 1-5 | 前端去掉只在檔內使用的 `export`（`accentColors`、`AutosaveOptions`、`ColorScheme`、`SeoMeta`、`TocItem`、`resolveLanguage`、`toLocalInput`） | `composables/`、`lib/` | 讓公開 API 更清楚 | 小 | 低 |
-| 1-6 | 宣告直接使用的 `@tiptap/core`：5 個檔案直接 import，目前只靠其他套件間接安裝 | `package.json` | 避免升級時意外壞掉 | 小 | 低（不是新套件，只是明確宣告） |
+| # | 項目 | Commit | 結果 |
+| --- | --- | --- | --- |
+| 1-1、1-3 | 移除重複的 enum `JsonConverter` 屬性與 `AddEndpointsApiExplorer()` | `d27f251` | `openapi.json` 不變 |
+| 1-2 | 示範資料不再重複實體預設值，角色改用 `Roles` 常數 | `4d0745b` | 少約 33 行 |
+| 1-4 | 合併重複的測試 helper（`Paged<T>`、`Id()`、`PostCreatedAsync`、`UploadAsync`） | `122546e` | 少約 30 行 |
+| 1-5、1-6 | 收斂只在檔內使用的匯出；明確宣告 `@tiptap/core` | `a385752` | |
+| 2-1 | 編輯器的儲存狀態文字移進 `useAutosave`，離開提醒抽成 `useUnsavedChangesGuard` | `ead83ee` | 新增 4 項測試 |
+| 2-2 | 分頁改用 `PaginationNav` 元件 | `3587734` | 6 個頁面少約 66 行，新增 4 項測試 |
+| 2-3 | `formatTime`、`pad`、`timeRange`、`WEEKDAYS` 集中到 `lib` | `ae29af8` | 新增 4 項測試 |
+| 2-4 | 排序改用 `ApplyOrderAsync` 查詢擴充 | `c583b57` | 行數差不多，「載入完整清單再排序」只在一處保證 |
+| 2-5 | 9 處 `UpdatedAt` 改用注入的 `TimeProvider` | `4eb302f` | **未採用**原計畫的 `SaveChangesAsync` 統一設定：文章瀏覽數累加也會被當成修改 |
+| 2-6 | 兩個富文本編輯器共用連結與內容同步（`editorCommands.ts`） | `0339df6` | 修正作品編輯器不接受 `mailto`、無效網址沒有提示；新增 4 項測試 |
+| 2-7 | 固定標題由路由 `afterEach` 統一設定 | `99f28c3` | 標題格式一致，移除未使用的 `VITE_APP_TITLE`；新增 1 項測試 |
+| 2-8 | 搜尋防抖改用 `useDebouncedSearch` | `ec71981` | 新增 2 項測試 |
 
-### 階段 2：抽出重複邏輯（效益最大）
-
-| # | 項目 | 位置 | 效益 | 工作量 | 風險 |
-| --- | --- | --- | --- | --- | --- |
-| 2-1 | 自動儲存頁面的共用邏輯移進 `useAutosave`：狀態文字、離開頁面前提醒、`beforeunload` 在兩個編輯器各寫一次 | `PostEditorView.vue`、`WorkEditorView.vue` | 約 50 行，且兩邊行為不會分歧 | 中 | 中：E2E 涵蓋作品編輯器 |
-| 2-2 | 分頁元件 `<Pager>`：相同的分頁按鈕寫了 6 次 | `PostsView`、`UsersView`、`GuestbookView`、`FilesView`、`PublicBlogView`、`PublicGuestbookView` | 約 100 行 | 中 | 低 |
-| 2-3 | 時間格式集中到 `lib/format.ts`：`HH:MM` 寫了 7 次、`pad()` 有 11 份；行事曆的 `timeRange()` 與星期名稱各重複 2～3 次 | `lib/`、行事曆與編輯器頁面 | 約 40 行 | 小 | 低（有單元測試） |
-| 2-4 | 後端排序：6 個 service 的 `ReorderAsync` 內容相同，改為 `IQueryable<T>` 擴充方法（與 `OwnedBy` 同類，不是 repository） | `Common/Reordering.cs` 與 6 個 service | 約 30 行 | 小 | 低（共用契約測試涵蓋排序） |
-| 2-5 | `UpdatedAt` 統一：9 處直接用 `DateTime.UtcNow`、其他用注入的 `TimeProvider`。改為在 `SaveChangesAsync` 統一設定修改時間 | 各 service、`ApplicationDbContext` | 約 20 行，測試時鐘涵蓋所有時間 | 中 | 中 |
-| 2-6 | 兩個 Tiptap 編輯器共用 `modelValue` 同步與 `setLink`；目前兩份 `setLink` 已經不一致（一份允許 `mailto:`） | `RichTextEditor.vue`、`blog/PostContentEditor.vue` | 約 30 行，並修正不一致 | 中 | 中 |
-| 2-7 | 頁面標題只設定一次：路由守衛與 8 個頁面各設一次，格式不同（` - ` 與 ` \| `），NotFound 兩處文字也不同 | `router/index.ts`、8 個頁面 | 一致的標題 | 小 | 低 |
-| 2-8 | 搜尋防抖與「篩選改變時回到第 1 頁」重複 3 次，可抽成 composable | `PostsView`、`UsersView`、`DirectoryView` 等 | 約 30 行 | 小 | 低 |
+前端單元測試由 169 項增加到 188 項。
 
 ### 階段 3：需要先決定
 

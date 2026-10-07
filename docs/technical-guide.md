@@ -545,7 +545,7 @@ export const mySkillsApi = {
 | 層級 | 工具 | 數量 | 測什麼 |
 | --- | --- | --- | --- |
 | 後端整合測試 | xUnit + WebApplicationFactory + 暫存 SQLite | 297 | 每個 API 的行為：授權、所有權、驗證、資料正確 |
-| 前端單元測試 | Vitest + jsdom | 169 | `lib/` 純函式、composable、store、路由、關鍵元件 |
+| 前端單元測試 | Vitest + jsdom | 188 | `lib/` 純函式、composable、store、路由、關鍵元件 |
 | E2E | Playwright + 真實後端 | 8 | 跨前後端的關鍵流程：登入還原、作品編輯、留言、深色模式 |
 
 最新的完整結果見 [`test-report.md`](test-report.md)。

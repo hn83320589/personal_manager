@@ -83,7 +83,7 @@
 | 後端 | .NET 9 Web API、EF Core 9；SQLite（預設）或 MySQL／MariaDB |
 | 前端 | Vue 3、TypeScript（strict）、Pinia、Tailwind CSS、Tiptap、Vite |
 | 認證 | JWT access token（只在記憶體）+ httpOnly cookie refresh token（每次輪換） |
-| 測試 | xUnit 整合測試 297 項、Vitest 169 項、Playwright E2E 8 項（本機執行，沒有 CI） |
+| 測試 | xUnit 整合測試 297 項、Vitest 188 項、Playwright E2E 8 項（本機執行，沒有 CI） |
 
 為什麼這樣選、程式碼怎麼組織，見[技術教學](docs/technical-guide.md)。目前沒有正式環境，只在本機開發。
 
