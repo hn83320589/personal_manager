@@ -26,17 +26,10 @@ public abstract class OwnedCollectionContract(ApiFactory factory) : IClassFixtur
     protected string MeUrl => $"/api/me/{Resource}";
     protected string PublicUrl(string username) => $"/api/public/users/{username}/{Resource}";
 
-    protected async Task<JsonElement> CreateAsync(TestUser user, object body)
-    {
-        var response = await user.Client().PostJsonAsync(MeUrl, body);
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        return await response.ReadDataAsync<JsonElement>();
-    }
+    protected Task<JsonElement> CreateAsync(TestUser user, object body) => user.PostCreatedAsync(MeUrl, body);
 
     protected async Task<List<string>> MyLabelsAsync(TestUser user) =>
         (await (await user.Client().GetAsync(MeUrl)).ReadDataAsync<List<JsonElement>>()).Select(LabelOf).ToList();
-
-    private static int IdOf(JsonElement item) => item.GetProperty("id").GetInt32();
 
     [Fact]
     public async Task Me_Anonymous_IsUnauthorized()
@@ -65,8 +58,8 @@ public abstract class OwnedCollectionContract(ApiFactory factory) : IClassFixtur
         var intruder = await Factory.CreateUserAsync();
         var item = await CreateAsync(owner, NewItem("原始內容"));
 
-        var update = await intruder.Client().PutJsonAsync($"{MeUrl}/{IdOf(item)}", NewItem("被竄改"));
-        var delete = await intruder.Client().DeleteAsync($"{MeUrl}/{IdOf(item)}");
+        var update = await intruder.Client().PutJsonAsync($"{MeUrl}/{item.Id()}", NewItem("被竄改"));
+        var delete = await intruder.Client().DeleteAsync($"{MeUrl}/{item.Id()}");
 
         Assert.Equal(HttpStatusCode.NotFound, update.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, delete.StatusCode);
@@ -79,7 +72,7 @@ public abstract class OwnedCollectionContract(ApiFactory factory) : IClassFixtur
         var me = await Factory.CreateUserAsync();
         var item = await CreateAsync(me, NewItem("舊的"));
 
-        var response = await me.Client().PutJsonAsync($"{MeUrl}/{IdOf(item)}", NewItem("新的"));
+        var response = await me.Client().PutJsonAsync($"{MeUrl}/{item.Id()}", NewItem("新的"));
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(["新的"], await MyLabelsAsync(me));
@@ -91,7 +84,7 @@ public abstract class OwnedCollectionContract(ApiFactory factory) : IClassFixtur
         var me = await Factory.CreateUserAsync();
         var item = await CreateAsync(me, NewItem("要刪除的"));
 
-        var response = await me.Client().DeleteAsync($"{MeUrl}/{IdOf(item)}");
+        var response = await me.Client().DeleteAsync($"{MeUrl}/{item.Id()}");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Empty(await MyLabelsAsync(me));
@@ -105,7 +98,7 @@ public abstract class OwnedCollectionContract(ApiFactory factory) : IClassFixtur
         var b = await CreateAsync(me, NewItem("B"));
         var c = await CreateAsync(me, NewItem("C"));
 
-        var response = await me.Client().PutJsonAsync($"{MeUrl}/order", new { ids = new[] { IdOf(c), IdOf(a), IdOf(b) } });
+        var response = await me.Client().PutJsonAsync($"{MeUrl}/order", new { ids = new[] { c.Id(), a.Id(), b.Id() } });
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(["C", "A", "B"], await MyLabelsAsync(me));
@@ -119,7 +112,7 @@ public abstract class OwnedCollectionContract(ApiFactory factory) : IClassFixtur
         var mine = await CreateAsync(me, NewItem("我的"));
         var theirs = await CreateAsync(other, NewItem("別人的"));
 
-        var response = await me.Client().PutJsonAsync($"{MeUrl}/order", new { ids = new[] { IdOf(theirs), IdOf(mine) } });
+        var response = await me.Client().PutJsonAsync($"{MeUrl}/order", new { ids = new[] { theirs.Id(), mine.Id() } });
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }

@@ -12,12 +12,7 @@ public class CalendarApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
 
     private static DateTime Utc(int year, int month, int day, int hour = 9) => new(year, month, day, hour, 0, 0, DateTimeKind.Utc);
 
-    private static async Task<JsonElement> Create(TestUser user, EventBody body)
-    {
-        var response = await user.Client().PostJsonAsync("/api/me/calendar/events", body);
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        return await response.ReadDataAsync<JsonElement>();
-    }
+    private static Task<JsonElement> Create(TestUser user, EventBody body) => user.PostCreatedAsync("/api/me/calendar/events", body);
 
     private static string Range(DateTime from, DateTime to) => $"?from={from:O}&to={to:O}";
 

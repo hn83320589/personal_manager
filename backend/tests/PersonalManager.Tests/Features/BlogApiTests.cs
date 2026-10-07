@@ -11,16 +11,8 @@ public class BlogApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         string? Category = null, string[]? Tags = null, string? CoverImageUrl = null,
         string Status = "Published", DateTime? PublishedAt = null);
 
-    private sealed record Paged<T>(List<T> Items, int TotalCount, int Page, int PageSize);
+    private static Task<JsonElement> Create(TestUser user, PostBody body) => user.PostCreatedAsync("/api/me/posts", body);
 
-    private static async Task<JsonElement> Create(TestUser user, PostBody body)
-    {
-        var response = await user.Client().PostJsonAsync("/api/me/posts", body);
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        return await response.ReadDataAsync<JsonElement>();
-    }
-
-    private static int Id(JsonElement post) => post.GetProperty("id").GetInt32();
     private static string Slug(JsonElement post) => post.GetProperty("slug").GetString()!;
 
     private async Task<List<string>> PublicTitles(string username, string query = "")
@@ -115,7 +107,7 @@ public class BlogApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
 
         await client.PostAsync($"/api/public/users/{author.Username}/posts/{Slug(post)}/views", null);
         await client.PostAsync($"/api/public/users/{author.Username}/posts/{Slug(post)}/views", null);
-        var mine = await (await author.Client().GetAsync($"/api/me/posts/{Id(post)}")).ReadDataAsync<JsonElement>();
+        var mine = await (await author.Client().GetAsync($"/api/me/posts/{post.Id()}")).ReadDataAsync<JsonElement>();
 
         Assert.Equal(2, mine.GetProperty("viewCount").GetInt32());
     }
@@ -274,9 +266,9 @@ public class BlogApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         var intruder = await factory.CreateUserAsync();
         var post = await Create(owner, new PostBody("原文"));
 
-        var update = await intruder.Client().PutJsonAsync($"/api/me/posts/{Id(post)}", new PostBody("被竄改"));
-        var delete = await intruder.Client().DeleteAsync($"/api/me/posts/{Id(post)}");
-        var read = await intruder.Client().GetAsync($"/api/me/posts/{Id(post)}");
+        var update = await intruder.Client().PutJsonAsync($"/api/me/posts/{post.Id()}", new PostBody("被竄改"));
+        var delete = await intruder.Client().DeleteAsync($"/api/me/posts/{post.Id()}");
+        var read = await intruder.Client().GetAsync($"/api/me/posts/{post.Id()}");
 
         Assert.Equal(HttpStatusCode.NotFound, update.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, delete.StatusCode);
@@ -289,7 +281,7 @@ public class BlogApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         var me = await factory.CreateUserAsync();
         var post = await Create(me, new PostBody("Original title"));
 
-        var updated = await (await me.Client().PutJsonAsync($"/api/me/posts/{Id(post)}",
+        var updated = await (await me.Client().PutJsonAsync($"/api/me/posts/{post.Id()}",
             new PostBody("New title", Slug: Slug(post), Status: "Draft"))).ReadDataAsync<JsonElement>();
 
         Assert.Equal(("New title", "original-title", "Draft"),

@@ -1,4 +1,6 @@
+using System.Net;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using PersonalManager.Api.Data;
 using PersonalManager.Api.Features.Auth;
@@ -14,6 +16,14 @@ public sealed record TestUser(int Id, string Username, string Token, ApiFactory 
         var client = Factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
         return client;
+    }
+
+    /// <summary>以這位使用者 POST，確認回應 201，回傳建立的資料。</summary>
+    public async Task<JsonElement> PostCreatedAsync(string url, object body)
+    {
+        var response = await Client().PostJsonAsync(url, body);
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        return await response.ReadDataAsync<JsonElement>();
     }
 }
 

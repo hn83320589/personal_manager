@@ -7,8 +7,6 @@ namespace PersonalManager.Tests.Features;
 
 public class AdminUsersApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
 {
-    private sealed record Paged<T>(List<T> Items, int TotalCount, int Page, int PageSize);
-
     private static string StatusUrl(TestUser user) => $"/api/admin/users/{user.Id}/status";
     private static string RoleUrl(TestUser user) => $"/api/admin/users/{user.Id}/role";
 

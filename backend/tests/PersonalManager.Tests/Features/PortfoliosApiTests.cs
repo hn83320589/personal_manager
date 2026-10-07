@@ -12,8 +12,6 @@ public class PortfoliosApiTests(ApiFactory factory) : PublicCollectionContract(f
 
     protected override string LabelOf(JsonElement item) => item.GetProperty("title").GetString()!;
 
-    private static int Id(JsonElement item) => item.GetProperty("id").GetInt32();
-
     private async Task<JsonElement> Save(TestUser user, int id, object document)
     {
         var response = await user.Client().PutJsonAsync($"{MeUrl}/{id}", document);
@@ -24,7 +22,7 @@ public class PortfoliosApiTests(ApiFactory factory) : PublicCollectionContract(f
     private async Task<HttpResponseMessage> TrySave(TestUser user, object document)
     {
         var created = await CreateAsync(user, NewItem("作品"));
-        return await user.Client().PutJsonAsync($"{MeUrl}/{Id(created)}", document);
+        return await user.Client().PutJsonAsync($"{MeUrl}/{created.Id()}", document);
     }
 
     private async Task<JsonElement> PublicDetail(string username, string slug) =>
@@ -66,7 +64,7 @@ public class PortfoliosApiTests(ApiFactory factory) : PublicCollectionContract(f
         var gallery = await owner.UploadAsync("card.jpg", SampleFiles.Jpeg(800, 1000));
         var guide = await owner.UploadAsync("guide.pdf", SampleFiles.Pdf());
         var created = await CreateAsync(owner, NewItem("草稿"));
-        var saved = await Save(owner, Id(created), FullDocument(Id(cover), Id(gallery), Id(guide)));
+        var saved = await Save(owner, created.Id(), FullDocument(cover.Id(), gallery.Id(), guide.Id()));
         return (owner, saved);
     }
 
@@ -162,8 +160,8 @@ public class PortfoliosApiTests(ApiFactory factory) : PublicCollectionContract(f
         var owner = await Factory.CreateUserAsync();
         var poster = await CreateAsync(owner, NewItem("海報"));
         var package = await CreateAsync(owner, NewItem("包裝"));
-        await Save(owner, Id(poster), new { title = "海報", category = "海報與主視覺", tags = new[] { "印刷" }, isPublic = true });
-        await Save(owner, Id(package), new { title = "包裝", category = "包裝", tags = new[] { "印刷", "包裝" }, isPublic = true });
+        await Save(owner, poster.Id(), new { title = "海報", category = "海報與主視覺", tags = new[] { "印刷" }, isPublic = true });
+        await Save(owner, package.Id(), new { title = "包裝", category = "包裝", tags = new[] { "印刷", "包裝" }, isPublic = true });
 
         var byCategory = await (await Factory.CreateClient().GetAsync($"{PublicUrl(owner.Username)}?category=包裝")).ReadDataAsync<List<JsonElement>>();
         var byTag = await (await Factory.CreateClient().GetAsync($"{PublicUrl(owner.Username)}?tag=印刷")).ReadDataAsync<List<JsonElement>>();
@@ -182,7 +180,7 @@ public class PortfoliosApiTests(ApiFactory factory) : PublicCollectionContract(f
         var me = await Factory.CreateUserAsync();
         var created = await CreateAsync(me, NewItem("作品"));
 
-        var saved = await Save(me, Id(created), new
+        var saved = await Save(me, created.Id(), new
         {
             title = "作品",
             blocks = new object[] { new { type = "text", html = "<p onclick=\"alert(1)\">安全</p><script>alert(1)</script>" } }
@@ -215,7 +213,7 @@ public class PortfoliosApiTests(ApiFactory factory) : PublicCollectionContract(f
         var other = await Factory.CreateUserAsync();
         var theirs = await other.UploadAsync("theirs.png", SampleFiles.Png(10, 10));
 
-        var response = await TrySave(me, new { title = "作品", covers = new[] { new { fileId = Id(theirs) } } });
+        var response = await TrySave(me, new { title = "作品", covers = new[] { new { fileId = theirs.Id() } } });
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
@@ -229,7 +227,7 @@ public class PortfoliosApiTests(ApiFactory factory) : PublicCollectionContract(f
         var response = await TrySave(me, new
         {
             title = "作品",
-            blocks = new object[] { new { type = "image", image = new { fileId = Id(pdf) } } }
+            blocks = new object[] { new { type = "image", image = new { fileId = pdf.Id() } } }
         });
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

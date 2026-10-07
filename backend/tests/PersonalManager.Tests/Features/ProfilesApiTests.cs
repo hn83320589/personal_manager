@@ -20,8 +20,6 @@ public class ProfilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     private sealed record DirectoryCard(string Username, string FullName, string Title, string Summary,
         string ProfileImageUrl, string Location, string ThemeColor);
 
-    private sealed record Paged<T>(List<T> Items, int TotalCount, int Page, int PageSize);
-
     // ---------- public profile ----------
 
     [Fact]

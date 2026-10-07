@@ -25,5 +25,11 @@ public static class ApiJson
     public static Task<HttpResponseMessage> PutJsonAsync<T>(this HttpClient client, string url, T body) =>
         client.PutAsJsonAsync(url, body, Options);
 
+    /// <summary>JSON 物件的 id 欄位。</summary>
+    public static int Id(this JsonElement item) => item.GetProperty("id").GetInt32();
+
     private sealed record Envelope<T>(bool Success, string Message, T? Data, List<string> Errors);
 }
+
+/// <summary>分頁回應（對應 API 的 PagedResult）。</summary>
+public sealed record Paged<T>(List<T> Items, int TotalCount, int Page, int PageSize);

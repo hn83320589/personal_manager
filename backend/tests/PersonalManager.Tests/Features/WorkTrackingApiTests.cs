@@ -26,14 +26,7 @@ public class ProjectsApiTests(ApiFactory factory) : OwnedCollectionContract(fact
 
 public class WorkTasksAndTimeEntriesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
 {
-    private static async Task<JsonElement> Post(TestUser user, string url, object body)
-    {
-        var response = await user.Client().PostJsonAsync(url, body);
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        return await response.ReadDataAsync<JsonElement>();
-    }
-
-    private static int Id(JsonElement item) => item.GetProperty("id").GetInt32();
+    private static Task<JsonElement> Post(TestUser user, string url, object body) => user.PostCreatedAsync(url, body);
 
     private static Task<JsonElement> CreateProject(TestUser user, string name) => Post(user, "/api/me/projects", new { name });
 
@@ -58,10 +51,10 @@ public class WorkTasksAndTimeEntriesApiTests(ApiFactory factory) : IClassFixture
     {
         var me = await factory.CreateUserAsync();
         var branding = await CreateProject(me, "山茶行");
-        await CreateTask(me, "標誌提案", Id(branding));
+        await CreateTask(me, "標誌提案", branding.Id());
         await CreateTask(me, "報價單");
 
-        var filtered = await MyTasks(me, $"?projectId={Id(branding)}");
+        var filtered = await MyTasks(me, $"?projectId={branding.Id()}");
 
         var task = Assert.Single(filtered);
         Assert.Equal(("標誌提案", "山茶行"), (task.GetProperty("title").GetString(), task.GetProperty("projectName").GetString()));
@@ -74,7 +67,7 @@ public class WorkTasksAndTimeEntriesApiTests(ApiFactory factory) : IClassFixture
         var other = await factory.CreateUserAsync();
         var theirs = await CreateProject(other, "別人的專案");
 
-        var response = await me.Client().PostJsonAsync("/api/me/work-tasks", new { title = "偷掛", projectId = Id(theirs) });
+        var response = await me.Client().PostJsonAsync("/api/me/work-tasks", new { title = "偷掛", projectId = theirs.Id() });
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
@@ -86,8 +79,8 @@ public class WorkTasksAndTimeEntriesApiTests(ApiFactory factory) : IClassFixture
         var intruder = await factory.CreateUserAsync();
         var task = await CreateTask(owner, "私人任務");
 
-        var update = await intruder.Client().PutJsonAsync($"/api/me/work-tasks/{Id(task)}", new { title = "竄改" });
-        var delete = await intruder.Client().DeleteAsync($"/api/me/work-tasks/{Id(task)}");
+        var update = await intruder.Client().PutJsonAsync($"/api/me/work-tasks/{task.Id()}", new { title = "竄改" });
+        var delete = await intruder.Client().DeleteAsync($"/api/me/work-tasks/{task.Id()}");
 
         Assert.Equal(HttpStatusCode.NotFound, update.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, delete.StatusCode);
@@ -98,8 +91,8 @@ public class WorkTasksAndTimeEntriesApiTests(ApiFactory factory) : IClassFixture
     {
         var me = await factory.CreateUserAsync();
         var task = await CreateTask(me, "排版", estimatedHours: 3);
-        await Post(me, "/api/me/time-entries", new { workTaskId = Id(task), date = "2026-05-04", durationMinutes = 90 });
-        await Post(me, "/api/me/time-entries", new { workTaskId = Id(task), date = "2026-05-05", durationMinutes = 45 });
+        await Post(me, "/api/me/time-entries", new { workTaskId = task.Id(), date = "2026-05-04", durationMinutes = 90 });
+        await Post(me, "/api/me/time-entries", new { workTaskId = task.Id(), date = "2026-05-05", durationMinutes = 45 });
 
         var listed = (await MyTasks(me)).Single();
 
@@ -111,9 +104,9 @@ public class WorkTasksAndTimeEntriesApiTests(ApiFactory factory) : IClassFixture
     {
         var me = await factory.CreateUserAsync();
         var project = await CreateProject(me, "結案專案");
-        await CreateTask(me, "留下來的任務", Id(project));
+        await CreateTask(me, "留下來的任務", project.Id());
 
-        await me.Client().DeleteAsync($"/api/me/projects/{Id(project)}");
+        await me.Client().DeleteAsync($"/api/me/projects/{project.Id()}");
         var task = (await MyTasks(me)).Single();
 
         Assert.Equal(JsonValueKind.Null, task.GetProperty("projectId").ValueKind);
@@ -161,7 +154,7 @@ public class WorkTasksAndTimeEntriesApiTests(ApiFactory factory) : IClassFixture
         var theirs = await CreateTask(other, "別人的任務");
 
         var response = await me.Client().PostJsonAsync("/api/me/time-entries",
-            new { workTaskId = Id(theirs), date = "2026-05-04", durationMinutes = 30 });
+            new { workTaskId = theirs.Id(), date = "2026-05-04", durationMinutes = 30 });
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
@@ -186,9 +179,9 @@ public class WorkTasksAndTimeEntriesApiTests(ApiFactory factory) : IClassFixture
     {
         var me = await factory.CreateUserAsync();
         var project = await CreateProject(me, "日光選物");
-        var task = await CreateTask(me, "包裝打樣", Id(project));
+        var task = await CreateTask(me, "包裝打樣", project.Id());
 
-        var entry = await Post(me, "/api/me/time-entries", new { workTaskId = Id(task), date = "2026-05-04", durationMinutes = 30 });
+        var entry = await Post(me, "/api/me/time-entries", new { workTaskId = task.Id(), date = "2026-05-04", durationMinutes = 30 });
 
         Assert.Equal(("包裝打樣", "日光選物"),
             (entry.GetProperty("workTaskTitle").GetString(), entry.GetProperty("projectName").GetString()));
@@ -199,9 +192,9 @@ public class WorkTasksAndTimeEntriesApiTests(ApiFactory factory) : IClassFixture
     {
         var me = await factory.CreateUserAsync();
         var project = await CreateProject(me, "山茶行");
-        var task = await CreateTask(me, "標誌", Id(project));
-        await Post(me, "/api/me/time-entries", new { workTaskId = Id(task), date = "2026-05-04", durationMinutes = 120 });
-        await Post(me, "/api/me/time-entries", new { workTaskId = Id(task), date = "2026-05-05", durationMinutes = 60 });
+        var task = await CreateTask(me, "標誌", project.Id());
+        await Post(me, "/api/me/time-entries", new { workTaskId = task.Id(), date = "2026-05-04", durationMinutes = 120 });
+        await Post(me, "/api/me/time-entries", new { workTaskId = task.Id(), date = "2026-05-05", durationMinutes = 60 });
         await Post(me, "/api/me/time-entries", new { title = "雜務", date = "2026-05-05", durationMinutes = 30 });
 
         var summary = await (await me.Client().GetAsync("/api/me/time-entries/summary?from=2026-05-01&to=2026-05-31"))

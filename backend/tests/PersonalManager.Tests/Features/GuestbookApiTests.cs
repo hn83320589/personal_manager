@@ -6,8 +6,6 @@ namespace PersonalManager.Tests.Features;
 
 public class GuestbookApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
 {
-    private sealed record Paged<T>(List<T> Items, int TotalCount, int Page, int PageSize);
-
     private static string PublicUrl(string username) => $"/api/public/users/{username}/guestbook";
 
     private async Task<HttpResponseMessage> Leave(string username, string message, string name = "訪客", string? email = "guest@example.com") =>
@@ -19,7 +17,6 @@ public class GuestbookApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     private static async Task<List<JsonElement>> MyEntries(TestUser owner, string query = "") =>
         (await (await owner.Client().GetAsync($"/api/me/guestbook{query}")).ReadDataAsync<Paged<JsonElement>>()).Items;
 
-    private static int Id(JsonElement entry) => entry.GetProperty("id").GetInt32();
     private static string Message(JsonElement entry) => entry.GetProperty("message").GetString()!;
 
     // ---------- visitors ----------
@@ -41,7 +38,7 @@ public class GuestbookApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         var owner = await factory.CreateUserAsync();
         await Leave(owner.Username, "第一則", email: "secret-visitor@example.com");
         var pending = (await MyEntries(owner)).Single();
-        await owner.Client().PutJsonAsync($"/api/me/guestbook/{Id(pending)}/approval", new { isApproved = true });
+        await owner.Client().PutJsonAsync($"/api/me/guestbook/{pending.Id()}/approval", new { isApproved = true });
 
         var response = await factory.CreateClient().GetAsync(PublicUrl(owner.Username));
         var json = await response.Content.ReadAsStringAsync();
@@ -124,7 +121,7 @@ public class GuestbookApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         await Leave(owner.Username, "待審核");
         await Leave(owner.Username, "已審核");
         var approved = (await MyEntries(owner)).Single(e => Message(e) == "已審核");
-        await owner.Client().PutJsonAsync($"/api/me/guestbook/{Id(approved)}/approval", new { isApproved = true });
+        await owner.Client().PutJsonAsync($"/api/me/guestbook/{approved.Id()}/approval", new { isApproved = true });
 
         var pending = await MyEntries(owner, "?status=pending");
 
@@ -137,9 +134,9 @@ public class GuestbookApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         var owner = await factory.CreateUserAsync();
         await Leave(owner.Username, "請問有接案嗎？");
         var entry = (await MyEntries(owner)).Single();
-        await owner.Client().PutJsonAsync($"/api/me/guestbook/{Id(entry)}/approval", new { isApproved = true });
+        await owner.Client().PutJsonAsync($"/api/me/guestbook/{entry.Id()}/approval", new { isApproved = true });
 
-        var reply = await owner.Client().PutJsonAsync($"/api/me/guestbook/{Id(entry)}/reply", new { reply = "有的，歡迎來信" });
+        var reply = await owner.Client().PutJsonAsync($"/api/me/guestbook/{entry.Id()}/reply", new { reply = "有的，歡迎來信" });
         var shown = (await PublicEntries(owner.Username)).Single();
 
         Assert.Equal(HttpStatusCode.OK, reply.StatusCode);
@@ -154,9 +151,9 @@ public class GuestbookApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         await Leave(owner.Username, "給版主");
         var entry = (await MyEntries(owner)).Single();
 
-        var approve = await intruder.Client().PutJsonAsync($"/api/me/guestbook/{Id(entry)}/approval", new { isApproved = true });
-        var reply = await intruder.Client().PutJsonAsync($"/api/me/guestbook/{Id(entry)}/reply", new { reply = "冒充回覆" });
-        var delete = await intruder.Client().DeleteAsync($"/api/me/guestbook/{Id(entry)}");
+        var approve = await intruder.Client().PutJsonAsync($"/api/me/guestbook/{entry.Id()}/approval", new { isApproved = true });
+        var reply = await intruder.Client().PutJsonAsync($"/api/me/guestbook/{entry.Id()}/reply", new { reply = "冒充回覆" });
+        var delete = await intruder.Client().DeleteAsync($"/api/me/guestbook/{entry.Id()}");
 
         Assert.Equal(HttpStatusCode.NotFound, approve.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, reply.StatusCode);
@@ -171,7 +168,7 @@ public class GuestbookApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         await Leave(owner.Username, "垃圾留言");
         var entry = (await MyEntries(owner)).Single();
 
-        var response = await owner.Client().DeleteAsync($"/api/me/guestbook/{Id(entry)}");
+        var response = await owner.Client().DeleteAsync($"/api/me/guestbook/{entry.Id()}");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Empty(await MyEntries(owner));

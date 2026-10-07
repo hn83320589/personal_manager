@@ -9,12 +9,7 @@ public class TodosApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     private sealed record TodoBody(string Title, string Status = "Pending", string Priority = "Medium",
         string? Description = null, DateTime? DueDate = null);
 
-    private static async Task<JsonElement> Create(TestUser user, TodoBody body)
-    {
-        var response = await user.Client().PostJsonAsync("/api/me/todos", body);
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        return await response.ReadDataAsync<JsonElement>();
-    }
+    private static Task<JsonElement> Create(TestUser user, TodoBody body) => user.PostCreatedAsync("/api/me/todos", body);
 
     private static async Task<List<string>> Titles(TestUser user, string query = "") =>
         (await (await user.Client().GetAsync($"/api/me/todos{query}")).ReadDataAsync<List<JsonElement>>())

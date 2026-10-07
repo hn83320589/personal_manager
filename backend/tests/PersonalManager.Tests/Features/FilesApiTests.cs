@@ -15,12 +15,6 @@ public class FilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
         return client.PostAsync("/api/me/files", form);
     }
 
-    private static async Task<JsonElement> UploadOk(TestUser user, string fileName, byte[] content)
-    {
-        var response = await Upload(user.Client(), fileName, content);
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        return await response.ReadDataAsync<JsonElement>();
-    }
 
     private static async Task<List<JsonElement>> MyFiles(TestUser user, string query = "") =>
         (await (await user.Client().GetAsync($"/api/me/files{query}")).ReadDataAsync<JsonElement>())
@@ -39,7 +33,7 @@ public class FilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     {
         var me = await factory.CreateUserAsync();
 
-        var file = await UploadOk(me, "cover.png", SampleFiles.Png(1600, 900));
+        var file = await me.UploadAsync("cover.png", SampleFiles.Png(1600, 900));
 
         Assert.Equal(("Image", 1600, 900, "image/png"), (
             file.GetProperty("kind").GetString(), file.GetProperty("width").GetInt32(),
@@ -50,7 +44,7 @@ public class FilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     public async Task UploadedFile_IsServedWithNoSniffHeader()
     {
         var me = await factory.CreateUserAsync();
-        var file = await UploadOk(me, "cover.png", SampleFiles.Png(10, 10));
+        var file = await me.UploadAsync("cover.png", SampleFiles.Png(10, 10));
 
         var served = await factory.CreateClient().GetAsync(file.GetProperty("url").GetString());
 
@@ -88,9 +82,9 @@ public class FilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     {
         var me = await factory.CreateUserAsync();
         var other = await factory.CreateUserAsync();
-        await UploadOk(me, "photo.png", SampleFiles.Png(2, 2));
-        await UploadOk(me, "guide.pdf", SampleFiles.Pdf());
-        await UploadOk(other, "theirs.png", SampleFiles.Png(2, 2));
+        await me.UploadAsync("photo.png", SampleFiles.Png(2, 2));
+        await me.UploadAsync("guide.pdf", SampleFiles.Pdf());
+        await other.UploadAsync("theirs.png", SampleFiles.Png(2, 2));
 
         var all = await MyFiles(me);
         var images = await MyFiles(me, "?kind=Image");
@@ -103,7 +97,7 @@ public class FilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     public async Task Delete_RemovesOwnFileFromStorage()
     {
         var me = await factory.CreateUserAsync();
-        var file = await UploadOk(me, "old.png", SampleFiles.Png(2, 2));
+        var file = await me.UploadAsync("old.png", SampleFiles.Png(2, 2));
 
         var response = await me.Client().DeleteAsync($"/api/me/files/{file.GetProperty("id").GetInt32()}");
         var served = await factory.CreateClient().GetAsync(file.GetProperty("url").GetString());
@@ -117,7 +111,7 @@ public class FilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     {
         var owner = await factory.CreateUserAsync();
         var intruder = await factory.CreateUserAsync();
-        var file = await UploadOk(owner, "mine.png", SampleFiles.Png(2, 2));
+        var file = await owner.UploadAsync("mine.png", SampleFiles.Png(2, 2));
 
         var response = await intruder.Client().DeleteAsync($"/api/me/files/{file.GetProperty("id").GetInt32()}");
 
@@ -137,7 +131,7 @@ public class FilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     public async Task Usages_ListWorksPostsAndProfileThatUseTheFile()
     {
         var me = await factory.CreateUserAsync();
-        var image = await UploadOk(me, "poster.png", SampleFiles.Png(10, 10));
+        var image = await me.UploadAsync("poster.png", SampleFiles.Png(10, 10));
         var (id, url) = (image.GetProperty("id").GetInt32(), image.GetProperty("url").GetString()!);
         var work = await (await me.Client().PostJsonAsync("/api/me/portfolios", new { title = "海報" })).ReadDataAsync<JsonElement>();
         await me.Client().PutJsonAsync($"/api/me/portfolios/{work.GetProperty("id").GetInt32()}", new
@@ -161,7 +155,7 @@ public class FilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     public async Task Usages_FindImagesInsidePostContent()
     {
         var me = await factory.CreateUserAsync();
-        var image = await UploadOk(me, "inline.png", SampleFiles.Png(10, 10));
+        var image = await me.UploadAsync("inline.png", SampleFiles.Png(10, 10));
         var url = image.GetProperty("url").GetString()!;
         await me.Client().PostJsonAsync("/api/me/posts", new
         {
@@ -177,7 +171,7 @@ public class FilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     public async Task Usages_OfAnUnusedFile_IsEmpty()
     {
         var me = await factory.CreateUserAsync();
-        var file = await UploadOk(me, "spare.png", SampleFiles.Png(2, 2));
+        var file = await me.UploadAsync("spare.png", SampleFiles.Png(2, 2));
 
         Assert.Empty(await Usages(me, file.GetProperty("id").GetInt32()));
     }
@@ -187,7 +181,7 @@ public class FilesApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     {
         var owner = await factory.CreateUserAsync();
         var intruder = await factory.CreateUserAsync();
-        var file = await UploadOk(owner, "mine.png", SampleFiles.Png(2, 2));
+        var file = await owner.UploadAsync("mine.png", SampleFiles.Png(2, 2));
 
         var response = await intruder.Client().GetAsync($"/api/me/files/{file.GetProperty("id").GetInt32()}/usages");
 
