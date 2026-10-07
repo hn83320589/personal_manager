@@ -238,10 +238,10 @@ public static class DatabaseSeeder
 
         // ── 聯絡方式 ─────────────────────────────────────────────────
         db.ContactMethods.AddRange(
-            new ContactMethod { UserId = admin.Id, Type = ContactType.Email, Value = "admin@example.com", Label = "工作信箱", Icon = "email", IsPublic = true, SortOrder = 1 },
-            new ContactMethod { UserId = admin.Id, Type = ContactType.Phone, Value = "0912345678", Label = "手機", Icon = "phone", IsPublic = true, SortOrder = 2 },
-            new ContactMethod { UserId = admin.Id, Type = ContactType.GitHub, Value = "https://github.com/example", Label = "GitHub", Icon = "github", IsPublic = true, SortOrder = 3 },
-            new ContactMethod { UserId = admin.Id, Type = ContactType.LinkedIn, Value = "https://linkedin.com/in/example", Label = "LinkedIn", Icon = "linkedin", IsPublic = true, SortOrder = 4 }
+            new ContactMethod { UserId = admin.Id, Type = ContactType.Email, Value = "admin@example.com", Label = "工作信箱", IsPublic = true, SortOrder = 1 },
+            new ContactMethod { UserId = admin.Id, Type = ContactType.Phone, Value = "0912345678", Label = "手機", IsPublic = true, SortOrder = 2 },
+            new ContactMethod { UserId = admin.Id, Type = ContactType.GitHub, Value = "https://github.com/example", Label = "GitHub", IsPublic = true, SortOrder = 3 },
+            new ContactMethod { UserId = admin.Id, Type = ContactType.LinkedIn, Value = "https://linkedin.com/in/example", Label = "LinkedIn", IsPublic = true, SortOrder = 4 }
         );
 
         await db.SaveChangesAsync();

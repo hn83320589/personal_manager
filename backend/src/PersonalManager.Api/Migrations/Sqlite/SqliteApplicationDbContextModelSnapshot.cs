@@ -173,11 +173,6 @@ namespace PersonalManager.Api.Migrations.Sqlite
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("IsPublic")
                         .HasColumnType("INTEGER");
 

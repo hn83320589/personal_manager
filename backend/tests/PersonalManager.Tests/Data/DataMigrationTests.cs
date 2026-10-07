@@ -91,6 +91,25 @@ public sealed class DataMigrationTests : IDisposable
         Assert.Equal(("舊的描述", 2, 0), (portfolios[0].Summary, portfolios.Select(p => p.Slug).Distinct().Count(), portfolios[0].Blocks.Count));
     }
 
+    [Fact]
+    public async Task RemoveContactMethodIcon_KeepsExistingContacts()
+    {
+        await MigrateToMigrationBeforeAsync("RemoveContactMethodIcon");
+        await _db.Database.ExecuteSqlAsync($"""
+            INSERT INTO Users (Username, Email, PasswordHash, FullName, Role, IsActive, CreatedAt, UpdatedAt)
+            VALUES ('legacy', 'legacy@test.local', 'x', 'Legacy', 'User', 1, '2026-01-01', '2026-01-01')
+            """);
+        await _db.Database.ExecuteSqlAsync($"""
+            INSERT INTO ContactMethods (UserId, Type, Label, Value, Icon, IsPublic, SortOrder, CreatedAt, UpdatedAt)
+            VALUES (1, 'Email', '工作信箱', 'me@example.com', 'email', 1, 1, '2026-01-01', '2026-01-01')
+            """);
+
+        await _db.Database.MigrateAsync();
+        var value = await _db.Database.SqlQuery<string>($"SELECT Value FROM ContactMethods").SingleAsync();
+
+        Assert.Equal("me@example.com", value);
+    }
+
     public void Dispose()
     {
         _db.Dispose();

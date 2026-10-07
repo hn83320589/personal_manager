@@ -34,9 +34,6 @@ public class ContactMethod : IOwnedByUser, ISortable
     [Required, StringLength(500)]
     public string Value { get; set; } = string.Empty;
 
-    [StringLength(50)]
-    public string Icon { get; set; } = string.Empty;
-
     public bool IsPublic { get; set; } = true;
     public int SortOrder { get; set; }
 
